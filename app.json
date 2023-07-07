@@ -1,0 +1,48 @@
+{
+  "expo": {
+    "name": "Utility Self Service App",
+    "slug": "utility-self-service-app",
+    "scheme": "untitled-app",
+    "description": "A  self-service portal allows customers to directly view their current usage and pay bills online with no hidden motives or wait times",
+    "privacy": "unlisted",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "version": "1.0.0",
+    "orientation": "default",
+    "icon": "./assets/app/icon.png",
+    "splash": {
+      "image": "./assets/app/splash.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#5A45FF"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "bundleIdentifier": "com.draftbit.untitledapp",
+      "supportsTablet": null,
+      "buildNumber": "1.0.0",
+      "infoPlist": {},
+      "usesIcloudStorage": false
+    },
+    "android": {
+      "versionCode": 1,
+      "package": "com.fluentgrid.mss",
+      "permissions": []
+    },
+    "web": {
+      "display": null,
+      "barStyle": null,
+      "themeColor": "#000000",
+      "orientation": null,
+      "backgroundColor": null,
+      "preferRelatedApplications": null
+    },
+    "notification": {
+      "androidMode": "default"
+    }
+  }
+}
