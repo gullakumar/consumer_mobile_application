@@ -19,12 +19,14 @@ import {
   Touchable,
   withTheme,
 } from '@draftbit/ui';
+import { useIsFocused } from '@react-navigation/native';
 import { FlatList, Image, Text, View, useWindowDimensions } from 'react-native';
 
 const PaymentsScreen = props => {
   const dimensions = useWindowDimensions();
   const Constants = GlobalVariables.useValues();
   const Variables = Constants;
+  const setGlobalVariableValue = GlobalVariables.useSetValue();
 
   const buildString = Scno => {
     // Type the code for the body of your function or hook here.
@@ -52,6 +54,23 @@ line two` ) and will not work with special characters inside of quotes ( example
     return `collections/rest/PaymentDetailsTService/getPaymentDetails/${Scno}`;
   };
 
+  const convertTimestampToDate = timestamp => {
+    const date = new Date(timestamp);
+    console.log('timestamp' + timestamp);
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1; // Months are zero-indexed, so we add 1
+    const day = date.getDate();
+    console.log('month' + month);
+    console.log('year' + year);
+    console.log('date' + day);
+    const formattedDate = `${year}-${month < 10 ? '0' + month : month}-${
+      day < 10 ? '0' + day : day
+    }`;
+
+    // Return the formatted date
+    return formattedDate;
+  };
+
   const buildConsumerString = Scno => {
     // Type the code for the body of your function or hook here.
     // Functions can be triggered via Button/Touchable actions.
@@ -64,10 +83,98 @@ line two` ) and will not work with special characters inside of quotes ( example
     return `billing/rest/AccountInfo/${Scno}`;
   };
 
+  const manageAccountFun = ManageAccountDetails => {
+    return ManageAccountDetails.map(team => {
+      return { label: team.new_added_account, value: team.new_added_account };
+    });
+  };
+
   const { theme } = props;
   const { navigation } = props;
 
+  const isFocused = useIsFocused();
+  React.useEffect(() => {
+    const handler = async () => {
+      try {
+        if (!isFocused) {
+          return;
+        }
+        setServiceConNumber(Constants['name']);
+        const consumerDetailsJson = await CISAPPApi.consumerDetailsPOST(
+          Constants,
+          { action: buildConsumerString(Constants['name']) }
+        );
+        console.log(consumerDetailsJson);
+        buildConsumerString(Constants['name']);
+        const prepaidFlag = (consumerDetailsJson && consumerDetailsJson[0])
+          ?.data?.prepaidFlag;
+        setPrepaidFlag(prepaidFlag);
+        const meterNo = (consumerDetailsJson && consumerDetailsJson[0])?.data
+          ?.meterNumber;
+        setMeterNumber(meterNo);
+        const Scno = (consumerDetailsJson && consumerDetailsJson[0])?.data
+          ?.scno;
+        setConsumerScNo(Scno);
+        const Name = (consumerDetailsJson && consumerDetailsJson[0])?.data
+          ?.name;
+        setConsumerName(Name);
+        const Billdetailsjson = await (async () => {
+          if (prepaidFlag === 'N') {
+            return await CISAPPApi.viewBillDetailsPOST(Constants, {
+              action: buildString(Constants['name']),
+            });
+          }
+        })();
+        console.log(Billdetailsjson);
+        buildString(Constants['name']);
+
+        const valuePRx6J3RZ =
+          Billdetailsjson && Billdetailsjson[0].data.BillDataJson[0];
+        setViewBillDetails(valuePRx6J3RZ);
+        const Billdetailslog = valuePRx6J3RZ;
+        const paymenthistoryjson = await CISAPPApi.paymentHistoryPOST(
+          Constants,
+          { action: paymentBuildString(Constants['name']) }
+        );
+        paymentBuildString(Constants['name']);
+
+        const valueqY5c4IUo = paymenthistoryjson && paymenthistoryjson[0].data;
+        setViewPaymentDetails(valueqY5c4IUo);
+        const paymentdetailslog = valueqY5c4IUo;
+        const prepaidJson = await (async () => {
+          if (prepaidFlag === 'Y') {
+            return await CISAPPApi.prepaidApiPOST(Constants, {
+              mtrno: meterNo,
+            });
+          }
+        })();
+        console.log(prepaidJson);
+        const availableBalance = (prepaidJson && prepaidJson[0])?.data[0]
+          ?.avail_balance;
+        console.log(availableBalance);
+        setAvailableBalance(availableBalance);
+        const ManageAccountDetails = await CISAPPApi.manageAccountsPOST(
+          Constants,
+          { accountNumber: Constants['name'] }
+        );
+        console.log(ManageAccountDetails);
+        const result = setGlobalVariableValue({
+          key: 'manageaccount_picker',
+          value: manageAccountFun(
+            ManageAccountDetails && ManageAccountDetails[0].data[0].data
+          ),
+        });
+        console.log(result);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    handler();
+  }, [isFocused]);
+
   const [availableBalance, setAvailableBalance] = React.useState('');
+  const [consumerName, setConsumerName] = React.useState('');
+  const [consumerScNo, setConsumerScNo] = React.useState('');
   const [meterNumber, setMeterNumber] = React.useState('');
   const [pickerValue, setPickerValue] = React.useState('');
   const [prepaidFlag, setPrepaidFlag] = React.useState('');
@@ -673,6 +780,12 @@ line two` ) and will not work with special characters inside of quotes ( example
                     )?.data?.meterNumber;
                     setMeterNumber(meterNo);
                     console.log(meterNo);
+                    const Scno = (consumerDetailsJson && consumerDetailsJson[0])
+                      ?.data?.scno;
+                    setConsumerScNo(Scno);
+                    const Name = (consumerDetailsJson && consumerDetailsJson[0])
+                      ?.data?.name;
+                    setConsumerName(Name);
                     const Billdetailsjson = await (async () => {
                       if (prepaidFlag === 'N') {
                         return await CISAPPApi.viewBillDetailsPOST(Constants, {
@@ -725,14 +838,14 @@ line two` ) and will not work with special characters inside of quotes ( example
                 },
                 dimensions.width
               )}
-              options={Constants['serviceConNo']}
+              options={Constants['manageaccount_picker']}
               leftIconMode={'inset'}
               type={'solid'}
               iconSize={24}
               autoDismissKeyboard={true}
-              value={pickerValue}
               rightIconName={'Feather/chevron-down'}
-              placeholder={'Select service connection no'}
+              placeholder={' '}
+              defaultValue={Constants['name']}
             />
           </View>
           {/* card */}
@@ -910,7 +1023,10 @@ line two` ) and will not work with special characters inside of quotes ( example
                   <Button
                     onPress={() => {
                       try {
-                        navigation.navigate('AdvancePayemntScreen');
+                        navigation.navigate('AdvancePayemntScreen', {
+                          Name: consumerName,
+                          serviceConNo: consumerScNo,
+                        });
                       } catch (err) {
                         console.error(err);
                       }
@@ -969,7 +1085,10 @@ line two` ) and will not work with special characters inside of quotes ( example
                 <Button
                   onPress={() => {
                     try {
-                      navigation.navigate('RechargeScreen');
+                      navigation.navigate('RechargeScreen', {
+                        Name: consumerName,
+                        ServiceConNo: consumerScNo,
+                      });
                     } catch (err) {
                       console.error(err);
                     }
@@ -1027,53 +1146,233 @@ line two` ) and will not work with special characters inside of quotes ( example
                   iconSize={24}
                   expanded={true}
                 >
-                  <FlatList
-                    renderItem={({ item }) => {
-                      const listData = item;
-                      return (
-                        <View
+                  {/* Details */}
+                  <View
+                    style={StyleSheet.applyWidth(
+                      StyleSheet.compose(
+                        GlobalStyles.ViewStyles(theme)['Details'],
+                        {
+                          borderBottomWidth: 1,
+                          borderLeftWidth: 1,
+                          borderRightWidth: 1,
+                          borderTopWidth: 1,
+                        }
+                      ),
+                      dimensions.width
+                    )}
+                  >
+                    {/* Date */}
+                    <View
+                      style={StyleSheet.applyWidth(
+                        { borderRightWidth: 1, flex: 1 },
+                        dimensions.width
+                      )}
+                    >
+                      <View
+                        style={StyleSheet.applyWidth(
+                          {
+                            backgroundColor: theme.colors.viewBG,
+                            height: 40,
+                            justifyContent: 'center',
+                          },
+                          dimensions.width
+                        )}
+                      >
+                        <Text
                           style={StyleSheet.applyWidth(
                             {
-                              alignContent: 'stretch',
-                              backgroundColor: 'rgb(255, 255, 255)',
-                              flexDirection: 'column',
-                              justifyContent: 'flex-start',
-                              paddingTop: 8,
+                              color: theme.colors.strong,
+                              fontFamily: 'Roboto_700Bold',
+                              fontSize: 14,
+                              textAlign: 'center',
+                              textTransform: 'capitalize',
                             },
                             dimensions.width
                           )}
                         >
-                          <Touchable>
+                          {'Date'}
+                        </Text>
+                      </View>
+                    </View>
+                    {/* Amount */}
+                    <View
+                      style={StyleSheet.applyWidth(
+                        { borderRightWidth: 1, flex: 1 },
+                        dimensions.width
+                      )}
+                    >
+                      <View
+                        style={StyleSheet.applyWidth(
+                          {
+                            backgroundColor: theme.colors.viewBG,
+                            height: 40,
+                            justifyContent: 'center',
+                          },
+                          dimensions.width
+                        )}
+                      >
+                        <Text
+                          style={StyleSheet.applyWidth(
+                            {
+                              color: theme.colors.strong,
+                              fontFamily: 'Roboto_700Bold',
+                              fontSize: 14,
+                              textAlign: 'center',
+                              textTransform: 'capitalize',
+                            },
+                            dimensions.width
+                          )}
+                        >
+                          {'Amount'}
+                        </Text>
+                      </View>
+                    </View>
+                    {/* Purpose */}
+                    <View
+                      style={StyleSheet.applyWidth(
+                        { flex: 1 },
+                        dimensions.width
+                      )}
+                    >
+                      <View
+                        style={StyleSheet.applyWidth(
+                          {
+                            backgroundColor: theme.colors.viewBG,
+                            height: 40,
+                            justifyContent: 'center',
+                          },
+                          dimensions.width
+                        )}
+                      >
+                        <Text
+                          style={StyleSheet.applyWidth(
+                            {
+                              color: theme.colors.strong,
+                              fontFamily: 'Roboto_700Bold',
+                              fontSize: 14,
+                              textAlign: 'center',
+                              textTransform: 'capitalize',
+                            },
+                            dimensions.width
+                          )}
+                        >
+                          {'Purpose'}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                  <FlatList
+                    renderItem={({ item }) => {
+                      const listData = item;
+                      return (
+                        <>
+                          {/* Details */}
+                          <View
+                            style={StyleSheet.applyWidth(
+                              StyleSheet.compose(
+                                GlobalStyles.ViewStyles(theme)['Details'],
+                                {
+                                  borderBottomWidth: 1,
+                                  borderLeftWidth: 1,
+                                  borderRightWidth: 1,
+                                }
+                              ),
+                              dimensions.width
+                            )}
+                          >
+                            {/* Date */}
                             <View
                               style={StyleSheet.applyWidth(
-                                {
-                                  alignItems: 'flex-start',
-                                  flex: 1,
-                                  paddingLeft: 16,
-                                },
+                                { borderRightWidth: 1, flex: 1 },
                                 dimensions.width
                               )}
                             >
-                              {/* Title */}
-                              <Text
+                              <View
                                 style={StyleSheet.applyWidth(
-                                  {
-                                    color: theme.colors.strong,
-                                    fontFamily: 'Roboto_400Regular',
-                                    fontSize: 14,
-                                    lineHeight: 20,
-                                  },
+                                  { height: 40, justifyContent: 'center' },
                                   dimensions.width
                                 )}
                               >
-                                {'Advance  Paid: ₹ '}
-                                {listData?.amountPaid} {listData?.paymentMode}
-                                {'\n'}
-                                {listData?.paymentDate}
-                              </Text>
+                                <Text
+                                  style={StyleSheet.applyWidth(
+                                    {
+                                      fontFamily: 'Roboto_400Regular',
+                                      fontSize: 14,
+                                      textAlign: 'center',
+                                      textTransform: 'capitalize',
+                                    },
+                                    dimensions.width
+                                  )}
+                                >
+                                  {(() => {
+                                    const e = convertTimestampToDate(
+                                      listData?.paymentDate
+                                    );
+                                    console.log(e);
+                                    return e;
+                                  })()}
+                                </Text>
+                              </View>
                             </View>
-                          </Touchable>
-                        </View>
+                            {/* Amount */}
+                            <View
+                              style={StyleSheet.applyWidth(
+                                { borderRightWidth: 1, flex: 1 },
+                                dimensions.width
+                              )}
+                            >
+                              <View
+                                style={StyleSheet.applyWidth(
+                                  { height: 40, justifyContent: 'center' },
+                                  dimensions.width
+                                )}
+                              >
+                                <Text
+                                  style={StyleSheet.applyWidth(
+                                    {
+                                      fontFamily: 'Roboto_400Regular',
+                                      fontSize: 14,
+                                      textAlign: 'center',
+                                      textTransform: 'capitalize',
+                                    },
+                                    dimensions.width
+                                  )}
+                                >
+                                  {'₹'}
+                                  {listData?.amountPaid}
+                                </Text>
+                              </View>
+                            </View>
+                            {/* Purpose */}
+                            <View
+                              style={StyleSheet.applyWidth(
+                                { flex: 1 },
+                                dimensions.width
+                              )}
+                            >
+                              <View
+                                style={StyleSheet.applyWidth(
+                                  { height: 40, justifyContent: 'center' },
+                                  dimensions.width
+                                )}
+                              >
+                                <Text
+                                  style={StyleSheet.applyWidth(
+                                    {
+                                      fontFamily: 'Roboto_400Regular',
+                                      fontSize: 14,
+                                      textAlign: 'center',
+                                      textTransform: 'capitalize',
+                                    },
+                                    dimensions.width
+                                  )}
+                                >
+                                  {listData?.paymentMode}
+                                </Text>
+                              </View>
+                            </View>
+                          </View>
+                        </>
                       );
                     }}
                     data={viewPaymentDetails}

@@ -73,6 +73,15 @@ line two` ) and will not work with special characters inside of quotes ( example
     return `billing/rest/getBillDataService/${Scno}`;
   };
 
+  const convertDateTimeToDate = dateTime => {
+    const date = dateTime.split(' ');
+    console.log('date' + date);
+
+    const str = date[0];
+
+    return str;
+  };
+
   const { theme } = props;
   const { navigation } = props;
 
@@ -83,6 +92,58 @@ line two` ) and will not work with special characters inside of quotes ( example
         if (!isFocused) {
           return;
         }
+        setServiceConNumber(Constants['name']);
+        const consumerDetailsJson = await CISAPPApi.consumerDetailsPOST(
+          Constants,
+          { action: buildConsumerString(Constants['name']) }
+        );
+        console.log(consumerDetailsJson);
+        buildConsumerString(Constants['name']);
+        const prepaidFlag = (consumerDetailsJson && consumerDetailsJson[0])
+          ?.data?.prepaidFlag;
+        console.log(prepaidFlag);
+        setPrepaidFlag(prepaidFlag);
+        const meterNo = (consumerDetailsJson && consumerDetailsJson[0])?.data
+          ?.meterNumber;
+        console.log(meterNo);
+        setMeterNumber(meterNo);
+        const Billdetailsjson = await (async () => {
+          if (prepaidFlag === 'N') {
+            return await CISAPPApi.viewBillDetailsPOST(Constants, {
+              action: buildString(Constants['name']),
+            });
+          }
+        })();
+        console.log(Billdetailsjson);
+        buildString(Constants['name']);
+
+        const valuexIxNMeaF =
+          Billdetailsjson && Billdetailsjson[0].data.BillDataJson[0];
+        setViewBillDetails(valuexIxNMeaF);
+        const Billdetailslog = valuexIxNMeaF;
+        const BillingHistoryJson = await CISAPPApi.billingHistoryPOST(
+          Constants,
+          { action: buildBillingString(Constants['name']) }
+        );
+        buildBillingString(Constants['name']);
+        console.log(BillingHistoryJson);
+
+        const valueyUz2DmB7 =
+          BillingHistoryJson && BillingHistoryJson[0].data.BillDataJson;
+        setBillingHistoryScreen(valueyUz2DmB7);
+        const billHistory = valueyUz2DmB7;
+        const prepaidJson = await (async () => {
+          if (prepaidFlag === 'Y') {
+            return await CISAPPApi.prepaidApiPOST(Constants, {
+              mtrno: meterNo,
+            });
+          }
+        })();
+        console.log(prepaidJson);
+        const availableBalance = (prepaidJson && prepaidJson[0])?.data[0]
+          ?.avail_balance;
+        console.log(availableBalance);
+        setAvailableBalance(availableBalance);
         const ManageAccountDetails = await CISAPPApi.manageAccountsPOST(
           Constants,
           { accountNumber: Constants['name'] }
@@ -1210,10 +1271,129 @@ line two` ) and will not work with special characters inside of quotes ( example
                     <>
                       {!(prepaidFlag === 'N') ? null : (
                         <Utils.CustomCodeErrorBoundary>
-                          <BillingHistory.LineChartComponent1 />
+                          <BillingHistory.LineChartComponent1
+                            billingHistoryScreen={billingHistoryScreen}
+                          />
                         </Utils.CustomCodeErrorBoundary>
                       )}
                     </>
+                  </View>
+                </View>
+              )}
+            </>
+            {/* Details */}
+            <>
+              {!(selectedTab === 'content') ? null : (
+                <View
+                  style={StyleSheet.applyWidth(
+                    StyleSheet.compose(
+                      GlobalStyles.ViewStyles(theme)['Details'],
+                      {
+                        borderBottomWidth: 1,
+                        borderLeftWidth: 1,
+                        borderRightWidth: 1,
+                        borderTopWidth: 1,
+                        flex: 0,
+                      }
+                    ),
+                    dimensions.width
+                  )}
+                >
+                  {/* Date */}
+                  <View
+                    style={StyleSheet.applyWidth(
+                      { borderRightWidth: 1, flex: 1, marginRight: 1 },
+                      dimensions.width
+                    )}
+                  >
+                    <View
+                      style={StyleSheet.applyWidth(
+                        {
+                          backgroundColor: theme.colors.viewBG,
+                          height: 40,
+                          justifyContent: 'center',
+                        },
+                        dimensions.width
+                      )}
+                    >
+                      <Text
+                        style={StyleSheet.applyWidth(
+                          {
+                            color: theme.colors.strong,
+                            fontFamily: 'Roboto_700Bold',
+                            fontSize: 14,
+                            textAlign: 'center',
+                            textTransform: 'capitalize',
+                          },
+                          dimensions.width
+                        )}
+                      >
+                        {'Date'}
+                      </Text>
+                    </View>
+                  </View>
+                  {/* Amount */}
+                  <View
+                    style={StyleSheet.applyWidth(
+                      { borderRightWidth: 1, flex: 1, marginRight: 1 },
+                      dimensions.width
+                    )}
+                  >
+                    <View
+                      style={StyleSheet.applyWidth(
+                        {
+                          backgroundColor: theme.colors.viewBG,
+                          height: 40,
+                          justifyContent: 'center',
+                        },
+                        dimensions.width
+                      )}
+                    >
+                      <Text
+                        style={StyleSheet.applyWidth(
+                          {
+                            color: theme.colors.strong,
+                            fontFamily: 'Roboto_700Bold',
+                            fontSize: 14,
+                            textAlign: 'center',
+                            textTransform: 'capitalize',
+                          },
+                          dimensions.width
+                        )}
+                      >
+                        {'Amount'}
+                      </Text>
+                    </View>
+                  </View>
+                  {/* Download */}
+                  <View
+                    style={StyleSheet.applyWidth({ flex: 1 }, dimensions.width)}
+                  >
+                    <View
+                      style={StyleSheet.applyWidth(
+                        {
+                          backgroundColor: theme.colors.viewBG,
+                          height: 40,
+                          justifyContent: 'center',
+                        },
+                        dimensions.width
+                      )}
+                    >
+                      <Text
+                        style={StyleSheet.applyWidth(
+                          {
+                            color: theme.colors.strong,
+                            fontFamily: 'Roboto_700Bold',
+                            fontSize: 14,
+                            textAlign: 'center',
+                            textTransform: 'capitalize',
+                          },
+                          dimensions.width
+                        )}
+                      >
+                        {'Download'}
+                      </Text>
+                    </View>
                   </View>
                 </View>
               )}
@@ -1223,77 +1403,111 @@ line two` ) and will not work with special characters inside of quotes ( example
                 const listData = item;
                 return (
                   <>
-                    {/* table */}
+                    {/* Details */}
                     <>
                       {!(selectedTab === 'content') ? null : (
                         <View
                           style={StyleSheet.applyWidth(
-                            GlobalStyles.ViewStyles(theme)['table 2'],
+                            StyleSheet.compose(
+                              GlobalStyles.ViewStyles(theme)['Details'],
+                              {
+                                borderBottomWidth: 1,
+                                borderLeftWidth: 1,
+                                borderRightWidth: 1,
+                              }
+                            ),
                             dimensions.width
                           )}
                         >
-                          <Touchable>
+                          {/* Date */}
+                          <View
+                            style={StyleSheet.applyWidth(
+                              { borderRightWidth: 1, flex: 1 },
+                              dimensions.width
+                            )}
+                          >
+                            <View
+                              style={StyleSheet.applyWidth(
+                                { height: 40, justifyContent: 'center' },
+                                dimensions.width
+                              )}
+                            >
+                              <Text
+                                style={StyleSheet.applyWidth(
+                                  {
+                                    fontFamily: 'Roboto_400Regular',
+                                    fontSize: 14,
+                                    textAlign: 'center',
+                                    textTransform: 'capitalize',
+                                  },
+                                  dimensions.width
+                                )}
+                              >
+                                {(() => {
+                                  const e = convertDateTimeToDate(
+                                    listData?.BillIssueDate
+                                  );
+                                  console.log(e);
+                                  return e;
+                                })()}
+                              </Text>
+                            </View>
+                          </View>
+                          {/* Amount */}
+                          <View
+                            style={StyleSheet.applyWidth(
+                              { borderRightWidth: 1, flex: 1, marginRight: 1 },
+                              dimensions.width
+                            )}
+                          >
+                            <View
+                              style={StyleSheet.applyWidth(
+                                { height: 40, justifyContent: 'center' },
+                                dimensions.width
+                              )}
+                            >
+                              <Text
+                                style={StyleSheet.applyWidth(
+                                  {
+                                    fontFamily: 'Roboto_400Regular',
+                                    fontSize: 14,
+                                    margin: 15,
+                                    textAlign: 'right',
+                                    textTransform: 'capitalize',
+                                  },
+                                  dimensions.width
+                                )}
+                              >
+                                {'₹'}
+                                {listData?.BillAmount}
+                              </Text>
+                            </View>
+                          </View>
+                          {/* Download */}
+                          <View
+                            style={StyleSheet.applyWidth(
+                              { flex: 1, marginRight: 1 },
+                              dimensions.width
+                            )}
+                          >
                             <View
                               style={StyleSheet.applyWidth(
                                 {
-                                  flex: 1,
-                                  flexDirection: 'row',
-                                  justifyContent: 'space-around',
-                                  paddingLeft: 16,
+                                  alignSelf: 'center',
+                                  height: 40,
+                                  justifyContent: 'center',
                                 },
                                 dimensions.width
                               )}
                             >
-                              {/* Title */}
-                              <Text
-                                style={StyleSheet.applyWidth(
-                                  {
-                                    color: theme.colors.strong,
-                                    fontFamily: 'Roboto_400Regular',
-                                    fontSize: 14,
-                                    lineHeight: 20,
-                                  },
-                                  dimensions.width
-                                )}
-                              >
-                                {'Month : '}
-                                {listData?.BillMonth}
-                                {'\n'}
-                              </Text>
-                              {/* Title */}
-                              <Text
-                                style={StyleSheet.applyWidth(
-                                  {
-                                    color: theme.colors.strong,
-                                    fontFamily: 'Roboto_400Regular',
-                                    fontSize: 14,
-                                    lineHeight: 20,
-                                  },
-                                  dimensions.width
-                                )}
-                              >
-                                {'Year : '}
-                                {listData?.BillYear}
-                                {'\n\n'}
-                              </Text>
-                              {/* Title */}
-                              <Text
-                                style={StyleSheet.applyWidth(
-                                  {
-                                    color: theme.colors.strong,
-                                    fontFamily: 'Roboto_400Regular',
-                                    fontSize: 14,
-                                    lineHeight: 20,
-                                  },
-                                  dimensions.width
-                                )}
-                              >
-                                {'Amount : '}
-                                {listData?.BillAmount}
-                                {'\n'}
-                              </Text>
+                              <Touchable>
+                                <Icon
+                                  size={24}
+                                  name={'Feather/arrow-down-circle'}
+                                />
+                              </Touchable>
                             </View>
-                          </Touchable>
+                          </View>
                         </View>
                       )}
                     </>

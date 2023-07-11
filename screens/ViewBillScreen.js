@@ -456,6 +456,7 @@ const ViewBillScreen = props => {
                     dimensions.width
                   )}
                 >
+                  {'₹'}
                   {props.route?.params?.BillAmount ?? ''}
                 </Text>
               </View>
@@ -499,6 +500,7 @@ const ViewBillScreen = props => {
                     dimensions.width
                   )}
                 >
+                  {'₹'}
                   {props.route?.params?.Arrear ?? ''}
                 </Text>
               </View>
@@ -542,6 +544,7 @@ const ViewBillScreen = props => {
                     dimensions.width
                   )}
                 >
+                  {'₹'}
                   {props.route?.params?.RebateGiven ?? ''}
                 </Text>
               </View>
@@ -585,6 +588,7 @@ const ViewBillScreen = props => {
                     dimensions.width
                   )}
                 >
+                  {'₹'}
                   {props.route?.params?.netcurrbill ?? ''}
                 </Text>
               </View>

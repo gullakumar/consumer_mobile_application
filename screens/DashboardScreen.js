@@ -35,6 +35,7 @@ const DashboardScreen = props => {
   const dimensions = useWindowDimensions();
   const Constants = GlobalVariables.useValues();
   const Variables = Constants;
+  const setGlobalVariableValue = GlobalVariables.useSetValue();
 
   const buildString = Scno => {
     console.log(`billing/rest/getBillDataWss/${Scno}`);
@@ -53,7 +54,7 @@ line two` ) and will not work with special characters inside of quotes ( example
     return `billing/rest/AccountInfo/${Scno}`;
   };
 
-  const manageAccount = Manage => {
+  const manageAccountFun = ManageAccountDetails => {
     // Type the code for the body of your function or hook here.
     // Functions can be triggered via Button/Touchable actions.
     // Hooks are run per ReactJS rules.
@@ -61,13 +62,85 @@ line two` ) and will not work with special characters inside of quotes ( example
     /* String line breaks are accomplished with backticks ( example: `line one
 line two` ) and will not work with special characters inside of quotes ( example: "line one line two" ) */
 
-    return Manage.map(team => {
-      return { label: team.new_added_account };
+    return ManageAccountDetails.map(team => {
+      return { label: team.new_added_account, value: team.new_added_account };
     });
   };
 
   const { theme } = props;
   const { navigation } = props;
+
+  const isFocused = useIsFocused();
+  React.useEffect(() => {
+    const handler = async () => {
+      try {
+        if (!isFocused) {
+          return;
+        }
+        setTextInputValue(Constants['name']);
+        const consumerDetailsJson = await CISAPPApi.consumerDetailsPOST(
+          Constants,
+          { action: buildConsumerString(Constants['name']) }
+        );
+        console.log(consumerDetailsJson);
+        buildConsumerString(Constants['name']);
+        const prepaidFlag = (consumerDetailsJson && consumerDetailsJson[0])
+          ?.data?.prepaidFlag;
+        console.log(prepaidFlag);
+        setPrepaidFlag(prepaidFlag);
+        const meterNo = (consumerDetailsJson && consumerDetailsJson[0])?.data
+          ?.meterNumber;
+        console.log(meterNo);
+        setMeterNumber(meterNo);
+        const Scno = (consumerDetailsJson && consumerDetailsJson[0])?.data
+          ?.scno;
+        setConsumerScNo(Scno);
+        const Name = (consumerDetailsJson && consumerDetailsJson[0])?.data
+          ?.name;
+        setConsumerName(Name);
+        const Billdetailsjson = await (async () => {
+          if (prepaidFlag === 'N') {
+            return await CISAPPApi.viewBillDetailsPOST(Constants, {
+              action: buildString(Constants['name']),
+            });
+          }
+        })();
+        buildString(Constants['name']);
+
+        const value0Ldb8r2G =
+          Billdetailsjson && Billdetailsjson[0].data.BillDataJson[0];
+        setViewbilldetails(value0Ldb8r2G);
+        const Billdetailslog = value0Ldb8r2G;
+        const prepaiddetailsJson = await (async () => {
+          if (prepaidFlag === 'Y') {
+            return await CISAPPApi.prepaidApiPOST(Constants, {
+              mtrno: meterNo,
+            });
+          }
+        })();
+        console.log(prepaiddetailsJson);
+        const availableBalance = (prepaiddetailsJson && prepaiddetailsJson[0])
+          ?.data[0]?.avail_balance;
+        console.log(availableBalance);
+        setAvailableBalance(availableBalance);
+        const ManageAccountDetails = await CISAPPApi.manageAccountsPOST(
+          Constants,
+          { accountNumber: Constants['name'] }
+        );
+        console.log(ManageAccountDetails);
+        const result = setGlobalVariableValue({
+          key: 'manageaccount_picker',
+          value: manageAccountFun(
+            ManageAccountDetails && ManageAccountDetails[0].data[0].data
+          ),
+        });
+        console.log(result);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    handler();
+  }, [isFocused]);
 
   const [accountno, setAccountno] = React.useState('');
   const [availableBalance, setAvailableBalance] = React.useState('');
@@ -695,10 +768,10 @@ line two` ) and will not work with special characters inside of quotes ( example
                         const Scno = (
                           consumerDetailsJson && consumerDetailsJson[0]
                         )?.data?.scno;
+                        setConsumerScNo(Scno);
                         const Name = (
                           consumerDetailsJson && consumerDetailsJson[0]
                         )?.data?.name;
-                        setConsumerScNo(Scno);
                         setConsumerName(Name);
                         const Billdetailsjson = await (async () => {
                           if (prepaidFlag === 'N') {
@@ -743,13 +816,14 @@ line two` ) and will not work with special characters inside of quotes ( example
                     },
                     dimensions.width
                   )}
-                  options={Constants['serviceConNo']}
+                  options={Constants['manageaccount_picker']}
                   leftIconMode={'inset'}
                   type={'solid'}
                   iconSize={24}
                   autoDismissKeyboard={true}
                   rightIconName={'Feather/chevron-down'}
-                  placeholder={'Select service connection number'}
+                  placeholder={' '}
+                  defaultValue={Constants['name']}
                 />
               </View>
             </View>
@@ -994,7 +1068,10 @@ line two` ) and will not work with special characters inside of quotes ( example
                   <Button
                     onPress={() => {
                       try {
-                        navigation.navigate('RechargeScreen');
+                        navigation.navigate('RechargeScreen', {
+                          Name: consumerName,
+                          ServiceConNo: consumerScNo,
+                        });
                       } catch (err) {
                         console.error(err);
                       }

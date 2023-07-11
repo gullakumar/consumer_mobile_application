@@ -33,10 +33,16 @@ const CheckTicketStatusforGuestScreen = props => {
     return `${consId}`;
   };
 
+  const buildConsumerString = Scno => {
+    console.log(`billing/rest/AccountInfo/${Scno}`);
+    return `billing/rest/AccountInfo/${Scno}`;
+  };
+
   const { theme } = props;
   const { navigation } = props;
 
   const [consId, setConsId] = React.useState('');
+  const [consumerId, setConsumerId] = React.useState('');
   const [listExists, setListExists] = React.useState(true);
   const [listMissing, setListMissing] = React.useState(false);
   const [menuTab1, setMenuTab1] = React.useState(true);
@@ -157,16 +163,25 @@ const CheckTicketStatusforGuestScreen = props => {
                 dimensions.width
               )}
               value={consId}
-              placeholder={'Enter your consumer Id'}
+              placeholder={'Enter service connection no'}
               placeholderTextColor={theme.colors.textPlaceholder}
             />
             <Touchable
               onPress={() => {
                 const handler = async () => {
                   try {
+                    const consumerDetailsJson =
+                      await CISAPPApi.consumerDetailsPOST(Constants, {
+                        action: buildConsumerString(consId),
+                      });
+                    buildConsumerString(consId);
+                    const consumerId = (
+                      consumerDetailsJson && consumerDetailsJson[0]
+                    )?.data?.consumerId;
+                    setConsumerId(consumerId);
                     const gettickerdata = await CISAPPApi.getticketdeatilsPOST(
                       Constants,
-                      { consId: consId }
+                      { consId: consumerId }
                     );
                     console.log(gettickerdata);
                     setTableData(
@@ -537,7 +552,7 @@ const CheckTicketStatusforGuestScreen = props => {
                         <>
                           {/* List View Frame */}
                           <>
-                            {!(listData?.RequestStatus === undefined) ? null : (
+                            {!(listData?.RequestStatus === 'Pending') ? null : (
                               <View
                                 style={StyleSheet.applyWidth(
                                   {

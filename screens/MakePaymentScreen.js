@@ -7,6 +7,7 @@ import {
   AccordionGroup,
   Button,
   Icon,
+  NumberInput,
   RadioButton,
   RadioButtonGroup,
   RadioButtonRow,
@@ -34,6 +35,8 @@ const MakePaymentScreen = props => {
   const { navigation } = props;
 
   const [numberInputValue, setNumberInputValue] = React.useState('');
+  const [numberInputValue2, setNumberInputValue2] = React.useState('');
+  const [numberInputValue3, setNumberInputValue3] = React.useState('');
   const [radioButtonGroup2Value, setRadioButtonGroup2Value] =
     React.useState('');
   const [radioButtonGroupValue, setRadioButtonGroupValue] = React.useState('');
@@ -727,27 +730,27 @@ const MakePaymentScreen = props => {
                       dimensions.width
                     )}
                   >
-                    <TextInput
-                      onChangeText={newTextInputValue => {
+                    <NumberInput
+                      onChangeText={newNumberInputValue => {
+                        const numberInputValue = newNumberInputValue;
                         try {
-                          setTextInputValue(newTextInputValue);
+                          setNumberInputValue3(newNumberInputValue);
                         } catch (err) {
                           console.error(err);
                         }
                       }}
                       style={StyleSheet.applyWidth(
-                        {
-                          borderRadius: 8,
-                          fontFamily: 'Roboto_400Regular',
-                          paddingBottom: 8,
-                          paddingLeft: 8,
-                          paddingRight: 8,
-                          paddingTop: 8,
-                        },
+                        StyleSheet.compose(
+                          GlobalStyles.NumberInputStyles(theme)['Number Input'],
+                          { borderRadius: 8, fontFamily: 'Roboto_400Regular' }
+                        ),
                         dimensions.width
                       )}
-                      placeholder={'1234567890'}
+                      value={numberInputValue3}
+                      changeTextDelay={500}
                       editable={true}
+                      maxLength={10}
+                      placeholder={'1234567890'}
                       placeholderTextColor={theme.colors['Custom Color_20']}
                     />
                   </View>

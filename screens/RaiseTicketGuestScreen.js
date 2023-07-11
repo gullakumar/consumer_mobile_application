@@ -94,6 +94,7 @@ line two` ) and will not work with special characters inside of quotes ( example
     handler();
   }, [isFocused]);
 
+  const [comid, setComid] = React.useState('');
   const [consumerNo, setConsumerNo] = React.useState('');
   const [pickerValue, setPickerValue] = React.useState('');
   const [pickerValue2, setPickerValue2] = React.useState('');
@@ -103,6 +104,7 @@ line two` ) and will not work with special characters inside of quotes ( example
   const [requestDetails1, setRequestDetails1] = React.useState('');
   const [requestnatureId, setRequestnatureId] = React.useState('');
   const [requestnatureId1, setRequestnatureId1] = React.useState('');
+  const [savid, setSavid] = React.useState('');
   const [scNo, setScNo] = React.useState('');
   const [searchBarValue, setSearchBarValue] = React.useState('');
   const [selectedTab, setSelectedTab] = React.useState('faq');
@@ -445,6 +447,13 @@ line two` ) and will not work with special characters inside of quotes ( example
                 )}
               >
                 <Picker
+                  onValueChange={newPickerValue => {
+                    try {
+                      setSavid(newPickerValue);
+                    } catch (err) {
+                      console.error(err);
+                    }
+                  }}
                   style={StyleSheet.applyWidth(
                     { height: 50 },
                     dimensions.width
@@ -505,6 +514,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                       const servicerequestsave =
                         await CISAPPApi.serviceRequestSavePOST(Constants, {
                           requestDetails: requestDetails,
+                          requestnatureId: savid,
                           scNo: scNo,
                         });
                       console.log(servicerequestsave);
@@ -663,7 +673,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                   onValueChange={newPickerValue => {
                     const pickerValue = newPickerValue;
                     try {
-                      setPickerValue(pickerValue);
+                      setComid(newPickerValue);
                     } catch (err) {
                       console.error(err);
                     }
@@ -723,7 +733,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                         {
                           consumerNo: consumerNo,
                           requestDetails1: requestDetails1,
-                          requestnatureId1: requestnatureId1,
+                          requestnatureId1: comid,
                         }
                       );
                       console.log(complaintsave);

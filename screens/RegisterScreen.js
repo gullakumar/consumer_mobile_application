@@ -360,6 +360,8 @@ const RegisterScreen = props => {
                 placeholder={'Mobile number'}
                 editable={true}
                 placeholderTextColor={theme.colors['Custom Color_20']}
+                maxLength={10}
+                enablesReturnKeyAutomatically={false}
               />
             </View>
           </View>

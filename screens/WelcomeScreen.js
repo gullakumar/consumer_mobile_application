@@ -579,7 +579,7 @@ const WelcomeScreen = props => {
                                     style={StyleSheet.applyWidth(
                                       {
                                         alignSelf: 'stretch',
-                                        fontFamily: 'Roboto_700Bold',
+                                        fontFamily: 'Roboto_400Regular',
                                         fontSize: 13,
                                         paddingBottom: 2,
                                         paddingLeft: 5,

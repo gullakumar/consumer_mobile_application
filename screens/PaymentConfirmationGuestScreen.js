@@ -5,7 +5,7 @@ import * as StyleSheet from '../utils/StyleSheet';
 import { Button, ScreenContainer, withTheme } from '@draftbit/ui';
 import { Image, Text, View, useWindowDimensions } from 'react-native';
 
-const PaymentConfirmationScreen = props => {
+const PaymentConfirmationGuestScreen = props => {
   const dimensions = useWindowDimensions();
 
   const { theme } = props;
@@ -133,7 +133,7 @@ const PaymentConfirmationScreen = props => {
           <Button
             onPress={() => {
               try {
-                navigation.navigate('DashboardScreen');
+                navigation.navigate('WelcomeScreen');
               } catch (err) {
                 console.error(err);
               }
@@ -157,7 +157,7 @@ const PaymentConfirmationScreen = props => {
           <Button
             onPress={() => {
               try {
-                navigation.navigate('ReceiptScreen', {
+                navigation.navigate('ReceiptGuestScreen', {
                   name: props.route?.params?.name ?? '',
                   Scno: props.route?.params?.Scno ?? '',
                 });
@@ -184,4 +184,4 @@ const PaymentConfirmationScreen = props => {
   );
 };
 
-export default withTheme(PaymentConfirmationScreen);
+export default withTheme(PaymentConfirmationGuestScreen);

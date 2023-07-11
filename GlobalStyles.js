@@ -372,12 +372,6 @@ export const LinkStyles = theme =>
 export const NumberInputStyles = theme =>
   StyleSheet.create({
     'Number Input': {
-      borderBottomWidth: 1,
-      borderColor: theme.colors.divider,
-      borderLeftWidth: 1,
-      borderRadius: 8,
-      borderRightWidth: 1,
-      borderTopWidth: 1,
       paddingBottom: 8,
       paddingLeft: 8,
       paddingRight: 8,

@@ -140,28 +140,43 @@ const AdvancePayemntScreen = props => {
                 dimensions.width
               )}
             >
-              <TextInput
+              {/* Service1 */}
+              <View
                 style={StyleSheet.applyWidth(
-                  {
-                    backgroundColor: theme.colors.strongInverse,
-                    borderBottomWidth: 1,
-                    borderColor: theme.colors.viewBG,
-                    borderLeftWidth: 1,
-                    borderRadius: 12,
-                    borderRightWidth: 1,
-                    borderTopWidth: 1,
-                    color: theme.colors.strong,
-                    fontFamily: 'Roboto_400Regular',
-                    height: 50,
-                    paddingLeft: 16,
-                    width: '100%',
-                  },
+                  GlobalStyles.ViewStyles(theme)['uname'],
                   dimensions.width
                 )}
-                placeholder={'Select service connection number'}
-                placeholderTextColor={theme.colors.textPlaceholder}
-                defaultValue={props.route?.params?.serviceConNo ?? ''}
-              />
+              >
+                <Icon
+                  size={24}
+                  color={theme.colors['Custom Color_20']}
+                  name={'MaterialIcons/house'}
+                />
+                <View
+                  style={StyleSheet.applyWidth(
+                    { flex: 1, paddingLeft: 10, paddingRight: 10 },
+                    dimensions.width
+                  )}
+                >
+                  <TextInput
+                    style={StyleSheet.applyWidth(
+                      {
+                        borderRadius: 8,
+                        fontFamily: 'Roboto_400Regular',
+                        paddingBottom: 8,
+                        paddingLeft: 8,
+                        paddingRight: 8,
+                        paddingTop: 8,
+                      },
+                      dimensions.width
+                    )}
+                    placeholder={'Service Connection No'}
+                    editable={true}
+                    placeholderTextColor={theme.colors['Custom Color_20']}
+                    defaultValue={props.route?.params?.serviceConNo ?? ''}
+                  />
+                </View>
+              </View>
             </View>
 
             <View

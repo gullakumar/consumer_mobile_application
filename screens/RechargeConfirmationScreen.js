@@ -104,7 +104,7 @@ const RechargeConfirmationScreen = props => {
               dimensions.width
             )}
           >
-            {'M M Vara'}
+            {props.route?.params?.Name ?? ''}
           </Text>
           {/* Service number */}
           <Text
@@ -122,7 +122,7 @@ const RechargeConfirmationScreen = props => {
               dimensions.width
             )}
           >
-            {'113245687568'}
+            {props.route?.params?.serviceConnectionNo ?? ''}
           </Text>
         </View>
         {/* Actions */}

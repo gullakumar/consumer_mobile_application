@@ -135,43 +135,54 @@ const RechargeScreen = props => {
             <View
               style={StyleSheet.applyWidth(
                 StyleSheet.compose(GlobalStyles.ViewStyles(theme)['category'], {
+                  borderBottomWidth: 1,
+                  borderColor: theme.colors['Divider'],
+                  borderLeftWidth: 1,
+                  borderRadius: 16,
+                  borderRightWidth: 1,
+                  borderTopWidth: 1,
                   marginTop: 20,
                 }),
                 dimensions.width
               )}
             >
-              <TextInput
+              {/* Service1 */}
+              <View
                 style={StyleSheet.applyWidth(
-                  {
-                    backgroundColor: theme.colors.strongInverse,
-                    borderBottomWidth: 1,
-                    borderColor: theme.colors.viewBG,
-                    borderLeftWidth: 1,
-                    borderRadius: 12,
-                    borderRightWidth: 1,
-                    borderTopWidth: 1,
-                    color: theme.colors.strong,
-                    fontFamily: 'Roboto_400Regular',
-                    height: 50,
-                    paddingLeft: 16,
-                    width: '100%',
-                  },
+                  GlobalStyles.ViewStyles(theme)['uname'],
                   dimensions.width
                 )}
-                placeholder={'Select service connection number'}
-                placeholderTextColor={theme.colors.textPlaceholder}
-              />
-              <Touchable>
+              >
                 <Icon
+                  size={24}
+                  color={theme.colors['Custom Color_20']}
+                  name={'MaterialIcons/house'}
+                />
+                <View
                   style={StyleSheet.applyWidth(
-                    { marginLeft: -35 },
+                    { flex: 1, paddingLeft: 10, paddingRight: 10 },
                     dimensions.width
                   )}
-                  size={24}
-                  name={'Entypo/chevron-down'}
-                  color={theme.colors.textPlaceholder}
-                />
-              </Touchable>
+                >
+                  <TextInput
+                    style={StyleSheet.applyWidth(
+                      {
+                        borderRadius: 8,
+                        fontFamily: 'Roboto_400Regular',
+                        paddingBottom: 8,
+                        paddingLeft: 8,
+                        paddingRight: 8,
+                        paddingTop: 8,
+                      },
+                      dimensions.width
+                    )}
+                    placeholder={'Service Connection No'}
+                    editable={true}
+                    placeholderTextColor={theme.colors['Custom Color_20']}
+                    defaultValue={props.route?.params?.ServiceConNo ?? ''}
+                  />
+                </View>
+              </View>
             </View>
 
             <View
@@ -483,7 +494,10 @@ const RechargeScreen = props => {
         <Button
           onPress={() => {
             try {
-              navigation.navigate('RechargeConfirmationScreen');
+              navigation.navigate('RechargeConfirmationScreen', {
+                Name: props.route?.params?.Name ?? '',
+                serviceConnectionNo: props.route?.params?.ServiceConNo ?? '',
+              });
             } catch (err) {
               console.error(err);
             }
@@ -499,7 +513,7 @@ const RechargeScreen = props => {
             },
             dimensions.width
           )}
-          title={'Make Payemnt'}
+          title={'Make Payment'}
         />
       </ScrollView>
     </ScreenContainer>

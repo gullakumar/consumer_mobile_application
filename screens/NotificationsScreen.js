@@ -630,7 +630,6 @@ const NotificationsScreen = props => {
                             dimensions.width
                           )}
                         >
-                          <Icon size={24} name={'Foundation/page-export-pdf'} />
                           <View
                             style={StyleSheet.applyWidth(
                               { flex: 1, paddingLeft: 16 },
@@ -690,12 +689,7 @@ const NotificationsScreen = props => {
                                 };
                                 handler();
                               }}
-                            >
-                              <Icon
-                                size={24}
-                                name={'SimpleLineIcons/arrow-down-circle'}
-                              />
-                            </Touchable>
+                            ></Touchable>
                           </View>
                         </View>
                       </>

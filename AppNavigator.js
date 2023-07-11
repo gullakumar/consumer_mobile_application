@@ -32,12 +32,14 @@ import MakePaymentScreen from './screens/MakePaymentScreen';
 import ManageAccountScreen from './screens/ManageAccountScreen';
 import NotificationsScreen from './screens/NotificationsScreen';
 import OutageScheduleScreen from './screens/OutageScheduleScreen';
+import PaymentConfirmationGuestScreen from './screens/PaymentConfirmationGuestScreen';
 import PaymentConfirmationScreen from './screens/PaymentConfirmationScreen';
 import PaymentsScreen from './screens/PaymentsScreen';
 import ProfileOptionsScreen from './screens/ProfileOptionsScreen';
 import QuickPayScreen from './screens/QuickPayScreen';
 import RaiseTicketGuestScreen from './screens/RaiseTicketGuestScreen';
 import RaiseTicketScreen from './screens/RaiseTicketScreen';
+import ReceiptGuestScreen from './screens/ReceiptGuestScreen';
 import ReceiptScreen from './screens/ReceiptScreen';
 import RechargeConfirmationScreen from './screens/RechargeConfirmationScreen';
 import RechargeScreen from './screens/RechargeScreen';
@@ -397,6 +399,20 @@ export default function RootAppNavigator() {
           component={MakePaymentGuestScreen}
           options={{
             title: 'Make Payment Guest',
+          }}
+        />
+        <Stack.Screen
+          name="PaymentConfirmationGuestScreen"
+          component={PaymentConfirmationGuestScreen}
+          options={{
+            title: 'Payment Confirmation Guest',
+          }}
+        />
+        <Stack.Screen
+          name="ReceiptGuestScreen"
+          component={ReceiptGuestScreen}
+          options={{
+            title: 'Receipt Guest',
           }}
         />
       </Stack.Navigator>

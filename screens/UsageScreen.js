@@ -19,6 +19,7 @@ import {
   Touchable,
   withTheme,
 } from '@draftbit/ui';
+import { useIsFocused } from '@react-navigation/native';
 import { FlashList } from '@shopify/flash-list';
 import { FlatList, Image, Text, View, useWindowDimensions } from 'react-native';
 import { Fetch } from 'react-request';
@@ -27,10 +28,17 @@ const UsageScreen = props => {
   const dimensions = useWindowDimensions();
   const Constants = GlobalVariables.useValues();
   const Variables = Constants;
+  const setGlobalVariableValue = GlobalVariables.useSetValue();
 
-  const builBillingString = Scno => {
+  const buildBillingString = Scno => {
     console.log(`billing/rest/getBillDataService/${Scno}`);
     return `billing/rest/getBillDataService/${Scno}`;
+  };
+
+  const manageAccountFun = ManageAccountDetails => {
+    return ManageAccountDetails.map(team => {
+      return { label: team.new_added_account, value: team.new_added_account };
+    });
   };
 
   const buildConsumerString = Scno => {
@@ -38,8 +46,69 @@ const UsageScreen = props => {
     return `billing/rest/AccountInfo/${Scno}`;
   };
 
+  const convertDateTimeToDate = dateTime => {
+    const date = dateTime.split(' ');
+    console.log('date' + date);
+
+    const str = date[0];
+
+    return str;
+  };
+
   const { theme } = props;
   const { navigation } = props;
+
+  const isFocused = useIsFocused();
+  React.useEffect(() => {
+    const handler = async () => {
+      try {
+        if (!isFocused) {
+          return;
+        }
+        const consumerDetailsJson = await CISAPPApi.consumerDetailsPOST(
+          Constants,
+          { action: Constants['name'] }
+        );
+        console.log(consumerDetailsJson);
+        buildConsumerString(Constants['name']);
+        const prepaidFlag = (consumerDetailsJson && consumerDetailsJson[0])
+          ?.data?.prepaidFlag;
+        setPrepaidFlag(prepaidFlag);
+        setServiceConNumber(Constants['name']);
+        console.log(prepaidFlag);
+        const meterNo = (consumerDetailsJson && consumerDetailsJson[0])?.data
+          ?.meterNumber;
+        setMeterNumber(meterNo);
+        console.log(meterNo);
+        const BillingHistoryJson = await CISAPPApi.billingHistoryPOST(
+          Constants,
+          { action: buildBillingString(Constants['name']) }
+        );
+        console.log(BillingHistoryJson);
+        buildBillingString(Constants['name']);
+
+        const valueFZLBTgGb =
+          BillingHistoryJson && BillingHistoryJson[0].data.BillDataJson;
+        setBillingHistoryScreen(valueFZLBTgGb);
+        const billHistory = valueFZLBTgGb;
+        const ManageAccountDetails = await CISAPPApi.manageAccountsPOST(
+          Constants,
+          { accountNumber: Constants['name'] }
+        );
+        console.log(ManageAccountDetails);
+        const result = setGlobalVariableValue({
+          key: 'manageaccount_picker',
+          value: manageAccountFun(
+            ManageAccountDetails && ManageAccountDetails[0].data[0].data
+          ),
+        });
+        console.log(result);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    handler();
+  }, [isFocused]);
 
   const [ShowNav, setShowNav] = React.useState(false);
   const [billingHistoryScreen, setBillingHistoryScreen] = React.useState({});
@@ -638,6 +707,7 @@ const UsageScreen = props => {
                   const handler = async () => {
                     const pickerValue = newPickerValue;
                     try {
+                      setServiceConNumber(newPickerValue);
                       const consumerDetailsJson =
                         await CISAPPApi.consumerDetailsPOST(Constants, {
                           action: buildConsumerString(newPickerValue),
@@ -656,10 +726,10 @@ const UsageScreen = props => {
                       console.log(meterNo);
                       const BillingHistoryJson =
                         await CISAPPApi.billingHistoryPOST(Constants, {
-                          action: builBillingString(newPickerValue),
+                          action: buildBillingString(newPickerValue),
                         });
                       console.log(BillingHistoryJson);
-                      builBillingString(newPickerValue);
+                      buildBillingString(undefined);
 
                       const valued0YkrErY =
                         BillingHistoryJson &&
@@ -681,14 +751,14 @@ const UsageScreen = props => {
                   },
                   dimensions.width
                 )}
-                options={Constants['serviceConNo']}
-                placeholder={'Select an option'}
+                options={Constants['manageaccount_picker']}
                 leftIconMode={'inset'}
                 type={'solid'}
                 iconSize={24}
                 autoDismissKeyboard={true}
                 rightIconName={'Feather/chevron-down'}
-                value={pickerValue}
+                placeholder={' '}
+                defaultValue={Constants['name']}
               />
             </View>
 
@@ -1098,7 +1168,7 @@ const UsageScreen = props => {
                     dimensions.width
                   )}
                 >
-                  {/* Month */}
+                  {/* Date */}
                   <View
                     style={StyleSheet.applyWidth(
                       { borderRightWidth: 1, flex: 1 },
@@ -1127,7 +1197,7 @@ const UsageScreen = props => {
                           dimensions.width
                         )}
                       >
-                        {'Month - Year'}
+                        {'Date'}
                       </Text>
                     </View>
                   </View>
@@ -1218,7 +1288,7 @@ const UsageScreen = props => {
                             dimensions.width
                           )}
                         >
-                          {/* Month */}
+                          {/* Date */}
                           <View
                             style={StyleSheet.applyWidth(
                               { borderRightWidth: 1, flex: 1 },
@@ -1242,9 +1312,13 @@ const UsageScreen = props => {
                                   dimensions.width
                                 )}
                               >
-                                {listData?.BillMonth}
-                                {' - '}
-                                {listData?.BillYear}
+                                {(() => {
+                                  const e = convertDateTimeToDate(
+                                    listData?.BillIssueDate
+                                  );
+                                  console.log(e);
+                                  return e;
+                                })()}
                               </Text>
                             </View>
                           </View>
@@ -1300,6 +1374,7 @@ const UsageScreen = props => {
                                   dimensions.width
                                 )}
                               >
+                                {'₹'}
                                 {listData?.BillAmount}
                               </Text>
                             </View>
