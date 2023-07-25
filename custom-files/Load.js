@@ -2,29 +2,28 @@ import React from 'react';
 import { View } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 
-export function LineChartComponent2() {
+export function LineChartComponent2({ loadpatterndeatils }) {
+  let newData = [];
+  let newBillDates = [];
+
+  if (loadpatterndeatils.length) {
+    console.log('details' + loadpatterndeatils.length);
+    // console.log("loadpatterndeatils"+loadpatterndeatils.length);
+
+    newData = loadpatterndeatils.map(item => item.date);
+
+    newBillDates = loadpatterndeatils.map(item => item.kVaImp);
+  }
+  console.log('from custom code', loadpatterndeatils);
   const data = {
-    labels: [
-      '10-Mar',
-      '11-Mar',
-      '12-Mar',
-      '13-Mar',
-      '14-Mar',
-      '15-Mar',
-      '16-Mar',
-    ],
+    //lables: billingHistoryScreen.BillIssueDate,
+    labels: newData,
+    //labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
     datasets: [
       {
-        data: [20, 45, 28, 80, 99, 43],
+        data: newBillDates,
+        //  data: [20, 45, 28, 80, 99, 43],
         color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
-      },
-      {
-        data: [50, 30, 90, 41, 86, 24],
-        color: (opacity = 1) => `rgba(255, 0, 0, ${opacity})`,
-      },
-      {
-        data: [60, 67, 42, 50, 77, 60],
-        color: (opacity = 1) => `rgba(0, 128, 0, ${opacity})`,
       },
     ],
   };

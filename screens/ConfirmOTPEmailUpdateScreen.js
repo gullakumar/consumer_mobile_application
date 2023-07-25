@@ -16,7 +16,7 @@ import {
 } from '@draftbit/ui';
 import { Text, View, useWindowDimensions } from 'react-native';
 
-const ConfirmOTPAddTicketprocessScreen = props => {
+const ConfirmOTPEmailUpdateScreen = props => {
   const dimensions = useWindowDimensions();
   const Constants = GlobalVariables.useValues();
   const Variables = Constants;
@@ -85,6 +85,11 @@ const ConfirmOTPAddTicketprocessScreen = props => {
       msg30: 'Invalid Password',
       msg31: 'OTP Limit Exceeded, Please Try Again!',
       msg32: "Account Dosen't Have SmartMeter",
+      msg33: 'Group Created',
+      msg34: 'Group Creation Error',
+      msg35: 'Added Group is Valid',
+      msg36: 'Account Added Successfully',
+      msg37: 'Add Account Error',
     };
 
     return scheme[msg];
@@ -156,7 +161,7 @@ const ConfirmOTPAddTicketprocessScreen = props => {
             dimensions.width
           )}
         >
-          {'Confirm OTP Add Ticket'}
+          {'Confirm OTP'}
         </Text>
       </View>
       {/* OTP Mobile and email */}
@@ -388,10 +393,38 @@ const ConfirmOTPAddTicketprocessScreen = props => {
                 const otpResult = createOTP();
                 console.log(otpResult);
                 const confirmotp = (
-                  await CISAPPApi.guestRaiseTicketAfterSendOTPPOSTStatusAndText(
-                    Constants,
-                    { otp: otpResult, transid: Constants['OTP_ACK_NUMBER'] }
-                  )
+                  await CISAPPApi.oTPEmailUpdatePOSTStatusAndText(Constants, {
+                    accno: (() => {
+                      const e = Constants['name'];
+                      console.log(e);
+                      return e;
+                    })(),
+                    newEmail: (() => {
+                      const e = props.route?.params?.newEmail ?? '';
+                      console.log(e);
+                      return e;
+                    })(),
+                    oldEmail: (() => {
+                      const e = Constants['email'];
+                      console.log(e);
+                      return e;
+                    })(),
+                    otp: (() => {
+                      const e = otpResult;
+                      console.log(e);
+                      return e;
+                    })(),
+                    txid: (() => {
+                      const e = Constants['OTP_ACK_NUMBER'];
+                      console.log(e);
+                      return e;
+                    })(),
+                    userId: (() => {
+                      const e = Constants['userId'];
+                      console.log(e);
+                      return e;
+                    })(),
+                  })
                 )?.json;
                 const messionj = confirmotp?.[0].data?.error?.message;
                 console.log(messionj);
@@ -402,9 +435,7 @@ const ConfirmOTPAddTicketprocessScreen = props => {
                 if (messionj?.length) {
                   return;
                 }
-                navigation.navigate('RaiseTicketGuestScreen', {
-                  userEnteredOTP: otpResult,
-                });
+                navigation.navigate('ProfileOptionsScreen');
               } catch (err) {
                 console.error(err);
               }
@@ -427,4 +458,4 @@ const ConfirmOTPAddTicketprocessScreen = props => {
   );
 };
 
-export default withTheme(ConfirmOTPAddTicketprocessScreen);
+export default withTheme(ConfirmOTPEmailUpdateScreen);

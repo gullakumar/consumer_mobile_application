@@ -7,35 +7,24 @@ import {
 } from 'react-query';
 import useFetch from 'react-fetch-hook';
 import { useIsFocused } from '@react-navigation/native';
+import { handleResponse, isOkStatus } from '../utils/handleRestApiResponse';
 import usePrevious from '../utils/usePrevious';
 import * as GlobalVariables from '../config/GlobalVariableContext';
 
-export const newbillendpointPOSTStatusAndText = Constants =>
+export const newbillendpointPOSTStatusAndText = (
+  Constants,
+  _args,
+  handlers = {}
+) =>
   fetch(`http://fgeam.fluentgrid.com:8888/consumerapi/getAccountDetails`, {
     body: JSON.stringify({ accno: '1234343' }),
     headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
     method: 'POST',
-  }).then(async res => ({
-    status: res.status,
-    statusText: res.statusText,
-    text: await res.text(),
-  }));
+  }).then(res => handleResponse(res, handlers));
 
-export const newbillendpointPOST = Constants =>
-  newbillendpointPOSTStatusAndText(Constants).then(
-    ({ status, statusText, text }) => {
-      try {
-        return JSON.parse(text);
-      } catch (e) {
-        console.error(
-          [
-            'Failed to parse response text as JSON.',
-            `Error: ${e.message}`,
-            `Text: ${JSON.stringify(text)}`,
-          ].join('\n\n')
-        );
-      }
-    }
+export const newbillendpointPOST = (Constants, _args, handlers = {}) =>
+  newbillendpointPOSTStatusAndText(Constants, {}, handlers).then(res =>
+    !isOkStatus(res.status) ? Promise.reject(res) : res.json
   );
 
 export const useNewbillendpointPOST = () => {
@@ -59,6 +48,7 @@ export const useNewbillendpointPOST = () => {
 export const FetchNewbillendpointPOST = ({
   children,
   onData = () => {},
+  handlers = {},
   refetchInterval,
 }) => {
   const Constants = GlobalVariables.useValues();
@@ -96,10 +86,11 @@ export const FetchNewbillendpointPOST = ({
     }
   }, [error]);
   React.useEffect(() => {
-    if (data) {
-      onData(data);
+    const f = handlers.onData ?? onData;
+    if (data && f) {
+      f(data);
     }
-  }, [data]);
+  }, [data, onData, handlers]);
 
   return children({ loading, data, error, refetchNewbillendpoint: refetch });
 };

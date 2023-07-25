@@ -2,6 +2,7 @@ import React from 'react';
 import * as GlobalStyles from '../GlobalStyles.js';
 import * as CISAPPApi from '../apis/CISAPPApi.js';
 import * as GlobalVariables from '../config/GlobalVariableContext';
+import * as CustomCode from '../custom-files/CustomCode';
 import Breakpoints from '../utils/Breakpoints';
 import * as StyleSheet from '../utils/StyleSheet';
 import {
@@ -172,7 +173,7 @@ const AddTicketProcessGuestScreen = props => {
             alignItems: 'center',
             flexDirection: 'column',
             justifyContent: 'space-evenly',
-            marginTop: 50,
+            marginTop: 40,
             paddingLeft: 20,
             paddingRight: 20,
           },
@@ -188,8 +189,8 @@ const AddTicketProcessGuestScreen = props => {
         >
           <Icon
             size={24}
-            color={theme.colors['Custom Color_20']}
             name={'Ionicons/person'}
+            color={theme.colors['Medium']}
           />
           <View
             style={StyleSheet.applyWidth(
@@ -219,7 +220,7 @@ const AddTicketProcessGuestScreen = props => {
               value={serviceconnectionnumber}
               placeholder={'Enter service connection no'}
               editable={true}
-              placeholderTextColor={theme.colors['Custom Color_20']}
+              placeholderTextColor={theme.colors['Medium']}
             />
           </View>
         </View>
@@ -236,10 +237,12 @@ const AddTicketProcessGuestScreen = props => {
           onPress={() => {
             const handler = async () => {
               try {
-                const otpvalue = await CISAPPApi.guestRaiseTicketSendOTPPOST(
-                  Constants,
-                  { accno: serviceconnectionnumber }
-                );
+                const otpvalue = (
+                  await CISAPPApi.guestRaiseTicketSendOTPPOSTStatusAndText(
+                    Constants,
+                    { accno: serviceconnectionnumber }
+                  )
+                )?.json;
                 console.log(otpvalue);
                 const messagejson = otpvalue?.[0].data?.error?.message;
                 setGlobalVariableValue({
@@ -265,7 +268,10 @@ const AddTicketProcessGuestScreen = props => {
             };
             handler();
           }}
-          style={StyleSheet.applyWidth({ marginTop: 50 }, dimensions.width)}
+          style={StyleSheet.applyWidth(
+            { borderRadius: 14, fontSize: 16, marginTop: 35 },
+            dimensions.width
+          )}
           title={'Submit'}
         />
       </View>

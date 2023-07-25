@@ -2,6 +2,7 @@ import React from 'react';
 import * as GlobalStyles from '../GlobalStyles.js';
 import * as CISAPPApi from '../apis/CISAPPApi.js';
 import * as GlobalVariables from '../config/GlobalVariableContext';
+import * as CustomCode from '../custom-files/CustomCode';
 import Breakpoints from '../utils/Breakpoints';
 import * as StyleSheet from '../utils/StyleSheet';
 import openImagePickerUtil from '../utils/openImagePicker';
@@ -21,7 +22,18 @@ const FeedbackGuestScreen = props => {
   const dimensions = useWindowDimensions();
   const Constants = GlobalVariables.useValues();
   const Variables = Constants;
-  const setGlobalVariableValue = GlobalVariables.useSetValue();
+
+  const startTimer = () => {
+    const intervalId = setInterval(() => {
+      if (seconds) {
+        setSeconds(prev =>
+          prev > 0 ? prev - 1 : (setSeconds(0), clearInterval(intervalId))
+        );
+      }
+    }, 1000);
+
+    return seconds;
+  };
 
   const processErrorMessage = msg => {
     const scheme = {
@@ -62,6 +74,31 @@ const FeedbackGuestScreen = props => {
     return scheme[msg];
   };
 
+  const DisplayFun = display => {
+    /*const myTimeout = setTimeout(messageFun,10000);
+
+function messageFun() {
+var msg = null;
+msg = message;
+console.log("message"+msg);
+return msg;
+}*/
+
+    /*setDisplay(true);
+const delayPromise = new Promise(r => setTimeout(r, 2000)).then(() => {
+setDisplay(false); 
+props.navigation.navigate('Welcome'); 
+console.log("i came here"); 
+} )*/
+
+    setDisplay(false);
+    new Promise(r => setTimeout(r, 5000)).then(() => {
+      setDisplay(true);
+      //props.navigation.navigate('BlankCopyScreen');
+      console.log('i came here');
+    });
+  };
+
   const { theme } = props;
   const { navigation } = props;
 
@@ -69,12 +106,16 @@ const FeedbackGuestScreen = props => {
   const [Name, setName] = React.useState('');
   const [Response, setResponse] = React.useState('');
   const [Suggestion, setSuggestion] = React.useState('');
+  const [display, setDisplay] = React.useState(true);
+  const [feedBackMsg, setFeedBackMsg] = React.useState('');
   const [searchBarValue, setSearchBarValue] = React.useState('');
+  const [seconds, setSeconds] = React.useState(5);
   const [selectedTab, setSelectedTab] = React.useState('tab1');
   const [starRatingValue, setStarRatingValue] = React.useState(0);
   const [starRatingValue2, setStarRatingValue2] = React.useState(0);
   const [textAreaValue, setTextAreaValue] = React.useState('');
   const [textInputValue, setTextInputValue] = React.useState('');
+  const [timerResult, setTimerResult] = React.useState('');
 
   return (
     <ScreenContainer
@@ -148,15 +189,32 @@ const FeedbackGuestScreen = props => {
           dimensions.width
         )}
       >
-        {/* error message */}
+        {/* Feedback Msg */}
         <Text
           style={StyleSheet.applyWidth(
-            GlobalStyles.TextStyles(theme)['Text'],
+            StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+              alignSelf: 'center',
+              color: theme.colors['Custom Color_9'],
+              fontFamily: 'Roboto_400Regular',
+              textAlign: 'center',
+            }),
             dimensions.width
           )}
         >
-          {processErrorMessage(Constants['ERROR_MESSAGE'])}
+          {feedBackMsg}
         </Text>
+        <>
+          {!feedBackMsg?.length ? null : (
+            <Text
+              style={StyleSheet.applyWidth(
+                GlobalStyles.TextStyles(theme)['Text'],
+                dimensions.width
+              )}
+            >
+              {seconds}
+            </Text>
+          )}
+        </>
         {/* s1 */}
         <View
           style={StyleSheet.applyWidth(
@@ -169,8 +227,8 @@ const FeedbackGuestScreen = props => {
         >
           <Icon
             size={24}
-            color={theme.colors['Custom Color_20']}
             name={'MaterialIcons/house'}
+            color={theme.colors['Medium']}
           />
           <View
             style={StyleSheet.applyWidth(
@@ -200,7 +258,7 @@ const FeedbackGuestScreen = props => {
               value={Name}
               placeholder={'Enter service connection number'}
               editable={true}
-              placeholderTextColor={theme.colors['Custom Color_20']}
+              placeholderTextColor={theme.colors['Medium']}
             />
           </View>
         </View>
@@ -215,8 +273,8 @@ const FeedbackGuestScreen = props => {
           )}
         >
           <Icon
+            color={theme.colors['Medium']}
             size={24}
-            color={theme.colors['Custom Color_20']}
             name={'Entypo/email'}
           />
           <View
@@ -246,8 +304,8 @@ const FeedbackGuestScreen = props => {
               )}
               value={Email}
               placeholder={'Enter your email'}
+              placeholderTextColor={theme.colors['Medium']}
               editable={true}
-              placeholderTextColor={theme.colors['Custom Color_20']}
             />
           </View>
         </View>
@@ -262,8 +320,8 @@ const FeedbackGuestScreen = props => {
           )}
         >
           <Icon
+            color={theme.colors['Medium']}
             size={24}
-            color={theme.colors['Custom Color_20']}
             name={'MaterialIcons/feedback'}
           />
           <View
@@ -294,7 +352,7 @@ const FeedbackGuestScreen = props => {
               value={Suggestion}
               placeholder={'Suggestion'}
               editable={true}
-              placeholderTextColor={theme.colors['Custom Color_20']}
+              placeholderTextColor={theme.colors['Medium']}
             />
           </View>
         </View>
@@ -339,7 +397,7 @@ const FeedbackGuestScreen = props => {
             placeholder={'Please leave your feedback here...'}
             multiline={true}
             numberOfLines={4}
-            placeholderTextColor={theme.colors.textPlaceholder}
+            placeholderTextColor={theme.colors['Medium']}
           />
         </View>
         {/* Button Solid */}
@@ -347,22 +405,24 @@ const FeedbackGuestScreen = props => {
           onPress={() => {
             const handler = async () => {
               try {
-                const feedbackvalues = await CISAPPApi.feedbackPOST(Constants, {
-                  email: Email,
-                  name: Name,
-                  response: Response,
-                  suggestion: Suggestion,
-                });
+                setSeconds('');
+                const feedbackvalues = (
+                  await CISAPPApi.feedbackPOSTStatusAndText(Constants, {
+                    email: Email,
+                    name: Name,
+                    response: Response,
+                    suggestion: Suggestion,
+                  })
+                )?.json;
                 console.log(feedbackvalues);
-                const messagejson = feedbackvalues?.[0].data?.error?.message;
-                setGlobalVariableValue({
-                  key: 'ERROR_MESSAGE',
-                  value: messagejson,
-                });
-                if (messagejson?.length) {
-                  return;
+                const messageResult =
+                  feedbackvalues && feedbackvalues[0].data[0].msg;
+                setFeedBackMsg(messageResult);
+                const seconds = startTimer();
+                setSeconds(seconds);
+                if (seconds === 0) {
+                  navigation.navigate('WelcomeScreen');
                 }
-                navigation.navigate('WelcomeScreen');
               } catch (err) {
                 console.error(err);
               }
@@ -371,7 +431,9 @@ const FeedbackGuestScreen = props => {
           }}
           style={StyleSheet.applyWidth(
             {
+              borderRadius: 14,
               fontFamily: 'Roboto_400Regular',
+              fontSize: 16,
               marginTop: 30,
               paddingLeft: 30,
               paddingRight: 30,

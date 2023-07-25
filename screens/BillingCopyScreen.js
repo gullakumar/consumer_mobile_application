@@ -26,35 +26,11 @@ import { FlashList } from '@shopify/flash-list';
 import * as WebBrowser from 'expo-web-browser';
 import { FlatList, Image, Text, View, useWindowDimensions } from 'react-native';
 
-const BillingScreen = props => {
+const BillingCopyScreen = props => {
   const dimensions = useWindowDimensions();
   const Constants = GlobalVariables.useValues();
   const Variables = Constants;
   const setGlobalVariableValue = GlobalVariables.useSetValue();
-
-  const buildString = Scno => {
-    // Type the code for the body of your function or hook here.
-    // Functions can be triggered via Button/Touchable actions.
-    // Hooks are run per ReactJS rules.
-
-    /* String line breaks are accomplished with backticks ( example: `line one
-line two` ) and will not work with special characters inside of quotes ( example: "line one line two" ) */
-
-    console.log(`billing/rest/getBillDataWss/${Scno}`);
-    return `billing/rest/getBillDataWss/${Scno}`;
-  };
-
-  const buildConsumerString = Scno => {
-    // Type the code for the body of your function or hook here.
-    // Functions can be triggered via Button/Touchable actions.
-    // Hooks are run per ReactJS rules.
-
-    /* String line breaks are accomplished with backticks ( example: `line one
-line two` ) and will not work with special characters inside of quotes ( example: "line one line two" ) */
-
-    console.log(`billing/rest/AccountInfo/${Scno}`);
-    return `billing/rest/AccountInfo/${Scno}`;
-  };
 
   const manageAccountFun = ManageAccountDetails => {
     return ManageAccountDetails.map(team => {
@@ -90,6 +66,30 @@ line two` ) and will not work with special characters inside of quotes ( example
     return `/SPM/getAllSpmMonthlyBillDetailsTByAccountNoOrMeterNumber?accountNoOrMeterNumber=${meterNo}`;
   };
 
+  const buildString = Scno => {
+    // Type the code for the body of your function or hook here.
+    // Functions can be triggered via Button/Touchable actions.
+    // Hooks are run per ReactJS rules.
+
+    /* String line breaks are accomplished with backticks ( example: `line one
+line two` ) and will not work with special characters inside of quotes ( example: "line one line two" ) */
+
+    console.log(`billing/rest/getBillDataWss/${Scno}`);
+    return `billing/rest/getBillDataWss/${Scno}`;
+  };
+
+  const buildConsumerString = Scno => {
+    // Type the code for the body of your function or hook here.
+    // Functions can be triggered via Button/Touchable actions.
+    // Hooks are run per ReactJS rules.
+
+    /* String line breaks are accomplished with backticks ( example: `line one
+line two` ) and will not work with special characters inside of quotes ( example: "line one line two" ) */
+
+    console.log(`billing/rest/AccountInfo/${Scno}`);
+    return `billing/rest/AccountInfo/${Scno}`;
+  };
+
   const { theme } = props;
   const { navigation } = props;
 
@@ -117,7 +117,7 @@ line two` ) and will not work with special characters inside of quotes ( example
         console.log(meterNo);
         setMeterNumber(meterNo);
         const Billdetailsjson = await (async () => {
-          if (prepaidFlag === 'N') {
+          if (prepaidFlag === undefined) {
             return (
               await CISAPPApi.viewBillDetailsPOSTStatusAndText(Constants, {
                 action: buildString(Constants['name']),
@@ -128,10 +128,10 @@ line two` ) and will not work with special characters inside of quotes ( example
         console.log(Billdetailsjson);
         buildString(Constants['name']);
 
-        const valuexIxNMeaF =
+        const valuedNawvAHq =
           Billdetailsjson && Billdetailsjson[0].data.BillDataJson[0];
-        setViewBillDetails(valuexIxNMeaF);
-        const Billdetailslog = valuexIxNMeaF;
+        setViewBillDetails(valuedNawvAHq);
+        const Billdetailslog = valuedNawvAHq;
         const BillingHistoryJson = (
           await CISAPPApi.billingHistoryPOSTStatusAndText(Constants, {
             action: buildBillingString(Constants['name']),
@@ -140,12 +140,12 @@ line two` ) and will not work with special characters inside of quotes ( example
         buildBillingString(Constants['name']);
         console.log(BillingHistoryJson);
 
-        const valueyUz2DmB7 =
+        const valueOaQntvWh =
           BillingHistoryJson && BillingHistoryJson[0].data.BillDataJson;
-        setBillingHistoryScreen(valueyUz2DmB7);
-        const billHistory = valueyUz2DmB7;
+        setBillingHistoryScreen(valueOaQntvWh);
+        const billHistory = valueOaQntvWh;
         const prepaidJson = await (async () => {
-          if (prepaidFlag === 'Y') {
+          if (prepaidFlag === undefined) {
             return (
               await CISAPPApi.prepaidApiPOSTStatusAndText(Constants, {
                 mtrno: meterNo,
@@ -164,13 +164,16 @@ line two` ) and will not work with special characters inside of quotes ( example
           })
         )?.json;
         prepaidBillingString(meterNo);
-        const prepaidBillingHistoryresult =
-          prepaidBillingHistoryJson && prepaidBillingHistoryJson[0].data.data;
+        console.log(prepaidBillingHistoryJson);
 
-        const valueOnL0TEPo = prepaidBillingHistoryresult;
-        setPrepaidBillingHistory(valueOnL0TEPo);
-        const prepaidHistoryresult = valueOnL0TEPo;
-        console.log(prepaidBillingHistoryresult);
+        const valuebmEj4nYt =
+          prepaidBillingHistoryJson &&
+          prepaidBillingHistoryJson[0].data.data[0];
+        setPrepaidBillingHistory(valuebmEj4nYt);
+        const prepaidBillHistoryResult = valuebmEj4nYt;
+        console.log(prepaidBillHistoryResult);
+        const date = prepaidBillHistoryResult?.prstRdgDate;
+        console.log(date);
         const ManageAccountDetails = (
           await CISAPPApi.manageAccountsPOSTStatusAndText(Constants, {
             accountNumber: Constants['name'],
@@ -839,9 +842,9 @@ line two` ) and will not work with special characters inside of quotes ( example
               }}
             >
               <Icon
+                color={theme.colors['Community_Light_Black']}
                 size={24}
                 name={'Ionicons/person-circle-outline'}
-                color={theme.colors['Community_Light_Black']}
               />
             </Touchable>
           </View>
@@ -906,7 +909,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                       console.log(meterNo);
                       setMeterNumber(meterNo);
                       const Billdetailsjson = await (async () => {
-                        if (prepaidFlag === 'N') {
+                        if (prepaidFlag === undefined) {
                           return (
                             await CISAPPApi.viewBillDetailsPOSTStatusAndText(
                               Constants,
@@ -918,11 +921,11 @@ line two` ) and will not work with special characters inside of quotes ( example
                       console.log(Billdetailsjson);
                       buildString(newPickerValue);
 
-                      const value4uw27AOB =
+                      const valuegUgza4fT =
                         Billdetailsjson &&
                         Billdetailsjson[0].data.BillDataJson[0];
-                      setViewBillDetails(value4uw27AOB);
-                      const Billdetailslog = value4uw27AOB;
+                      setViewBillDetails(valuegUgza4fT);
+                      const Billdetailslog = valuegUgza4fT;
                       const BillingHistoryJson = (
                         await CISAPPApi.billingHistoryPOSTStatusAndText(
                           Constants,
@@ -932,13 +935,13 @@ line two` ) and will not work with special characters inside of quotes ( example
                       buildBillingString(newPickerValue);
                       console.log(BillingHistoryJson);
 
-                      const valueKQgEfMtz =
+                      const valueXOqFwJZB =
                         BillingHistoryJson &&
                         BillingHistoryJson[0].data.BillDataJson;
-                      setBillingHistoryScreen(valueKQgEfMtz);
-                      const billHistory = valueKQgEfMtz;
+                      setBillingHistoryScreen(valueXOqFwJZB);
+                      const billHistory = valueXOqFwJZB;
                       const prepaidJson = await (async () => {
-                        if (prepaidFlag === 'Y') {
+                        if (prepaidFlag === undefined) {
                           return (
                             await CISAPPApi.prepaidApiPOSTStatusAndText(
                               Constants,
@@ -955,16 +958,17 @@ line two` ) and will not work with special characters inside of quotes ( example
                       const prepaidBillingHistoryJson = (
                         await CISAPPApi.billingHistoryPrepaidPOSTStatusAndText(
                           Constants,
-                          { action: prepaidBillingString(meterNo) }
+                          { action: meterNo }
                         )
                       )?.json;
                       prepaidBillingString(meterNo);
                       console.log(prepaidBillingHistoryJson);
-                      const prepaidBillingHistoryResult =
+
+                      const valueeCLWUPTY =
                         prepaidBillingHistoryJson &&
-                        prepaidBillingHistoryJson[0].data.data;
-                      setPrepaidBillingHistory(prepaidBillingHistoryResult);
-                      console.log(prepaidBillingHistoryResult);
+                        prepaidBillingHistoryJson[0].data.data[0];
+                      setPrepaidBillingHistory(valueeCLWUPTY);
+                      const prepaidBillHistoryResult = valueeCLWUPTY;
                     } catch (err) {
                       console.error(err);
                     }
@@ -994,7 +998,7 @@ line two` ) and will not work with special characters inside of quotes ( example
             </View>
             {/* postpaid */}
             <>
-              {!(prepaidFlag === 'N') ? null : (
+              {!(prepaidFlag === undefined) ? null : (
                 <View
                   style={StyleSheet.applyWidth(
                     StyleSheet.compose(GlobalStyles.ViewStyles(theme)['card'], {
@@ -1143,7 +1147,7 @@ line two` ) and will not work with special characters inside of quotes ( example
             </>
             {/* prepaid */}
             <>
-              {!(prepaidFlag === 'Y') ? null : (
+              {!(prepaidFlag === undefined) ? null : (
                 <View
                   style={StyleSheet.applyWidth(
                     StyleSheet.compose(GlobalStyles.ViewStyles(theme)['card'], {
@@ -1186,12 +1190,542 @@ line two` ) and will not work with special characters inside of quotes ( example
                 </View>
               )}
             </>
+            {/* section header */}
             <>
-              {!(prepaidFlag === 'Y') ? null : (
+              {!(prepaidFlag === undefined) ? null : (
+                <View
+                  style={StyleSheet.applyWidth(
+                    StyleSheet.compose(
+                      GlobalStyles.ViewStyles(theme)['section header 2'],
+                      { justifyContent: 'center', paddingBottom: 12 }
+                    ),
+                    dimensions.width
+                  )}
+                >
+                  {/* Heading */}
+                  <Text
+                    style={StyleSheet.applyWidth(
+                      {
+                        alignSelf: 'center',
+                        color: theme.colors['ShopAppBlue'],
+                        fontFamily: 'Roboto_400Regular',
+                        fontSize: 16,
+                        textAlign: 'center',
+                      },
+                      dimensions.width
+                    )}
+                  >
+                    {'Billing History'}
+                  </Text>
+                </View>
+              )}
+            </>
+            {/* Tabs */}
+            <>
+              {!(prepaidFlag === undefined) ? null : (
+                <View
+                  style={StyleSheet.applyWidth(
+                    GlobalStyles.ViewStyles(theme)['Tabs'],
+                    dimensions.width
+                  )}
+                >
+                  {/* tab1 */}
+                  <View
+                    style={StyleSheet.applyWidth(
+                      {
+                        alignItems: 'center',
+                        flex: 1,
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                      },
+                      dimensions.width
+                    )}
+                  >
+                    {/* Dashboard */}
+                    <View
+                      style={StyleSheet.applyWidth(
+                        { flex: 1 },
+                        dimensions.width
+                      )}
+                    >
+                      {/* selected */}
+                      <>
+                        {!(selectedTab === undefined) ? null : (
+                          <Touchable>
+                            <View
+                              style={StyleSheet.applyWidth(
+                                {
+                                  alignItems: 'center',
+                                  borderBottomWidth: 3,
+                                  borderColor: theme.colors['Custom Color'],
+                                  height: 25,
+                                },
+                                dimensions.width
+                              )}
+                            >
+                              <Text
+                                style={StyleSheet.applyWidth(
+                                  {
+                                    color: theme.colors['Custom Color'],
+                                    fontFamily: 'Roboto_400Regular',
+                                    fontSize: 14,
+                                  },
+                                  dimensions.width
+                                )}
+                              >
+                                {'Chart'}
+                              </Text>
+                            </View>
+                          </Touchable>
+                        )}
+                      </>
+                      {/* unselected */}
+                      <>
+                        {!(selectedTab !== undefined) ? null : (
+                          <Touchable
+                            onPress={() => {
+                              try {
+                                setSelectedTab('Dashboard');
+                              } catch (err) {
+                                console.error(err);
+                              }
+                            }}
+                          >
+                            <View
+                              style={StyleSheet.applyWidth(
+                                {
+                                  alignItems: 'center',
+                                  borderBottomWidth: 2,
+                                  borderColor: theme.colors['Light'],
+                                  height: 25,
+                                },
+                                dimensions.width
+                              )}
+                            >
+                              <Text
+                                style={StyleSheet.applyWidth(
+                                  {
+                                    color: theme.colors['Light'],
+                                    fontFamily: 'Roboto_400Regular',
+                                    fontSize: 14,
+                                  },
+                                  dimensions.width
+                                )}
+                              >
+                                {'Chart'}
+                              </Text>
+                            </View>
+                          </Touchable>
+                        )}
+                      </>
+                    </View>
+                  </View>
+                  {/* tab2 */}
+                  <View
+                    style={StyleSheet.applyWidth(
+                      {
+                        alignItems: 'center',
+                        flex: 1,
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                      },
+                      dimensions.width
+                    )}
+                  >
+                    {/* Content */}
+                    <View
+                      style={StyleSheet.applyWidth(
+                        { flex: 1 },
+                        dimensions.width
+                      )}
+                    >
+                      {/* selected */}
+                      <>
+                        {!(selectedTab === 'content') ? null : (
+                          <Touchable>
+                            <View
+                              style={StyleSheet.applyWidth(
+                                {
+                                  alignItems: 'center',
+                                  borderBottomWidth: 3,
+                                  borderColor: theme.colors['Custom Color'],
+                                  height: 25,
+                                },
+                                dimensions.width
+                              )}
+                            >
+                              <Text
+                                style={StyleSheet.applyWidth(
+                                  {
+                                    color: theme.colors['Custom Color'],
+                                    fontFamily: 'Roboto_400Regular',
+                                    fontSize: 14,
+                                  },
+                                  dimensions.width
+                                )}
+                              >
+                                {'Table'}
+                              </Text>
+                            </View>
+                          </Touchable>
+                        )}
+                      </>
+                      {/* unselected */}
+                      <>
+                        {!(selectedTab !== 'content') ? null : (
+                          <Touchable
+                            onPress={() => {
+                              try {
+                                setSelectedTab('content');
+                              } catch (err) {
+                                console.error(err);
+                              }
+                            }}
+                          >
+                            <View
+                              style={StyleSheet.applyWidth(
+                                {
+                                  alignItems: 'center',
+                                  borderBottomWidth: 2,
+                                  borderColor: theme.colors['Light'],
+                                  height: 25,
+                                },
+                                dimensions.width
+                              )}
+                            >
+                              <Text
+                                style={StyleSheet.applyWidth(
+                                  {
+                                    color: theme.colors['Light'],
+                                    fontFamily: 'Roboto_400Regular',
+                                    fontSize: 14,
+                                  },
+                                  dimensions.width
+                                )}
+                              >
+                                {'Table'}
+                              </Text>
+                            </View>
+                          </Touchable>
+                        )}
+                      </>
+                    </View>
+                  </View>
+                </View>
+              )}
+            </>
+            {/* Dashboard */}
+            <>
+              {!(selectedTab === undefined) ? null : (
+                <View
+                  style={StyleSheet.applyWidth(
+                    GlobalStyles.ViewStyles(theme)['Dashboard'],
+                    dimensions.width
+                  )}
+                >
+                  <View
+                    style={StyleSheet.applyWidth(
+                      {
+                        alignItems: 'center',
+                        flex: 1,
+                        paddingTop: 50,
+                        width: '100%',
+                      },
+                      dimensions.width
+                    )}
+                  >
+                    {/* View 2 */}
+                    <>
+                      {!billingHistoryScreen?.length ? null : (
+                        <View>
+                          <>
+                            {!(prepaidFlag === undefined) ? null : (
+                              <Utils.CustomCodeErrorBoundary>
+                                <BillingHistory.LineChartComponent1
+                                  billingHistoryScreen={billingHistoryScreen}
+                                />
+                              </Utils.CustomCodeErrorBoundary>
+                            )}
+                          </>
+                        </View>
+                      )}
+                    </>
+                  </View>
+                </View>
+              )}
+            </>
+            {/* Details */}
+            <>
+              {!(selectedTab === undefined) ? null : (
+                <View
+                  style={StyleSheet.applyWidth(
+                    StyleSheet.compose(
+                      GlobalStyles.ViewStyles(theme)['Details'],
+                      {
+                        borderBottomWidth: 1,
+                        borderLeftWidth: 1,
+                        borderRightWidth: 1,
+                        borderTopWidth: 1,
+                        flex: 0,
+                      }
+                    ),
+                    dimensions.width
+                  )}
+                >
+                  {/* Bill Issue Date */}
+                  <View
+                    style={StyleSheet.applyWidth(
+                      { borderRightWidth: 1, flex: 1, marginRight: 1 },
+                      dimensions.width
+                    )}
+                  >
+                    <View
+                      style={StyleSheet.applyWidth(
+                        {
+                          backgroundColor: theme.colors.viewBG,
+                          height: 40,
+                          justifyContent: 'center',
+                        },
+                        dimensions.width
+                      )}
+                    >
+                      <Text
+                        style={StyleSheet.applyWidth(
+                          {
+                            color: theme.colors.strong,
+                            fontFamily: 'Roboto_700Bold',
+                            fontSize: 14,
+                            textAlign: 'center',
+                            textTransform: 'capitalize',
+                          },
+                          dimensions.width
+                        )}
+                      >
+                        {'Bill Issue Date'}
+                      </Text>
+                    </View>
+                  </View>
+                  {/* Amount */}
+                  <View
+                    style={StyleSheet.applyWidth(
+                      { borderRightWidth: 1, flex: 1, marginRight: 1 },
+                      dimensions.width
+                    )}
+                  >
+                    <View
+                      style={StyleSheet.applyWidth(
+                        {
+                          backgroundColor: theme.colors.viewBG,
+                          height: 40,
+                          justifyContent: 'center',
+                        },
+                        dimensions.width
+                      )}
+                    >
+                      <Text
+                        style={StyleSheet.applyWidth(
+                          {
+                            color: theme.colors.strong,
+                            fontFamily: 'Roboto_700Bold',
+                            fontSize: 14,
+                            textAlign: 'center',
+                            textTransform: 'capitalize',
+                          },
+                          dimensions.width
+                        )}
+                      >
+                        {'Amount'}
+                      </Text>
+                    </View>
+                  </View>
+                  {/* Download */}
+                  <View
+                    style={StyleSheet.applyWidth({ flex: 1 }, dimensions.width)}
+                  >
+                    <View
+                      style={StyleSheet.applyWidth(
+                        {
+                          backgroundColor: theme.colors.viewBG,
+                          height: 40,
+                          justifyContent: 'center',
+                        },
+                        dimensions.width
+                      )}
+                    >
+                      <Text
+                        style={StyleSheet.applyWidth(
+                          {
+                            color: theme.colors.strong,
+                            fontFamily: 'Roboto_700Bold',
+                            fontSize: 14,
+                            textAlign: 'center',
+                            textTransform: 'capitalize',
+                          },
+                          dimensions.width
+                        )}
+                      >
+                        {'Download'}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              )}
+            </>
+            <FlatList
+              renderItem={({ item }) => {
+                const listData = item;
+                return (
+                  <>
+                    {/* Details */}
+                    <>
+                      {!(selectedTab === undefined) ? null : (
+                        <View
+                          style={StyleSheet.applyWidth(
+                            StyleSheet.compose(
+                              GlobalStyles.ViewStyles(theme)['Details'],
+                              {
+                                borderBottomWidth: 1,
+                                borderLeftWidth: 1,
+                                borderRightWidth: 1,
+                              }
+                            ),
+                            dimensions.width
+                          )}
+                        >
+                          {/* Bill Issue Date */}
+                          <View
+                            style={StyleSheet.applyWidth(
+                              { borderRightWidth: 1, flex: 1 },
+                              dimensions.width
+                            )}
+                          >
+                            <View
+                              style={StyleSheet.applyWidth(
+                                { height: 40, justifyContent: 'center' },
+                                dimensions.width
+                              )}
+                            >
+                              <Text
+                                style={StyleSheet.applyWidth(
+                                  {
+                                    fontFamily: 'Roboto_400Regular',
+                                    fontSize: 14,
+                                    textAlign: 'center',
+                                    textTransform: 'capitalize',
+                                  },
+                                  dimensions.width
+                                )}
+                              >
+                                {(() => {
+                                  const e = convertDateTimeToDate(
+                                    listData?.BillIssueDate
+                                  );
+                                  console.log(e);
+                                  return e;
+                                })()}
+                              </Text>
+                            </View>
+                          </View>
+                          {/* Amount */}
+                          <View
+                            style={StyleSheet.applyWidth(
+                              {
+                                alignItems: 'stretch',
+                                borderRightWidth: 1,
+                                flex: 1,
+                                marginRight: 1,
+                              },
+                              dimensions.width
+                            )}
+                          >
+                            <View
+                              style={StyleSheet.applyWidth(
+                                {
+                                  alignItems: 'flex-end',
+                                  alignSelf: 'flex-end',
+                                  height: 40,
+                                  justifyContent: 'center',
+                                  padding: 12,
+                                },
+                                dimensions.width
+                              )}
+                            >
+                              <Text
+                                style={StyleSheet.applyWidth(
+                                  {
+                                    fontFamily: 'Roboto_400Regular',
+                                    fontSize: 14,
+                                    textAlign: 'right',
+                                    textTransform: 'capitalize',
+                                  },
+                                  dimensions.width
+                                )}
+                              >
+                                {'₹'}
+                                {listData?.BillAmount}
+                              </Text>
+                            </View>
+                          </View>
+                          {/* Download */}
+                          <View
+                            style={StyleSheet.applyWidth(
+                              { flex: 1, marginRight: 1 },
+                              dimensions.width
+                            )}
+                          >
+                            <View
+                              style={StyleSheet.applyWidth(
+                                {
+                                  alignSelf: 'center',
+                                  height: 40,
+                                  justifyContent: 'center',
+                                },
+                                dimensions.width
+                              )}
+                            >
+                              <Touchable
+                                onPress={() => {
+                                  const handler = async () => {
+                                    try {
+                                      await WebBrowser.openBrowserAsync(
+                                        `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.plugin.DynamicServiceReportGenerator/service?name=POSTPAID_BILL&month=${listData?.BillMonth}&year=${listData?.BillYear}&scno=${serviceConNumber}`
+                                      );
+                                    } catch (err) {
+                                      console.error(err);
+                                    }
+                                  };
+                                  handler();
+                                }}
+                              >
+                                <Icon
+                                  size={24}
+                                  name={'Feather/arrow-down-circle'}
+                                />
+                              </Touchable>
+                            </View>
+                          </View>
+                        </View>
+                      )}
+                    </>
+                  </>
+                );
+              }}
+              data={billingHistoryScreen}
+              listKey={'zMsMhJSI'}
+              keyExtractor={listData =>
+                listData?.id || listData?.uuid || JSON.stringify(listData)
+              }
+              numColumns={1}
+              onEndReachedThreshold={0.5}
+              showsHorizontalScrollIndicator={true}
+              showsVerticalScrollIndicator={true}
+            />
+            <>
+              {!(prepaidFlag === undefined) ? null : (
                 <View>
                   {/* Prepaid Section header */}
                   <>
-                    {!(prepaidFlag === 'Y') ? null : (
+                    {!(prepaidFlag === undefined) ? null : (
                       <View
                         style={StyleSheet.applyWidth(
                           StyleSheet.compose(
@@ -1221,7 +1755,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                   </>
                   {/* prepaidtabs */}
                   <>
-                    {!(prepaidFlag === 'Y') ? null : (
+                    {!(prepaidFlag === undefined) ? null : (
                       <View
                         style={StyleSheet.applyWidth(
                           {
@@ -1253,7 +1787,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                           >
                             {/* selected */}
                             <>
-                              {!(selectedTab2 === 'prepaidchart') ? null : (
+                              {!(selectedTab2 === undefined) ? null : (
                                 <Touchable>
                                   <View
                                     style={StyleSheet.applyWidth(
@@ -1289,7 +1823,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                             </>
                             {/* unselected */}
                             <>
-                              {!(selectedTab2 !== 'prepaidchart') ? null : (
+                              {!(selectedTab2 !== undefined) ? null : (
                                 <Touchable
                                   onPress={() => {
                                     try {
@@ -1353,7 +1887,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                           >
                             {/* selected */}
                             <>
-                              {!(selectedTab2 === 'prepaidtable') ? null : (
+                              {!(selectedTab2 === undefined) ? null : (
                                 <Touchable>
                                   <View
                                     style={StyleSheet.applyWidth(
@@ -1389,7 +1923,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                             </>
                             {/* unselected */}
                             <>
-                              {!(selectedTab2 !== 'prepaidtable') ? null : (
+                              {!(selectedTab2 !== undefined) ? null : (
                                 <Touchable
                                   onPress={() => {
                                     try {
@@ -1437,7 +1971,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                   </>
                   {/* prepaidchart */}
                   <>
-                    {!(selectedTab2 === 'prepaidchart') ? null : (
+                    {!(selectedTab2 === undefined) ? null : (
                       <View
                         style={StyleSheet.applyWidth(
                           StyleSheet.compose(
@@ -1464,7 +1998,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                               )}
                             >
                               <>
-                                {!(prepaidFlag === 'Y') ? null : (
+                                {!(prepaidFlag === undefined) ? null : (
                                   <Utils.CustomCodeErrorBoundary>
                                     <BillingHistory.LineChartComponent1
                                       prepaidBillingHistory={
@@ -1482,7 +2016,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                   </>
                   {/* prepaidtable */}
                   <>
-                    {!(selectedTab2 === 'prepaidtable') ? null : (
+                    {!(selectedTab2 === undefined) ? null : (
                       <View
                         style={StyleSheet.applyWidth(
                           StyleSheet.compose(
@@ -1605,14 +2139,14 @@ line two` ) and will not work with special characters inside of quotes ( example
                       </View>
                     )}
                   </>
-                  <FlatList
+                  <FlashList
                     renderItem={({ item }) => {
-                      const listData = item;
+                      const flashListData = item;
                       return (
                         <>
                           {/* prepaidtable */}
                           <>
-                            {!(selectedTab2 === 'prepaidtable') ? null : (
+                            {!(selectedTab2 === undefined) ? null : (
                               <View
                                 style={StyleSheet.applyWidth(
                                   {
@@ -1654,11 +2188,9 @@ line two` ) and will not work with special characters inside of quotes ( example
                                         dimensions.width
                                       )}
                                     >
-                                      {(() => {
-                                        const e = listData?.blissueDt;
-                                        console.log(e);
-                                        return e;
-                                      })()}
+                                      {convertDateTimeToDate(
+                                        flashListData?.prstRdgDate
+                                      )}
                                     </Text>
                                   </View>
                                 </View>
@@ -1701,11 +2233,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                                       )}
                                     >
                                       {'₹'}
-                                      {(() => {
-                                        const e = listData?.closingBalance;
-                                        console.log(e);
-                                        return e;
-                                      })()}
+                                      {flashListData?.closingBalance}
                                     </Text>
                                   </View>
                                 </View>
@@ -1754,554 +2282,13 @@ line two` ) and will not work with special characters inside of quotes ( example
                       );
                     }}
                     data={prepaidBillingHistory}
-                    listKey={'dD48TRyd'}
-                    keyExtractor={listData =>
-                      listData?.id || listData?.uuid || JSON.stringify(listData)
+                    listKey={'xFhEg248'}
+                    keyExtractor={flashListData =>
+                      flashListData?.id ||
+                      flashListData?.uuid ||
+                      JSON.stringify(flashListData)
                     }
-                    numColumns={1}
-                    onEndReachedThreshold={0.5}
-                    showsHorizontalScrollIndicator={true}
-                    showsVerticalScrollIndicator={true}
-                  />
-                </View>
-              )}
-            </>
-            {/* View 2 */}
-            <>
-              {!(prepaidFlag === 'N') ? null : (
-                <View>
-                  {/* section header */}
-                  <>
-                    {!(prepaidFlag === 'N') ? null : (
-                      <View
-                        style={StyleSheet.applyWidth(
-                          StyleSheet.compose(
-                            GlobalStyles.ViewStyles(theme)['section header 2'],
-                            { justifyContent: 'center', paddingBottom: 12 }
-                          ),
-                          dimensions.width
-                        )}
-                      >
-                        {/* Heading */}
-                        <Text
-                          style={StyleSheet.applyWidth(
-                            {
-                              alignSelf: 'center',
-                              color: theme.colors['ShopAppBlue'],
-                              fontFamily: 'Roboto_400Regular',
-                              fontSize: 16,
-                              textAlign: 'center',
-                            },
-                            dimensions.width
-                          )}
-                        >
-                          {'Billing History'}
-                        </Text>
-                      </View>
-                    )}
-                  </>
-                  {/* Tabs */}
-                  <>
-                    {!(prepaidFlag === 'N') ? null : (
-                      <View
-                        style={StyleSheet.applyWidth(
-                          GlobalStyles.ViewStyles(theme)['Tabs'],
-                          dimensions.width
-                        )}
-                      >
-                        {/* tab1 */}
-                        <View
-                          style={StyleSheet.applyWidth(
-                            {
-                              alignItems: 'center',
-                              flex: 1,
-                              flexDirection: 'row',
-                              justifyContent: 'space-between',
-                            },
-                            dimensions.width
-                          )}
-                        >
-                          {/* Dashboard */}
-                          <View
-                            style={StyleSheet.applyWidth(
-                              { flex: 1 },
-                              dimensions.width
-                            )}
-                          >
-                            {/* selected */}
-                            <>
-                              {!(selectedTab === 'Dashboard') ? null : (
-                                <Touchable>
-                                  <View
-                                    style={StyleSheet.applyWidth(
-                                      {
-                                        alignItems: 'center',
-                                        borderBottomWidth: 3,
-                                        borderColor:
-                                          theme.colors['Custom Color'],
-                                        height: 25,
-                                      },
-                                      dimensions.width
-                                    )}
-                                  >
-                                    <Text
-                                      style={StyleSheet.applyWidth(
-                                        {
-                                          color: theme.colors['Custom Color'],
-                                          fontFamily: 'Roboto_400Regular',
-                                          fontSize: 14,
-                                        },
-                                        dimensions.width
-                                      )}
-                                    >
-                                      {'Chart'}
-                                    </Text>
-                                  </View>
-                                </Touchable>
-                              )}
-                            </>
-                            {/* unselected */}
-                            <>
-                              {!(selectedTab !== 'Dashboard') ? null : (
-                                <Touchable
-                                  onPress={() => {
-                                    try {
-                                      setSelectedTab('Dashboard');
-                                    } catch (err) {
-                                      console.error(err);
-                                    }
-                                  }}
-                                >
-                                  <View
-                                    style={StyleSheet.applyWidth(
-                                      {
-                                        alignItems: 'center',
-                                        borderBottomWidth: 2,
-                                        borderColor: theme.colors['Light'],
-                                        height: 25,
-                                      },
-                                      dimensions.width
-                                    )}
-                                  >
-                                    <Text
-                                      style={StyleSheet.applyWidth(
-                                        {
-                                          color: theme.colors['Light'],
-                                          fontFamily: 'Roboto_400Regular',
-                                          fontSize: 14,
-                                        },
-                                        dimensions.width
-                                      )}
-                                    >
-                                      {'Chart'}
-                                    </Text>
-                                  </View>
-                                </Touchable>
-                              )}
-                            </>
-                          </View>
-                        </View>
-                        {/* tab2 */}
-                        <View
-                          style={StyleSheet.applyWidth(
-                            {
-                              alignItems: 'center',
-                              flex: 1,
-                              flexDirection: 'row',
-                              justifyContent: 'space-between',
-                            },
-                            dimensions.width
-                          )}
-                        >
-                          {/* Content */}
-                          <View
-                            style={StyleSheet.applyWidth(
-                              { flex: 1 },
-                              dimensions.width
-                            )}
-                          >
-                            {/* selected */}
-                            <>
-                              {!(selectedTab === 'content') ? null : (
-                                <Touchable>
-                                  <View
-                                    style={StyleSheet.applyWidth(
-                                      {
-                                        alignItems: 'center',
-                                        borderBottomWidth: 3,
-                                        borderColor:
-                                          theme.colors['Custom Color'],
-                                        height: 25,
-                                      },
-                                      dimensions.width
-                                    )}
-                                  >
-                                    <Text
-                                      style={StyleSheet.applyWidth(
-                                        {
-                                          color: theme.colors['Custom Color'],
-                                          fontFamily: 'Roboto_400Regular',
-                                          fontSize: 14,
-                                        },
-                                        dimensions.width
-                                      )}
-                                    >
-                                      {'Table'}
-                                    </Text>
-                                  </View>
-                                </Touchable>
-                              )}
-                            </>
-                            {/* unselected */}
-                            <>
-                              {!(selectedTab !== 'content') ? null : (
-                                <Touchable
-                                  onPress={() => {
-                                    try {
-                                      setSelectedTab('content');
-                                    } catch (err) {
-                                      console.error(err);
-                                    }
-                                  }}
-                                >
-                                  <View
-                                    style={StyleSheet.applyWidth(
-                                      {
-                                        alignItems: 'center',
-                                        borderBottomWidth: 2,
-                                        borderColor: theme.colors['Light'],
-                                        height: 25,
-                                      },
-                                      dimensions.width
-                                    )}
-                                  >
-                                    <Text
-                                      style={StyleSheet.applyWidth(
-                                        {
-                                          color: theme.colors['Light'],
-                                          fontFamily: 'Roboto_400Regular',
-                                          fontSize: 14,
-                                        },
-                                        dimensions.width
-                                      )}
-                                    >
-                                      {'Table'}
-                                    </Text>
-                                  </View>
-                                </Touchable>
-                              )}
-                            </>
-                          </View>
-                        </View>
-                      </View>
-                    )}
-                  </>
-                  {/* Dashboard */}
-                  <>
-                    {!(selectedTab === 'Dashboard') ? null : (
-                      <View
-                        style={StyleSheet.applyWidth(
-                          GlobalStyles.ViewStyles(theme)['Dashboard'],
-                          dimensions.width
-                        )}
-                      >
-                        <View
-                          style={StyleSheet.applyWidth(
-                            {
-                              alignItems: 'center',
-                              flex: 1,
-                              paddingTop: 50,
-                              width: '100%',
-                            },
-                            dimensions.width
-                          )}
-                        >
-                          {/* View 2 */}
-                          <>
-                            {!billingHistoryScreen?.length ? null : (
-                              <View>
-                                <>
-                                  {!(prepaidFlag === 'N') ? null : (
-                                    <Utils.CustomCodeErrorBoundary>
-                                      <BillingHistory.LineChartComponent1
-                                        billingHistoryScreen={
-                                          billingHistoryScreen
-                                        }
-                                      />
-                                    </Utils.CustomCodeErrorBoundary>
-                                  )}
-                                </>
-                              </View>
-                            )}
-                          </>
-                        </View>
-                      </View>
-                    )}
-                  </>
-                  {/* Details */}
-                  <>
-                    {!(selectedTab === 'content') ? null : (
-                      <View
-                        style={StyleSheet.applyWidth(
-                          StyleSheet.compose(
-                            GlobalStyles.ViewStyles(theme)['Details'],
-                            {
-                              borderBottomWidth: 1,
-                              borderLeftWidth: 1,
-                              borderRightWidth: 1,
-                              borderTopWidth: 1,
-                              flex: 0,
-                            }
-                          ),
-                          dimensions.width
-                        )}
-                      >
-                        {/* Bill Issue Date */}
-                        <View
-                          style={StyleSheet.applyWidth(
-                            { borderRightWidth: 1, flex: 1, marginRight: 1 },
-                            dimensions.width
-                          )}
-                        >
-                          <View
-                            style={StyleSheet.applyWidth(
-                              {
-                                backgroundColor: theme.colors.viewBG,
-                                height: 40,
-                                justifyContent: 'center',
-                              },
-                              dimensions.width
-                            )}
-                          >
-                            <Text
-                              style={StyleSheet.applyWidth(
-                                {
-                                  color: theme.colors.strong,
-                                  fontFamily: 'Roboto_700Bold',
-                                  fontSize: 14,
-                                  textAlign: 'center',
-                                  textTransform: 'capitalize',
-                                },
-                                dimensions.width
-                              )}
-                            >
-                              {'Bill Issue Date'}
-                            </Text>
-                          </View>
-                        </View>
-                        {/* Amount */}
-                        <View
-                          style={StyleSheet.applyWidth(
-                            { borderRightWidth: 1, flex: 1, marginRight: 1 },
-                            dimensions.width
-                          )}
-                        >
-                          <View
-                            style={StyleSheet.applyWidth(
-                              {
-                                backgroundColor: theme.colors.viewBG,
-                                height: 40,
-                                justifyContent: 'center',
-                              },
-                              dimensions.width
-                            )}
-                          >
-                            <Text
-                              style={StyleSheet.applyWidth(
-                                {
-                                  color: theme.colors.strong,
-                                  fontFamily: 'Roboto_700Bold',
-                                  fontSize: 14,
-                                  textAlign: 'center',
-                                  textTransform: 'capitalize',
-                                },
-                                dimensions.width
-                              )}
-                            >
-                              {'Amount'}
-                            </Text>
-                          </View>
-                        </View>
-                        {/* Download */}
-                        <View
-                          style={StyleSheet.applyWidth(
-                            { flex: 1 },
-                            dimensions.width
-                          )}
-                        >
-                          <View
-                            style={StyleSheet.applyWidth(
-                              {
-                                backgroundColor: theme.colors.viewBG,
-                                height: 40,
-                                justifyContent: 'center',
-                              },
-                              dimensions.width
-                            )}
-                          >
-                            <Text
-                              style={StyleSheet.applyWidth(
-                                {
-                                  color: theme.colors.strong,
-                                  fontFamily: 'Roboto_700Bold',
-                                  fontSize: 14,
-                                  textAlign: 'center',
-                                  textTransform: 'capitalize',
-                                },
-                                dimensions.width
-                              )}
-                            >
-                              {'Download'}
-                            </Text>
-                          </View>
-                        </View>
-                      </View>
-                    )}
-                  </>
-                  <FlatList
-                    renderItem={({ item }) => {
-                      const listData = item;
-                      return (
-                        <>
-                          {/* Details */}
-                          <>
-                            {!(selectedTab === 'content') ? null : (
-                              <View
-                                style={StyleSheet.applyWidth(
-                                  StyleSheet.compose(
-                                    GlobalStyles.ViewStyles(theme)['Details'],
-                                    {
-                                      borderBottomWidth: 1,
-                                      borderLeftWidth: 1,
-                                      borderRightWidth: 1,
-                                    }
-                                  ),
-                                  dimensions.width
-                                )}
-                              >
-                                {/* Bill Issue Date */}
-                                <View
-                                  style={StyleSheet.applyWidth(
-                                    { borderRightWidth: 1, flex: 1 },
-                                    dimensions.width
-                                  )}
-                                >
-                                  <View
-                                    style={StyleSheet.applyWidth(
-                                      { height: 40, justifyContent: 'center' },
-                                      dimensions.width
-                                    )}
-                                  >
-                                    <Text
-                                      style={StyleSheet.applyWidth(
-                                        {
-                                          fontFamily: 'Roboto_400Regular',
-                                          fontSize: 14,
-                                          textAlign: 'center',
-                                          textTransform: 'capitalize',
-                                        },
-                                        dimensions.width
-                                      )}
-                                    >
-                                      {(() => {
-                                        const e = convertDateTimeToDate(
-                                          listData?.BillIssueDate
-                                        );
-                                        console.log(e);
-                                        return e;
-                                      })()}
-                                    </Text>
-                                  </View>
-                                </View>
-                                {/* Amount */}
-                                <View
-                                  style={StyleSheet.applyWidth(
-                                    {
-                                      alignItems: 'stretch',
-                                      borderRightWidth: 1,
-                                      flex: 1,
-                                      marginRight: 1,
-                                    },
-                                    dimensions.width
-                                  )}
-                                >
-                                  <View
-                                    style={StyleSheet.applyWidth(
-                                      {
-                                        alignItems: 'flex-end',
-                                        alignSelf: 'flex-end',
-                                        height: 40,
-                                        justifyContent: 'center',
-                                        padding: 12,
-                                      },
-                                      dimensions.width
-                                    )}
-                                  >
-                                    <Text
-                                      style={StyleSheet.applyWidth(
-                                        {
-                                          fontFamily: 'Roboto_400Regular',
-                                          fontSize: 14,
-                                          textAlign: 'right',
-                                          textTransform: 'capitalize',
-                                        },
-                                        dimensions.width
-                                      )}
-                                    >
-                                      {'₹'}
-                                      {listData?.BillAmount}
-                                    </Text>
-                                  </View>
-                                </View>
-                                {/* Download */}
-                                <View
-                                  style={StyleSheet.applyWidth(
-                                    { flex: 1, marginRight: 1 },
-                                    dimensions.width
-                                  )}
-                                >
-                                  <View
-                                    style={StyleSheet.applyWidth(
-                                      {
-                                        alignSelf: 'center',
-                                        height: 40,
-                                        justifyContent: 'center',
-                                      },
-                                      dimensions.width
-                                    )}
-                                  >
-                                    <Touchable
-                                      onPress={() => {
-                                        const handler = async () => {
-                                          try {
-                                            await WebBrowser.openBrowserAsync(
-                                              `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.plugin.DynamicServiceReportGenerator/service?name=POSTPAID_BILL&month=${listData?.BillMonth}&year=${listData?.BillYear}&scno=${serviceConNumber}`
-                                            );
-                                          } catch (err) {
-                                            console.error(err);
-                                          }
-                                        };
-                                        handler();
-                                      }}
-                                    >
-                                      <Icon
-                                        size={24}
-                                        name={'Feather/arrow-down-circle'}
-                                      />
-                                    </Touchable>
-                                  </View>
-                                </View>
-                              </View>
-                            )}
-                          </>
-                        </>
-                      );
-                    }}
-                    data={billingHistoryScreen}
-                    listKey={'tRRSKtpT'}
-                    keyExtractor={listData =>
-                      listData?.id || listData?.uuid || JSON.stringify(listData)
-                    }
+                    estimatedItemSize={50}
                     numColumns={1}
                     onEndReachedThreshold={0.5}
                     showsHorizontalScrollIndicator={true}
@@ -2536,4 +2523,4 @@ line two` ) and will not work with special characters inside of quotes ( example
   );
 };
 
-export default withTheme(BillingScreen);
+export default withTheme(BillingCopyScreen);

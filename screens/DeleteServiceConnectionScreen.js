@@ -18,7 +18,7 @@ import {
 } from '@draftbit/ui';
 import { Image, Text, View, useWindowDimensions } from 'react-native';
 
-const ServiceConnectionDetailsScreen = props => {
+const DeleteServiceConnectionScreen = props => {
   const dimensions = useWindowDimensions();
   const Constants = GlobalVariables.useValues();
   const Variables = Constants;
@@ -88,6 +88,54 @@ const ServiceConnectionDetailsScreen = props => {
       )}
       hasTopSafeArea={false}
     >
+      {/* Header */}
+      <View
+        style={StyleSheet.applyWidth(
+          StyleSheet.compose(GlobalStyles.ViewStyles(theme)['Header 3'], {
+            marginTop: 45,
+          }),
+          dimensions.width
+        )}
+      >
+        {/* Back btn */}
+        <Touchable
+          onPress={() => {
+            try {
+              navigation.goBack();
+            } catch (err) {
+              console.error(err);
+            }
+          }}
+        >
+          <View
+            style={StyleSheet.applyWidth(
+              {
+                alignItems: 'center',
+                height: 44,
+                justifyContent: 'center',
+                width: 44,
+              },
+              dimensions.width
+            )}
+          >
+            <Icon size={24} name={'AntDesign/arrowleft'} />
+          </View>
+        </Touchable>
+        {/* View bill and make payment */}
+        <Text
+          style={StyleSheet.applyWidth(
+            {
+              color: theme.colors.strong,
+              fontFamily: 'Roboto_700Bold',
+              fontSize: 18,
+              marginLeft: 10,
+            },
+            dimensions.width
+          )}
+        >
+          {'Delete Service Connection'}
+        </Text>
+      </View>
       {/* Content */}
       <View
         style={StyleSheet.applyWidth(
@@ -95,60 +143,12 @@ const ServiceConnectionDetailsScreen = props => {
           dimensions.width
         )}
       >
-        {/* Header */}
-        <View
-          style={StyleSheet.applyWidth(
-            StyleSheet.compose(GlobalStyles.ViewStyles(theme)['Header 3'], {
-              marginTop: 45,
-            }),
-            dimensions.width
-          )}
-        >
-          {/* Back btn */}
-          <Touchable
-            onPress={() => {
-              try {
-                navigation.goBack();
-              } catch (err) {
-                console.error(err);
-              }
-            }}
-          >
-            <View
-              style={StyleSheet.applyWidth(
-                {
-                  alignItems: 'center',
-                  height: 44,
-                  justifyContent: 'center',
-                  width: 44,
-                },
-                dimensions.width
-              )}
-            >
-              <Icon size={24} name={'AntDesign/arrowleft'} />
-            </View>
-          </Touchable>
-          {/* View bill and make payment */}
-          <Text
-            style={StyleSheet.applyWidth(
-              {
-                color: theme.colors.strong,
-                fontFamily: 'Roboto_700Bold',
-                fontSize: 18,
-                marginLeft: 10,
-              },
-              dimensions.width
-            )}
-          >
-            {'Add New Service Connection'}
-          </Text>
-        </View>
         {/* amblock */}
         <View
           style={StyleSheet.applyWidth(
             {
               justifyContent: 'flex-start',
-              marginTop: 60,
+              marginTop: 40,
               paddingLeft: 20,
               paddingRight: 20,
             },
@@ -173,61 +173,15 @@ const ServiceConnectionDetailsScreen = props => {
           <View
             style={StyleSheet.applyWidth(
               StyleSheet.compose(GlobalStyles.ViewStyles(theme)['user name'], {
-                marginBottom: 15,
-              }),
-              dimensions.width
-            )}
-          >
-            <Icon
-              color={theme.colors['Medium']}
-              size={24}
-              name={'MaterialIcons/house'}
-            />
-            <View
-              style={StyleSheet.applyWidth(
-                { flex: 1, paddingLeft: 10, paddingRight: 10 },
-                dimensions.width
-              )}
-            >
-              <TextInput
-                onChangeText={newTextInputValue => {
-                  try {
-                    setNewAcct(newTextInputValue);
-                  } catch (err) {
-                    console.error(err);
-                  }
-                }}
-                style={StyleSheet.applyWidth(
-                  {
-                    borderRadius: 8,
-                    fontFamily: 'Roboto_400Regular',
-                    paddingBottom: 8,
-                    paddingLeft: 8,
-                    paddingRight: 8,
-                    paddingTop: 8,
-                  },
-                  dimensions.width
-                )}
-                value={newAcct}
-                placeholder={'Enter new service connection'}
-                editable={true}
-                placeholderTextColor={theme.colors['Medium']}
-              />
-            </View>
-          </View>
-          {/* Meter Number */}
-          <View
-            style={StyleSheet.applyWidth(
-              StyleSheet.compose(GlobalStyles.ViewStyles(theme)['user name'], {
-                marginTop: 10,
+                marginBottom: 10,
               }),
               dimensions.width
             )}
           >
             <Icon
               size={24}
-              color={theme.colors['Medium']}
               name={'MaterialIcons/house'}
+              color={theme.colors['Medium']}
             />
             <View
               style={StyleSheet.applyWidth(
@@ -247,10 +201,10 @@ const ServiceConnectionDetailsScreen = props => {
                   },
                   dimensions.width
                 )}
-                value={Constants['name']}
-                placeholder={'Exiting service connection number'}
+                placeholder={'Enter service connection number'}
                 editable={true}
                 placeholderTextColor={theme.colors['Medium']}
+                defaultValue={props.route?.params?.serviceConnectionNo ?? ''}
               />
             </View>
           </View>
@@ -260,17 +214,19 @@ const ServiceConnectionDetailsScreen = props => {
               const handler = async () => {
                 try {
                   const adsercondetresult = (
-                    await CISAPPApi.addServiceConnectionAccountPOSTStatusAndText(
-                      Constants,
-                      {
-                        existAcct: (() => {
-                          const e = Constants['name'];
-                          console.log(e);
-                          return e;
-                        })(),
-                        newAcct: newAcct,
-                      }
-                    )
+                    await CISAPPApi.deleteAccountPOSTStatusAndText(Constants, {
+                      accountNumber: (() => {
+                        const e =
+                          props.route?.params?.serviceConnectionNo ?? '';
+                        console.log(e);
+                        return e;
+                      })(),
+                      consumerNumber: (() => {
+                        const e = Constants['consumerNo'];
+                        console.log(e);
+                        return e;
+                      })(),
+                    })
                   )?.json;
                   console.log(adsercondetresult);
                   const messagejson =
@@ -279,22 +235,10 @@ const ServiceConnectionDetailsScreen = props => {
                     key: 'ERROR_MESSAGE',
                     value: messagejson,
                   });
-                  const test = setGlobalVariableValue({
-                    key: 'OTP_ACK_NUMBER',
-                    value: JSON.parse(
-                      (adsercondetresult && adsercondetresult[0])?.data[0]?.data
-                    )?.id,
-                  });
-                  setGlobalVariableValue({
-                    key: 'new_acc',
-                    value: newAcct,
-                  });
                   if (messagejson?.length) {
                     return;
                   }
-                  navigation.navigate(
-                    'ConfirmOTPAddNewServiceConnectionScreen'
-                  );
+                  navigation.navigate('ManageAccountScreen');
                 } catch (err) {
                   console.error(err);
                 }
@@ -305,10 +249,11 @@ const ServiceConnectionDetailsScreen = props => {
               StyleSheet.compose(GlobalStyles.ButtonStyles(theme)['Submit'], {
                 borderRadius: 14,
                 fontSize: 16,
+                marginTop: 20,
               }),
               dimensions.width
             )}
-            title={'Submit'}
+            title={'Confirm Delete'}
           />
         </View>
         {/* Body */}
@@ -323,4 +268,4 @@ const ServiceConnectionDetailsScreen = props => {
   );
 };
 
-export default withTheme(ServiceConnectionDetailsScreen);
+export default withTheme(DeleteServiceConnectionScreen);

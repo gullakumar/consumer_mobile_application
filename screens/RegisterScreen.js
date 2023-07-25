@@ -3,12 +3,14 @@ import * as GlobalStyles from '../GlobalStyles.js';
 import * as CISAPPApi from '../apis/CISAPPApi.js';
 import * as GlobalVariables from '../config/GlobalVariableContext';
 import Images from '../config/Images';
+import * as CustomCode from '../custom-files/CustomCode';
 import Breakpoints from '../utils/Breakpoints';
 import * as StyleSheet from '../utils/StyleSheet';
 import {
   Button,
   Checkbox,
   Icon,
+  NumberInput,
   ScreenContainer,
   TextInput,
   Touchable,
@@ -21,7 +23,16 @@ const RegisterScreen = props => {
   const dimensions = useWindowDimensions();
   const Constants = GlobalVariables.useValues();
   const Variables = Constants;
-  const setGlobalVariableValue = GlobalVariables.useSetValue();
+
+  const passwordUpdate = (pwd, confirmPwd) => {
+    console.log('Password' + pwd);
+    console.log('confirmPassword' + confirmPwd);
+    let customErrorMessage = null;
+    if (pwd != confirmPwd) {
+      customErrorMessage = 'Passwords do not match';
+      return customErrorMessage;
+    }
+  };
 
   const processErrorMessage = msg => {
     const scheme = {
@@ -64,14 +75,17 @@ const RegisterScreen = props => {
   const { theme } = props;
   const { navigation } = props;
 
+  const [ERROR_MESSAGE, setERROR_MESSAGE] = React.useState('');
   const [Mobileno, setMobileno] = React.useState('');
   const [checkboxRowValue, setCheckboxRowValue] = React.useState('');
   const [checkboxValue, setCheckboxValue] = React.useState(false);
   const [checkboxValue2, setCheckboxValue2] = React.useState(false);
   const [confirmpassword, setConfirmpassword] = React.useState('');
   const [email, setEmail] = React.useState('');
+  const [errorMessage, setErrorMessage] = React.useState('');
   const [hiddenPassword, setHiddenPassword] = React.useState(true);
   const [hiddenPassword2, setHiddenPassword2] = React.useState(true);
+  const [numberInputValue, setNumberInputValue] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [serviceconnectionnumber, setServiceconnectionnumber] =
     React.useState('');
@@ -165,7 +179,7 @@ const RegisterScreen = props => {
           {/* Logo */}
           <Image
             style={StyleSheet.applyWidth(
-              { height: 40, marginBottom: 24, marginTop: 10, width: 150 },
+              { height: 40, marginBottom: 10, marginTop: 10, width: 150 },
               dimensions.width
             )}
             resizeMode={'cover'}
@@ -174,11 +188,26 @@ const RegisterScreen = props => {
           {/* Error message */}
           <Text
             style={StyleSheet.applyWidth(
-              GlobalStyles.TextStyles(theme)['Text'],
+              StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+                color: theme.colors['Error'],
+                fontFamily: 'Roboto_400Regular',
+              }),
               dimensions.width
             )}
           >
-            {processErrorMessage(Constants['ERROR_MESSAGE'])}
+            {processErrorMessage(ERROR_MESSAGE)}
+          </Text>
+          {/* Error message */}
+          <Text
+            style={StyleSheet.applyWidth(
+              StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+                color: theme.colors['Error'],
+                fontFamily: 'Roboto_400Regular',
+              }),
+              dimensions.width
+            )}
+          >
+            {errorMessage}
           </Text>
           {/* Service connection number */}
           <View
@@ -205,8 +234,8 @@ const RegisterScreen = props => {
             )}
           >
             <Icon
+              color={theme.colors['Medium']}
               size={24}
-              color={theme.colors['Custom Color_20']}
               name={'Ionicons/person'}
             />
             <View
@@ -236,8 +265,8 @@ const RegisterScreen = props => {
                 )}
                 value={serviceconnectionnumber}
                 placeholder={'Service connection number'}
+                placeholderTextColor={theme.colors['Medium']}
                 editable={true}
-                placeholderTextColor={theme.colors['Custom Color_20']}
               />
             </View>
           </View>
@@ -267,8 +296,8 @@ const RegisterScreen = props => {
           >
             <Icon
               size={24}
-              color={theme.colors['Custom Color_20']}
               name={'MaterialCommunityIcons/email'}
+              color={theme.colors['Medium']}
             />
             <View
               style={StyleSheet.applyWidth(
@@ -298,7 +327,7 @@ const RegisterScreen = props => {
                 value={email}
                 placeholder={'Enter your email id'}
                 editable={true}
-                placeholderTextColor={theme.colors['Custom Color_20']}
+                placeholderTextColor={theme.colors['Medium']}
               />
             </View>
           </View>
@@ -328,8 +357,8 @@ const RegisterScreen = props => {
           >
             <Icon
               size={24}
-              color={theme.colors['Custom Color_20']}
               name={'Entypo/phone'}
+              color={theme.colors['Medium']}
             />
             <View
               style={StyleSheet.applyWidth(
@@ -337,31 +366,24 @@ const RegisterScreen = props => {
                 dimensions.width
               )}
             >
-              <TextInput
-                onChangeText={newTextInputValue => {
+              <NumberInput
+                onChangeText={newNumberInputValue => {
                   try {
-                    setMobileno(newTextInputValue);
+                    setMobileno(newNumberInputValue);
                   } catch (err) {
                     console.error(err);
                   }
                 }}
                 style={StyleSheet.applyWidth(
-                  {
-                    borderRadius: 8,
-                    fontFamily: 'Roboto_400Regular',
-                    paddingBottom: 8,
-                    paddingLeft: 8,
-                    paddingRight: 8,
-                    paddingTop: 8,
-                  },
+                  GlobalStyles.NumberInputStyles(theme)['Number Input'],
                   dimensions.width
                 )}
                 value={Mobileno}
-                placeholder={'Mobile number'}
+                placeholder={'Enter your mobile number'}
+                changeTextDelay={500}
                 editable={true}
-                placeholderTextColor={theme.colors['Custom Color_20']}
                 maxLength={10}
-                enablesReturnKeyAutomatically={false}
+                placeholderTextColor={theme.colors['Medium']}
               />
             </View>
           </View>
@@ -393,8 +415,8 @@ const RegisterScreen = props => {
               >
                 <Icon
                   size={24}
-                  color={theme.colors['Custom Color_20']}
                   name={'FontAwesome/lock'}
+                  color={theme.colors['Medium']}
                 />
                 <View
                   style={StyleSheet.applyWidth(
@@ -424,7 +446,7 @@ const RegisterScreen = props => {
                     value={password}
                     placeholder={'Password'}
                     editable={true}
-                    placeholderTextColor={theme.colors['Custom Color_20']}
+                    placeholderTextColor={theme.colors['Medium']}
                     secureTextEntry={true}
                   />
                 </View>
@@ -554,8 +576,8 @@ const RegisterScreen = props => {
               >
                 <Icon
                   size={24}
-                  color={theme.colors['Custom Color_20']}
                   name={'FontAwesome/lock'}
+                  color={theme.colors['Medium']}
                 />
                 <View
                   style={StyleSheet.applyWidth(
@@ -586,7 +608,7 @@ const RegisterScreen = props => {
                     placeholder={'Confirm password'}
                     secureTextEntry={true}
                     editable={true}
-                    placeholderTextColor={theme.colors['Custom Color_20']}
+                    placeholderTextColor={theme.colors['Medium']}
                   />
                 </View>
               </View>
@@ -663,20 +685,26 @@ const RegisterScreen = props => {
             onPress={() => {
               const handler = async () => {
                 try {
-                  const registredvalues = await CISAPPApi.registeredPOST(
-                    Constants,
-                    {
+                  setErrorMessage('');
+                  const passwordResult = passwordUpdate(
+                    password,
+                    confirmpassword
+                  );
+                  console.log(passwordResult);
+                  setErrorMessage(passwordResult);
+                  if (passwordResult?.length) {
+                    return;
+                  }
+                  const registredvalues = (
+                    await CISAPPApi.registeredPOSTStatusAndText(Constants, {
                       accno: serviceconnectionnumber,
                       email: email,
                       mobilenumber: Mobileno,
                       password: password,
-                    }
-                  );
+                    })
+                  )?.json;
                   const messagejson = registredvalues?.[0].data?.error?.message;
-                  setGlobalVariableValue({
-                    key: 'ERROR_MESSAGE',
-                    value: messagejson,
-                  });
+                  setERROR_MESSAGE(messagejson);
                   console.log(messagejson);
                   console.log(registredvalues);
                   if (messagejson?.length) {
@@ -691,8 +719,9 @@ const RegisterScreen = props => {
             }}
             style={StyleSheet.applyWidth(
               {
+                borderRadius: 14,
                 fontFamily: 'Roboto_400Regular',
-                fontSize: 14,
+                fontSize: 15,
                 marginTop: 20,
                 width: '100%',
               },

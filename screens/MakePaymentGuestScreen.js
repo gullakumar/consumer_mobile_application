@@ -1,6 +1,8 @@
 import React from 'react';
 import * as GlobalStyles from '../GlobalStyles.js';
 import * as CISAPPApi from '../apis/CISAPPApi.js';
+import * as GlobalVariables from '../config/GlobalVariableContext';
+import * as CustomCode from '../custom-files/CustomCode';
 import Breakpoints from '../utils/Breakpoints';
 import * as StyleSheet from '../utils/StyleSheet';
 import {
@@ -18,6 +20,7 @@ import {
 } from '@draftbit/ui';
 import { useIsFocused } from '@react-navigation/native';
 import { FlashList } from '@shopify/flash-list';
+import * as WebBrowser from 'expo-web-browser';
 import {
   ActivityIndicator,
   Image,
@@ -30,18 +33,32 @@ import { Fetch } from 'react-request';
 
 const MakePaymentGuestScreen = props => {
   const dimensions = useWindowDimensions();
+  const Constants = GlobalVariables.useValues();
+  const Variables = Constants;
+  const setGlobalVariableValue = GlobalVariables.useSetValue();
+
+  const buildConsumerString = Scno => {
+    console.log(`billing/rest/AccountInfo/${Scno}`);
+    return `billing/rest/AccountInfo/${Scno}`;
+  };
 
   const { theme } = props;
   const { navigation } = props;
 
+  const [amount, setAmount] = React.useState('');
+  const [consumerId, setConsumerId] = React.useState('');
+  const [email, setEmail] = React.useState('');
+  const [mobileNumber, setMobileNumber] = React.useState('');
   const [numberInputValue, setNumberInputValue] = React.useState('');
   const [numberInputValue2, setNumberInputValue2] = React.useState('');
+  const [office, setOffice] = React.useState('');
+  const [officeId, setOfficeId] = React.useState('');
   const [radioButtonGroup2Value, setRadioButtonGroup2Value] =
     React.useState('');
   const [radioButtonGroupValue, setRadioButtonGroupValue] = React.useState('');
   const [radioButtonGroupValue2, setRadioButtonGroupValue2] =
     React.useState('');
-  const [textInputValue, setTextInputValue] = React.useState('');
+  const [ucode, setUcode] = React.useState('');
 
   return (
     <ScreenContainer scrollable={false} hasSafeArea={true}>
@@ -645,8 +662,8 @@ const MakePaymentGuestScreen = props => {
                 >
                   <Icon
                     size={24}
-                    color={theme.colors['Custom Color_20']}
                     name={'FontAwesome/rupee'}
+                    color={theme.colors['Medium']}
                   />
                   <View
                     style={StyleSheet.applyWidth(
@@ -654,28 +671,24 @@ const MakePaymentGuestScreen = props => {
                       dimensions.width
                     )}
                   >
-                    <TextInput
-                      onChangeText={newTextInputValue => {
+                    <NumberInput
+                      onChangeText={newNumberInputValue => {
+                        const numberInputValue = newNumberInputValue;
                         try {
-                          setTextInputValue(newTextInputValue);
+                          setAmount(newNumberInputValue);
                         } catch (err) {
                           console.error(err);
                         }
                       }}
                       style={StyleSheet.applyWidth(
-                        {
-                          borderRadius: 8,
-                          fontFamily: 'Roboto_400Regular',
-                          paddingBottom: 8,
-                          paddingLeft: 8,
-                          paddingRight: 8,
-                          paddingTop: 8,
-                        },
+                        GlobalStyles.NumberInputStyles(theme)['Number Input'],
                         dimensions.width
                       )}
-                      placeholder={'Amount'}
+                      value={numberInputValue2}
+                      changeTextDelay={500}
                       editable={true}
-                      placeholderTextColor={theme.colors['Custom Color_20']}
+                      placeholder={'Enter amount'}
+                      placeholderTextColor={theme.colors['Medium']}
                     />
                   </View>
                 </View>
@@ -693,19 +706,12 @@ const MakePaymentGuestScreen = props => {
                     {!'+91' ? null : (
                       <Icon
                         size={24}
-                        color={theme.colors['Custom Color_20']}
                         name={'Entypo/phone'}
+                        color={theme.colors['Medium']}
                       />
                     )}
                   </>
                   <TextInput
-                    onChangeText={newTextInputValue => {
-                      try {
-                        setTextInputValue(newTextInputValue);
-                      } catch (err) {
-                        console.error(err);
-                      }
-                    }}
                     style={StyleSheet.applyWidth(
                       {
                         borderRadius: 8,
@@ -721,7 +727,7 @@ const MakePaymentGuestScreen = props => {
                     disabled={true}
                     editable={false}
                     placeholder={'+91'}
-                    placeholderTextColor={theme.colors['Custom Color_20']}
+                    placeholderTextColor={theme.colors['Medium']}
                   />
                   <View
                     style={StyleSheet.applyWidth(
@@ -733,7 +739,7 @@ const MakePaymentGuestScreen = props => {
                       onChangeText={newNumberInputValue => {
                         const numberInputValue = newNumberInputValue;
                         try {
-                          setNumberInputValue2(newNumberInputValue);
+                          setMobileNumber(newNumberInputValue);
                         } catch (err) {
                           console.error(err);
                         }
@@ -745,12 +751,12 @@ const MakePaymentGuestScreen = props => {
                         ),
                         dimensions.width
                       )}
-                      value={numberInputValue2}
+                      value={mobileNumber}
                       changeTextDelay={500}
                       editable={true}
                       maxLength={10}
                       placeholder={'1234567890'}
-                      placeholderTextColor={theme.colors['Custom Color_20']}
+                      placeholderTextColor={theme.colors['Medium']}
                     />
                   </View>
                 </View>
@@ -766,8 +772,8 @@ const MakePaymentGuestScreen = props => {
                 >
                   <Icon
                     size={24}
-                    color={theme.colors['Custom Color_20']}
                     name={'MaterialCommunityIcons/email'}
+                    color={theme.colors['Medium']}
                   />
                   <View
                     style={StyleSheet.applyWidth(
@@ -778,7 +784,7 @@ const MakePaymentGuestScreen = props => {
                     <TextInput
                       onChangeText={newTextInputValue => {
                         try {
-                          setTextInputValue(newTextInputValue);
+                          setEmail(newTextInputValue);
                         } catch (err) {
                           console.error(err);
                         }
@@ -796,7 +802,7 @@ const MakePaymentGuestScreen = props => {
                       )}
                       placeholder={'abcdefgh@gmail.com'}
                       editable={true}
-                      placeholderTextColor={theme.colors['Custom Color_20']}
+                      placeholderTextColor={theme.colors['Medium']}
                     />
                   </View>
                 </View>
@@ -855,16 +861,12 @@ const MakePaymentGuestScreen = props => {
                     <CISAPPApi.FetchPaymentGatewayPOST>
                       {({ loading, error, data, refetchPaymentGateway }) => {
                         const paymentMethodsData = data;
-                        if (!paymentMethodsData || loading) {
+                        if (loading) {
                           return <ActivityIndicator />;
                         }
 
                         if (error) {
-                          return (
-                            <Text style={{ textAlign: 'center' }}>
-                              There was a problem fetching this data
-                            </Text>
-                          );
+                          return <ActivityIndicator />;
                         }
 
                         return (
@@ -908,7 +910,7 @@ const MakePaymentGuestScreen = props => {
                                         { fontFamily: 'Inter_500Medium' },
                                         dimensions.width
                                       )}
-                                      value={flashListData?.name}
+                                      value={flashListData?.id}
                                       label={flashListData?.name}
                                       color={theme.colors.primary}
                                       unselectedColor={theme.colors.primary}
@@ -921,11 +923,7 @@ const MakePaymentGuestScreen = props => {
                               paymentMethodsData && paymentMethodsData[0].data
                             }
                             listKey={'rT5ZVL4T'}
-                            keyExtractor={flashListData =>
-                              flashListData?.id ||
-                              flashListData?.uuid ||
-                              JSON.stringify(flashListData)
-                            }
+                            keyExtractor={flashListData => flashListData?.id}
                             contentContainerStyle={StyleSheet.applyWidth(
                               {
                                 borderRadius: 12,
@@ -950,20 +948,124 @@ const MakePaymentGuestScreen = props => {
         {/* Pay */}
         <Button
           onPress={() => {
-            try {
-              navigation.navigate('PaymentConfirmationGuestScreen', {
-                name: props.route?.params?.Name ?? '',
-                Scno: props.route?.params?.Scno ?? '',
-              });
-            } catch (err) {
-              console.error(err);
-            }
+            const handler = async () => {
+              try {
+                const consumerDetailsJson = (
+                  await CISAPPApi.consumerDetailsPOSTStatusAndText(Constants, {
+                    action: buildConsumerString(
+                      props.route?.params?.Scno ?? ''
+                    ),
+                  })
+                )?.json;
+                buildConsumerString(props.route?.params?.Scno ?? '');
+                console.log(consumerDetailsJson);
+                const officeData = (
+                  consumerDetailsJson && consumerDetailsJson[0]
+                )?.data?.office;
+                setOffice(officeData);
+                const officeIdData = (
+                  consumerDetailsJson && consumerDetailsJson[0]
+                )?.data?.officeId;
+                const ucodeData = (
+                  consumerDetailsJson && consumerDetailsJson[0]
+                )?.data?.ucode;
+                setUcode(ucodeData);
+                const consumerIdData = (
+                  consumerDetailsJson && consumerDetailsJson[0]
+                )?.data?.consumerId;
+                setConsumerId(consumerIdData);
+                const paymentJson = (
+                  await CISAPPApi.payemntServicePOSTStatusAndText(Constants, {
+                    accno: (() => {
+                      const e = props.route?.params?.accno ?? '';
+                      console.log(e);
+                      return e;
+                    })(),
+                    amount: (() => {
+                      const e = amount;
+                      console.log(e);
+                      return e;
+                    })(),
+                    billid: (() => {
+                      const e = props.route?.params?.Billid ?? '';
+                      console.log(e);
+                      return e;
+                    })(),
+                    consid: (() => {
+                      const e = consumerIdData;
+                      console.log(e);
+                      return e;
+                    })(),
+                    email: (() => {
+                      const e = email;
+                      console.log(e);
+                      return e;
+                    })(),
+                    from: (() => {
+                      const e = 'MOBILE';
+                      console.log(e);
+                      return e;
+                    })(),
+                    gateway: (() => {
+                      const e = radioButtonGroupValue;
+                      console.log(e);
+                      return e;
+                    })(),
+                    mobile: (() => {
+                      const e = mobileNumber;
+                      console.log(e);
+                      return e;
+                    })(),
+                    name: (() => {
+                      const e = props.route?.params?.Name ?? '';
+                      console.log(e);
+                      return e;
+                    })(),
+                    officeName: (() => {
+                      const e = officeData;
+                      console.log(e);
+                      return e;
+                    })(),
+                    officeid: (() => {
+                      const e = officeIdData;
+                      console.log(e);
+                      return e;
+                    })(),
+                    scno: (() => {
+                      const e = props.route?.params?.Scno ?? '';
+                      console.log(e);
+                      return e;
+                    })(),
+                    ucode: (() => {
+                      const e = ucodeData;
+                      console.log(e);
+                      return e;
+                    })(),
+                  })
+                )?.json;
+                console.log(paymentJson);
+                const url = setGlobalVariableValue({
+                  key: 'payemntfinalurl',
+                  value: (paymentJson && paymentJson[0].data)?.data,
+                });
+                console.log(url);
+                await WebBrowser.openBrowserAsync(`${url}`);
+                navigation.navigate('PaymentConfirmationGuestScreen', {
+                  name: props.route?.params?.Name ?? '',
+                  Scno: props.route?.params?.Scno ?? '',
+                });
+              } catch (err) {
+                console.error(err);
+              }
+            };
+            handler();
           }}
           style={StyleSheet.applyWidth(
             {
               backgroundColor: theme.colors['GetFit Orange'],
+              borderRadius: 14,
               fontFamily: 'Roboto_400Regular',
-              fontSize: 14,
+              fontSize: 16,
               marginLeft: 20,
               marginRight: 20,
               marginTop: 35,

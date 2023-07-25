@@ -50,4 +50,6 @@ export default {
   Subs2: require('../assets/images/Subs2.png'),
   Subs3: require('../assets/images/Subs3.png'),
   Sub4: require('../assets/images/Sub4.png'),
+  JBVNLLogo: require('../assets/images/JBVNLLogo.png'),
+  JBNL: require('../assets/images/JBNL.png'),
 };

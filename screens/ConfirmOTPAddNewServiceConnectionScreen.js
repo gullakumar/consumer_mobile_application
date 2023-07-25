@@ -2,6 +2,7 @@ import React from 'react';
 import * as GlobalStyles from '../GlobalStyles.js';
 import * as CISAPPApi from '../apis/CISAPPApi.js';
 import * as GlobalVariables from '../config/GlobalVariableContext';
+import * as CustomCode from '../custom-files/CustomCode';
 import Breakpoints from '../utils/Breakpoints';
 import * as StyleSheet from '../utils/StyleSheet';
 import {
@@ -247,6 +248,7 @@ const ConfirmOTPAddNewServiceConnectionScreen = props => {
           editable={true}
           keyboardType={'numeric'}
           maxLength={1}
+          placeholderTextColor={theme.colors['Medium']}
         />
         {/* OTP Input */}
         <TextInput
@@ -284,6 +286,7 @@ const ConfirmOTPAddNewServiceConnectionScreen = props => {
           editable={true}
           keyboardType={'numeric'}
           maxLength={1}
+          placeholderTextColor={theme.colors['Medium']}
         />
         {/* OTP Input */}
         <TextInput
@@ -321,6 +324,7 @@ const ConfirmOTPAddNewServiceConnectionScreen = props => {
           editable={true}
           keyboardType={'numeric'}
           maxLength={1}
+          placeholderTextColor={theme.colors['Medium']}
         />
         {/* OTP Input */}
         <TextInput
@@ -358,6 +362,7 @@ const ConfirmOTPAddNewServiceConnectionScreen = props => {
           editable={true}
           keyboardType={'numeric'}
           maxLength={1}
+          placeholderTextColor={theme.colors['Medium']}
         />
       </View>
 
@@ -387,16 +392,17 @@ const ConfirmOTPAddNewServiceConnectionScreen = props => {
               try {
                 const otpResult = createOTP();
                 console.log(otpResult);
-                const confirmotp =
-                  await CISAPPApi.addAccountConfirmOTPForNewScnoAddingPOST(
+                const confirmotp = (
+                  await CISAPPApi.addAccountConfirmOTPForNewScnoAddingPOSTStatusAndText(
                     Constants,
                     {
-                      existAcct: Constants['exi_acc'],
+                      existAcct: Constants['name'],
                       newAcct: Constants['new_acc'],
                       otp: otpResult,
                       txid: Constants['OTP_ACK_NUMBER'],
                     }
-                  );
+                  )
+                )?.json;
                 const messionj = confirmotp?.[0].data?.error?.message;
                 console.log(messionj);
                 setGlobalVariableValue({
@@ -414,7 +420,12 @@ const ConfirmOTPAddNewServiceConnectionScreen = props => {
             handler();
           }}
           style={StyleSheet.applyWidth(
-            { fontFamily: 'Roboto_400Regular', marginTop: 50 },
+            {
+              borderRadius: 14,
+              fontFamily: 'Roboto_400Regular',
+              fontSize: 16,
+              marginTop: 50,
+            },
             dimensions.width
           )}
           title={'Continue '}

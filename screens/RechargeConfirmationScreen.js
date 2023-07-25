@@ -141,7 +141,9 @@ const RechargeConfirmationScreen = props => {
             style={StyleSheet.applyWidth(
               {
                 backgroundColor: theme.colors.primary,
+                borderRadius: 14,
                 fontFamily: 'Roboto_400Regular',
+                fontSize: 16,
                 textAlign: 'center',
               },
               dimensions.width

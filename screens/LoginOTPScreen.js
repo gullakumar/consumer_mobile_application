@@ -15,7 +15,7 @@ import {
 } from '@draftbit/ui';
 import { Text, View, useWindowDimensions } from 'react-native';
 
-const ForgotpasswordScreen = props => {
+const LoginOTPScreen = props => {
   const dimensions = useWindowDimensions();
   const Constants = GlobalVariables.useValues();
   const Variables = Constants;
@@ -131,7 +131,7 @@ const ForgotpasswordScreen = props => {
             dimensions.width
           )}
         >
-          {'Forgot Password'}
+          {'Login with OTP'}
         </Text>
       </View>
       {/* OTP Mobile and email */}
@@ -174,7 +174,7 @@ const ForgotpasswordScreen = props => {
             alignItems: 'center',
             flexDirection: 'column',
             justifyContent: 'space-evenly',
-            marginTop: 40,
+            marginTop: 30,
             paddingLeft: 20,
             paddingRight: 20,
           },
@@ -239,7 +239,7 @@ const ForgotpasswordScreen = props => {
             const handler = async () => {
               try {
                 const otpvalue = (
-                  await CISAPPApi.forgotpasswordPOSTStatusAndText(Constants, {
+                  await CISAPPApi.loginWithOTPPOSTStatusAndText(Constants, {
                     accno: serviceconnectionnumber,
                   })
                 )?.json;
@@ -252,13 +252,13 @@ const ForgotpasswordScreen = props => {
                     ?.id,
                 });
                 setGlobalVariableValue({
-                  key: 'OTP_SERVICE_NUMBER',
+                  key: 'name',
                   value: serviceconnectionnumber,
                 });
                 if (messagejson?.length) {
                   return;
                 }
-                navigation.navigate('ConfirmOTPForgotpasswordScreen');
+                navigation.navigate('ConfirmOTPLoginScreen');
               } catch (err) {
                 console.error(err);
               }
@@ -266,7 +266,7 @@ const ForgotpasswordScreen = props => {
             handler();
           }}
           style={StyleSheet.applyWidth(
-            { borderRadius: 14, fontSize: 16, marginTop: 35 },
+            { borderRadius: 14, fontSize: 16, marginTop: 30 },
             dimensions.width
           )}
           title={'Submit'}
@@ -276,4 +276,4 @@ const ForgotpasswordScreen = props => {
   );
 };
 
-export default withTheme(ForgotpasswordScreen);
+export default withTheme(LoginOTPScreen);

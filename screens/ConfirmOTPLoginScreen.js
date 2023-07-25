@@ -16,40 +16,13 @@ import {
 } from '@draftbit/ui';
 import { Text, View, useWindowDimensions } from 'react-native';
 
-const ConfirmOTPAddTicketprocessScreen = props => {
+const ConfirmOTPLoginScreen = props => {
   const dimensions = useWindowDimensions();
   const Constants = GlobalVariables.useValues();
   const Variables = Constants;
-  const setGlobalVariableValue = GlobalVariables.useSetValue();
-
-  const otpVerify = (otpResult, otp) => {
-    if (otpResult === otp) {
-      // Navigate to the change password screen
-      //console.log('Navigating to change password screen...');
-      return otpVerify;
-      // Add your navigation logic here
-    } else {
-      console.log('Incorrect OTP. Please try again.');
-    }
-  };
 
   const createOTP = () => {
     return `${otpValue1}${otpValue2}${otpValue3}${otpValue4}`;
-  };
-
-  const check_otp = otp => {
-    const ChangePasswordScreen = () => {
-      // Function to handle OTP verification
-      const verifyOTP = () => {
-        if (userOTP === otpValue) {
-          // Navigate to the change password screen
-          console.log('Navigating to change password screen...');
-          // Add your navigation logic here
-        } else {
-          console.log('Incorrect OTP. Please try again.');
-        }
-      };
-    };
   };
 
   const processErrorMessage = msg => {
@@ -90,9 +63,36 @@ const ConfirmOTPAddTicketprocessScreen = props => {
     return scheme[msg];
   };
 
+  const check_otp = otp => {
+    const ChangePasswordScreen = () => {
+      // Function to handle OTP verification
+      const verifyOTP = () => {
+        if (userOTP === otpValue) {
+          // Navigate to the change password screen
+          console.log('Navigating to change password screen...');
+          // Add your navigation logic here
+        } else {
+          console.log('Incorrect OTP. Please try again.');
+        }
+      };
+    };
+  };
+
+  const otpVerify = (otpResult, otp) => {
+    if (otpResult === otp) {
+      // Navigate to the change password screen
+      //console.log('Navigating to change password screen...');
+      return otpVerify;
+      // Add your navigation logic here
+    } else {
+      console.log('Incorrect OTP. Please try again.');
+    }
+  };
+
   const { theme } = props;
   const { navigation } = props;
 
+  const [ERROR_MESSAGE, setERROR_MESSAGE] = React.useState('');
   const [otpValue1, setOtpValue1] = React.useState('');
   const [otpValue2, setOtpValue2] = React.useState('');
   const [otpValue3, setOtpValue3] = React.useState('');
@@ -156,7 +156,7 @@ const ConfirmOTPAddTicketprocessScreen = props => {
             dimensions.width
           )}
         >
-          {'Confirm OTP Add Ticket'}
+          {'Confirm OTP'}
         </Text>
       </View>
       {/* OTP Mobile and email */}
@@ -191,7 +191,7 @@ const ConfirmOTPAddTicketprocessScreen = props => {
           dimensions.width
         )}
       >
-        {processErrorMessage(Constants['ERROR_MESSAGE'])}
+        {processErrorMessage(ERROR_MESSAGE)}
       </Text>
       {/* OTP */}
       <View
@@ -388,23 +388,31 @@ const ConfirmOTPAddTicketprocessScreen = props => {
                 const otpResult = createOTP();
                 console.log(otpResult);
                 const confirmotp = (
-                  await CISAPPApi.guestRaiseTicketAfterSendOTPPOSTStatusAndText(
-                    Constants,
-                    { otp: otpResult, transid: Constants['OTP_ACK_NUMBER'] }
-                  )
+                  await CISAPPApi.loginConfirmOTPPOSTStatusAndText(Constants, {
+                    accno: (() => {
+                      const e = Constants['name'];
+                      console.log(e);
+                      return e;
+                    })(),
+                    otp: (() => {
+                      const e = otpResult;
+                      console.log(e);
+                      return e;
+                    })(),
+                    transid: (() => {
+                      const e = Constants['OTP_ACK_NUMBER'];
+                      console.log(e);
+                      return e;
+                    })(),
+                  })
                 )?.json;
                 const messionj = confirmotp?.[0].data?.error?.message;
                 console.log(messionj);
-                setGlobalVariableValue({
-                  key: 'ERROR_MESSAGE',
-                  value: messionj,
-                });
+                setERROR_MESSAGE(messionj);
                 if (messionj?.length) {
                   return;
                 }
-                navigation.navigate('RaiseTicketGuestScreen', {
-                  userEnteredOTP: otpResult,
-                });
+                navigation.navigate('DashboardScreen');
               } catch (err) {
                 console.error(err);
               }
@@ -427,4 +435,4 @@ const ConfirmOTPAddTicketprocessScreen = props => {
   );
 };
 
-export default withTheme(ConfirmOTPAddTicketprocessScreen);
+export default withTheme(ConfirmOTPLoginScreen);

@@ -86,29 +86,30 @@ const DownloadGuestScreen = props => {
             dimensions.width
           )}
         >
-          {'Download'}
+          {'Downloads'}
         </Text>
       </View>
       {/* Content Frame */}
       <View
         style={StyleSheet.applyWidth(
-          { justifyContent: 'center', paddingLeft: 20, paddingRight: 20 },
+          {
+            justifyContent: 'center',
+            paddingLeft: 20,
+            paddingRight: 20,
+            paddingTop: 40,
+          },
           dimensions.width
         )}
       >
         <CISAPPApi.FetchDownloadPOST>
           {({ loading, error, data, refetchDownload }) => {
             const fetchData = data;
-            if (!fetchData || loading) {
+            if (loading) {
               return <ActivityIndicator />;
             }
 
             if (error) {
-              return (
-                <Text style={{ textAlign: 'center' }}>
-                  There was a problem fetching this data
-                </Text>
-              );
+              return <ActivityIndicator />;
             }
 
             return (
@@ -120,7 +121,10 @@ const DownloadGuestScreen = props => {
                       {/* sort op */}
                       <View
                         style={StyleSheet.applyWidth(
-                          GlobalStyles.ViewStyles(theme)['sort op'],
+                          StyleSheet.compose(
+                            GlobalStyles.ViewStyles(theme)['sort op'],
+                            { marginTop: 5 }
+                          ),
                           dimensions.width
                         )}
                       >

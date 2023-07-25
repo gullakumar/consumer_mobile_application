@@ -2,24 +2,24 @@ import React from 'react';
 import { View } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 
-export function LineChartComponent1({ billingHistoryScreen }) {
+export function LineChartComponent1({ prepaidBillingHistory }) {
   let newData = [];
   let newBillDates = [];
 
-  if (billingHistoryScreen.length) {
-    newData = billingHistoryScreen.map(item => item.BillAmount);
-    newBillDates = billingHistoryScreen.map(item => item.BillMonth);
+  if (prepaidBillingHistory.length) {
+    //newData = prepaidBillingHistory.map( item => item. )
+    //newBillDates = prepaidBillingHistory.map( item => item. )
   }
-  console.log('from custom code', billingHistoryScreen);
+  console.log('from custom code', prepaidBillingHistory);
 
   const data = {
-    //lables: billingHistoryScreen.BillIssueDate,
+    lables: prepaidBillingHistory.BillIssueDate,
     labels: newBillDates,
     //labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
     datasets: [
       {
         data: newData,
-        //  data: [20, 45, 28, 80, 99, 43],
+        //data: [20, 45, 28, 80, 99, 43],
         color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
       },
     ],

@@ -2,6 +2,7 @@ import React from 'react';
 import * as GlobalStyles from '../GlobalStyles.js';
 import * as CISAPPApi from '../apis/CISAPPApi.js';
 import * as GlobalVariables from '../config/GlobalVariableContext';
+import * as CustomCode from '../custom-files/CustomCode';
 import Breakpoints from '../utils/Breakpoints';
 import * as StyleSheet from '../utils/StyleSheet';
 import {
@@ -19,7 +20,6 @@ const ConfirmOTPForgotpasswordScreen = props => {
   const dimensions = useWindowDimensions();
   const Constants = GlobalVariables.useValues();
   const Variables = Constants;
-  const setGlobalVariableValue = GlobalVariables.useSetValue();
 
   const otpVerify = (otpResult, otp) => {
     if (otpResult === otp) {
@@ -92,6 +92,7 @@ const ConfirmOTPForgotpasswordScreen = props => {
   const { theme } = props;
   const { navigation } = props;
 
+  const [ERROR_MESSAGE, setERROR_MESSAGE] = React.useState('');
   const [otpValue1, setOtpValue1] = React.useState('');
   const [otpValue2, setOtpValue2] = React.useState('');
   const [otpValue3, setOtpValue3] = React.useState('');
@@ -190,7 +191,7 @@ const ConfirmOTPForgotpasswordScreen = props => {
           dimensions.width
         )}
       >
-        {processErrorMessage(Constants['ERROR_MESSAGE'])}
+        {processErrorMessage(ERROR_MESSAGE)}
       </Text>
       {/* OTP */}
       <View
@@ -242,6 +243,7 @@ const ConfirmOTPForgotpasswordScreen = props => {
           editable={true}
           keyboardType={'numeric'}
           maxLength={1}
+          placeholderTextColor={theme.colors['Medium']}
         />
         {/* OTP Input */}
         <TextInput
@@ -279,6 +281,7 @@ const ConfirmOTPForgotpasswordScreen = props => {
           editable={true}
           keyboardType={'numeric'}
           maxLength={1}
+          placeholderTextColor={theme.colors['Medium']}
         />
         {/* OTP Input */}
         <TextInput
@@ -316,6 +319,7 @@ const ConfirmOTPForgotpasswordScreen = props => {
           editable={true}
           keyboardType={'numeric'}
           maxLength={1}
+          placeholderTextColor={theme.colors['Medium']}
         />
         {/* OTP Input */}
         <TextInput
@@ -353,6 +357,7 @@ const ConfirmOTPForgotpasswordScreen = props => {
           editable={true}
           keyboardType={'numeric'}
           maxLength={1}
+          placeholderTextColor={theme.colors['Medium']}
         />
       </View>
 
@@ -382,16 +387,15 @@ const ConfirmOTPForgotpasswordScreen = props => {
               try {
                 const otpResult = createOTP();
                 console.log(otpResult);
-                const confirmotp = await CISAPPApi.confirmOTPscreenPOST(
-                  Constants,
-                  { otp: otpResult, transid: Constants['OTP_ACK_NUMBER'] }
-                );
+                const confirmotp = (
+                  await CISAPPApi.confirmOTPscreenPOSTStatusAndText(Constants, {
+                    otp: otpResult,
+                    transid: Constants['OTP_ACK_NUMBER'],
+                  })
+                )?.json;
                 const messionj = confirmotp?.[0].data?.error?.message;
                 console.log(messionj);
-                setGlobalVariableValue({
-                  key: 'ERROR_MESSAGE',
-                  value: messionj,
-                });
+                setERROR_MESSAGE(messionj);
                 if (messionj?.length) {
                   return;
                 }
@@ -405,7 +409,12 @@ const ConfirmOTPForgotpasswordScreen = props => {
             handler();
           }}
           style={StyleSheet.applyWidth(
-            { fontFamily: 'Roboto_400Regular', marginTop: 50 },
+            {
+              borderRadius: 14,
+              fontFamily: 'Roboto_400Regular',
+              fontSize: 16,
+              marginTop: 50,
+            },
             dimensions.width
           )}
           title={'Continue '}

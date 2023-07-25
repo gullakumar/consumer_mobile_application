@@ -3,6 +3,7 @@ import * as GlobalStyles from '../GlobalStyles.js';
 import * as CISAPPApi from '../apis/CISAPPApi.js';
 import * as GlobalVariables from '../config/GlobalVariableContext';
 import Images from '../config/Images';
+import * as CustomCode from '../custom-files/CustomCode';
 import Breakpoints from '../utils/Breakpoints';
 import * as StyleSheet from '../utils/StyleSheet';
 import {
@@ -20,6 +21,7 @@ import {
   withTheme,
 } from '@draftbit/ui';
 import { useIsFocused } from '@react-navigation/native';
+import * as WebBrowser from 'expo-web-browser';
 import { FlatList, Image, Text, View, useWindowDimensions } from 'react-native';
 
 const PaymentsScreen = props => {
@@ -89,6 +91,22 @@ line two` ) and will not work with special characters inside of quotes ( example
     });
   };
 
+  const rechargeHistoryBuildString = meterNo => {
+    console.log(
+      `/SPM/getAllSpmBillDetailsByAccountNoOrMeterNumber?accountNoOrMeterNumber=${meterNo}`
+    );
+    return `/SPM/getAllSpmBillDetailsByAccountNoOrMeterNumber?accountNoOrMeterNumber=${meterNo}`;
+  };
+
+  const converDateTimeToDate = dateTime => {
+    const date = dateTime.split(' ');
+    console.log('date' + date);
+
+    const str = date[0];
+
+    return str;
+  };
+
   const { theme } = props;
   const { navigation } = props;
 
@@ -100,10 +118,11 @@ line two` ) and will not work with special characters inside of quotes ( example
           return;
         }
         setServiceConNumber(Constants['name']);
-        const consumerDetailsJson = await CISAPPApi.consumerDetailsPOST(
-          Constants,
-          { action: buildConsumerString(Constants['name']) }
-        );
+        const consumerDetailsJson = (
+          await CISAPPApi.consumerDetailsPOSTStatusAndText(Constants, {
+            action: buildConsumerString(Constants['name']),
+          })
+        )?.json;
         console.log(consumerDetailsJson);
         buildConsumerString(Constants['name']);
         const prepaidFlag = (consumerDetailsJson && consumerDetailsJson[0])
@@ -120,9 +139,11 @@ line two` ) and will not work with special characters inside of quotes ( example
         setConsumerName(Name);
         const Billdetailsjson = await (async () => {
           if (prepaidFlag === 'N') {
-            return await CISAPPApi.viewBillDetailsPOST(Constants, {
-              action: buildString(Constants['name']),
-            });
+            return (
+              await CISAPPApi.viewBillDetailsPOSTStatusAndText(Constants, {
+                action: buildString(Constants['name']),
+              })
+            )?.json;
           }
         })();
         console.log(Billdetailsjson);
@@ -132,10 +153,11 @@ line two` ) and will not work with special characters inside of quotes ( example
           Billdetailsjson && Billdetailsjson[0].data.BillDataJson[0];
         setViewBillDetails(valuePRx6J3RZ);
         const Billdetailslog = valuePRx6J3RZ;
-        const paymenthistoryjson = await CISAPPApi.paymentHistoryPOST(
-          Constants,
-          { action: paymentBuildString(Constants['name']) }
-        );
+        const paymenthistoryjson = (
+          await CISAPPApi.paymentHistoryPOSTStatusAndText(Constants, {
+            action: paymentBuildString(Constants['name']),
+          })
+        )?.json;
         paymentBuildString(Constants['name']);
 
         const valueqY5c4IUo = paymenthistoryjson && paymenthistoryjson[0].data;
@@ -143,9 +165,11 @@ line two` ) and will not work with special characters inside of quotes ( example
         const paymentdetailslog = valueqY5c4IUo;
         const prepaidJson = await (async () => {
           if (prepaidFlag === 'Y') {
-            return await CISAPPApi.prepaidApiPOST(Constants, {
-              mtrno: meterNo,
-            });
+            return (
+              await CISAPPApi.prepaidApiPOSTStatusAndText(Constants, {
+                mtrno: meterNo,
+              })
+            )?.json;
           }
         })();
         console.log(prepaidJson);
@@ -153,10 +177,21 @@ line two` ) and will not work with special characters inside of quotes ( example
           ?.avail_balance;
         console.log(availableBalance);
         setAvailableBalance(availableBalance);
-        const ManageAccountDetails = await CISAPPApi.manageAccountsPOST(
-          Constants,
-          { accountNumber: Constants['name'] }
-        );
+        const RechargeHistoryJson = (
+          await CISAPPApi.rechargeHistoryPrepaidPOSTStatusAndText(Constants, {
+            action: rechargeHistoryBuildString(meterNo),
+          })
+        )?.json;
+        rechargeHistoryBuildString(meterNo);
+        console.log(RechargeHistoryJson);
+        const rechargeData =
+          RechargeHistoryJson && RechargeHistoryJson[0].data.data;
+        setViewRechargeDetails(rechargeData);
+        const ManageAccountDetails = (
+          await CISAPPApi.manageAccountsPOSTStatusAndText(Constants, {
+            accountNumber: Constants['name'],
+          })
+        )?.json;
         console.log(ManageAccountDetails);
         const result = setGlobalVariableValue({
           key: 'manageaccount_picker',
@@ -175,6 +210,7 @@ line two` ) and will not work with special characters inside of quotes ( example
   const [availableBalance, setAvailableBalance] = React.useState('');
   const [consumerName, setConsumerName] = React.useState('');
   const [consumerScNo, setConsumerScNo] = React.useState('');
+  const [hiddenHindi, setHiddenHindi] = React.useState(true);
   const [meterNumber, setMeterNumber] = React.useState('');
   const [pickerValue, setPickerValue] = React.useState('');
   const [prepaidFlag, setPrepaidFlag] = React.useState('');
@@ -182,6 +218,8 @@ line two` ) and will not work with special characters inside of quotes ( example
   const [showNav, setShowNav] = React.useState(false);
   const [viewBillDetails, setViewBillDetails] = React.useState({});
   const [viewPaymentDetails, setViewPaymentDetails] = React.useState({});
+  const [viewRechargeDetails, setViewRechargeDetails] = React.useState({});
+  const [visibleHindi, setVisibleHindi] = React.useState(false);
 
   return (
     <ScreenContainer
@@ -307,46 +345,6 @@ line two` ) and will not work with special characters inside of quotes ( example
                     </Text>
                   </View>
                 </Touchable>
-                {/* On Demand Reading */}
-                <Touchable
-                  onPress={() => {
-                    try {
-                      setShowNav(false);
-                      navigation.navigate('UsageScreen');
-                    } catch (err) {
-                      console.error(err);
-                    }
-                  }}
-                >
-                  <View
-                    style={StyleSheet.applyWidth(
-                      {
-                        alignItems: 'center',
-                        flexDirection: 'row',
-                        paddingBottom: 12,
-                        paddingLeft: 24,
-                        paddingRight: 24,
-                        paddingTop: 12,
-                      },
-                      dimensions.width
-                    )}
-                  >
-                    <Icon size={24} name={'Ionicons/speedometer-outline'} />
-                    <Text
-                      style={StyleSheet.applyWidth(
-                        {
-                          color: theme.colors['Strong'],
-                          fontFamily: 'Roboto_400Regular',
-                          fontSize: 16,
-                          marginLeft: 8,
-                        },
-                        dimensions.width
-                      )}
-                    >
-                      {'On-Demand Reading'}
-                    </Text>
-                  </View>
-                </Touchable>
                 {/* Notifications */}
                 <Touchable
                   onPress={() => {
@@ -426,6 +424,99 @@ line two` ) and will not work with special characters inside of quotes ( example
                       )}
                     >
                       {'Load & Quality'}
+                    </Text>
+                  </View>
+                </Touchable>
+                {/* Load Enhancement */}
+                <Touchable
+                  onPress={() => {
+                    const handler = async () => {
+                      try {
+                        navigation.navigate('LoadQualityScreen');
+                        await WebBrowser.openBrowserAsync(
+                          'http://20.192.2.50:9388/cportal/#/bltLec/KUM188'
+                        );
+                      } catch (err) {
+                        console.error(err);
+                      }
+                    };
+                    handler();
+                  }}
+                >
+                  <View
+                    style={StyleSheet.applyWidth(
+                      {
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                        paddingBottom: 12,
+                        paddingLeft: 24,
+                        paddingRight: 24,
+                        paddingTop: 12,
+                      },
+                      dimensions.width
+                    )}
+                  >
+                    <Icon
+                      size={24}
+                      name={'MaterialCommunityIcons/alert-outline'}
+                    />
+                    <Text
+                      style={StyleSheet.applyWidth(
+                        {
+                          color: theme.colors['Strong'],
+                          fontFamily: 'Roboto_400Regular',
+                          fontSize: 16,
+                          marginLeft: 8,
+                        },
+                        dimensions.width
+                      )}
+                    >
+                      {'Load Enhancement'}
+                    </Text>
+                  </View>
+                </Touchable>
+                {/* Load Reduction */}
+                <Touchable
+                  onPress={() => {
+                    const handler = async () => {
+                      try {
+                        navigation.navigate('LoadQualityScreen');
+                        await WebBrowser.openBrowserAsync(
+                          'http://20.192.2.50:9388/cportal/#/bltLrc/KUM188'
+                        );
+                      } catch (err) {
+                        console.error(err);
+                      }
+                    };
+                    handler();
+                  }}
+                >
+                  <View
+                    style={StyleSheet.applyWidth(
+                      {
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                        paddingBottom: 12,
+                        paddingLeft: 24,
+                        paddingRight: 24,
+                        paddingTop: 12,
+                      },
+                      dimensions.width
+                    )}
+                  >
+                    <Icon size={24} name={'FontAwesome/exclamation-triangle'} />
+                    <Text
+                      style={StyleSheet.applyWidth(
+                        {
+                          color: theme.colors['Strong'],
+                          fontFamily: 'Roboto_400Regular',
+                          fontSize: 16,
+                          marginLeft: 8,
+                        },
+                        dimensions.width
+                      )}
+                    >
+                      {'Load Reduction'}
                     </Text>
                   </View>
                 </Touchable>
@@ -675,21 +766,59 @@ line two` ) and will not work with special characters inside of quotes ( example
           >
             {'Payments'}
           </Text>
-
-          <Touchable>
-            {/* EN */}
-            <Text
-              style={StyleSheet.applyWidth(
-                StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
-                  paddingRight: 2,
-                }),
-                dimensions.width
-              )}
-            >
-              {'EN'}
-            </Text>
-          </Touchable>
-
+          <>
+            {!hiddenHindi ? null : (
+              <Touchable
+                onPress={() => {
+                  try {
+                    setVisibleHindi(true);
+                    setHiddenHindi(false);
+                  } catch (err) {
+                    console.error(err);
+                  }
+                }}
+              >
+                {/* EN */}
+                <Text
+                  style={StyleSheet.applyWidth(
+                    StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+                      paddingRight: 2,
+                    }),
+                    dimensions.width
+                  )}
+                >
+                  {'EN'}
+                </Text>
+              </Touchable>
+            )}
+          </>
+          <>
+            {!visibleHindi ? null : (
+              <Touchable
+                onPress={() => {
+                  try {
+                    setHiddenHindi(true);
+                    setVisibleHindi(false);
+                  } catch (err) {
+                    console.error(err);
+                  }
+                }}
+              >
+                {/* HI */}
+                <Text
+                  style={StyleSheet.applyWidth(
+                    StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+                      paddingLeft: 5,
+                      paddingRight: 2,
+                    }),
+                    dimensions.width
+                  )}
+                >
+                  {'HI'}
+                </Text>
+              </Touchable>
+            )}
+          </>
           <Touchable
             onPress={() => {
               try {
@@ -756,8 +885,8 @@ line two` ) and will not work with special characters inside of quotes ( example
           >
             <Icon
               size={24}
-              color={theme.colors['Custom Color_20']}
               name={'MaterialIcons/house'}
+              color={theme.colors['Medium']}
             />
             <Picker
               onValueChange={newPickerValue => {
@@ -765,10 +894,12 @@ line two` ) and will not work with special characters inside of quotes ( example
                   const pickerValue = newPickerValue;
                   try {
                     setServiceConNumber(newPickerValue);
-                    const consumerDetailsJson =
-                      await CISAPPApi.consumerDetailsPOST(Constants, {
-                        action: buildConsumerString(newPickerValue),
-                      });
+                    const consumerDetailsJson = (
+                      await CISAPPApi.consumerDetailsPOSTStatusAndText(
+                        Constants,
+                        { action: buildConsumerString(newPickerValue) }
+                      )
+                    )?.json;
                     console.log(consumerDetailsJson);
                     buildConsumerString(newPickerValue);
                     const prepaidFlag = (
@@ -788,9 +919,12 @@ line two` ) and will not work with special characters inside of quotes ( example
                     setConsumerName(Name);
                     const Billdetailsjson = await (async () => {
                       if (prepaidFlag === 'N') {
-                        return await CISAPPApi.viewBillDetailsPOST(Constants, {
-                          action: buildString(newPickerValue),
-                        });
+                        return (
+                          await CISAPPApi.viewBillDetailsPOSTStatusAndText(
+                            Constants,
+                            { action: buildString(newPickerValue) }
+                          )
+                        )?.json;
                       }
                     })();
                     console.log(Billdetailsjson);
@@ -801,10 +935,12 @@ line two` ) and will not work with special characters inside of quotes ( example
                       Billdetailsjson[0].data.BillDataJson[0];
                     setViewBillDetails(valuejko4fzFB);
                     const Billdetailslog = valuejko4fzFB;
-                    const paymenthistoryjson =
-                      await CISAPPApi.paymentHistoryPOST(Constants, {
-                        action: paymentBuildString(newPickerValue),
-                      });
+                    const paymenthistoryjson = (
+                      await CISAPPApi.paymentHistoryPOSTStatusAndText(
+                        Constants,
+                        { action: paymentBuildString(newPickerValue) }
+                      )
+                    )?.json;
                     paymentBuildString(newPickerValue);
 
                     const valueswbjlC9X =
@@ -813,9 +949,12 @@ line two` ) and will not work with special characters inside of quotes ( example
                     const paymentdetailslog = valueswbjlC9X;
                     const prepaidJson = await (async () => {
                       if (prepaidFlag === 'Y') {
-                        return await CISAPPApi.prepaidApiPOST(Constants, {
-                          mtrno: meterNo,
-                        });
+                        return (
+                          await CISAPPApi.prepaidApiPOSTStatusAndText(
+                            Constants,
+                            { mtrno: meterNo }
+                          )
+                        )?.json;
                       }
                     })();
                     console.log(prepaidJson);
@@ -823,6 +962,21 @@ line two` ) and will not work with special characters inside of quotes ( example
                       ?.data[0]?.avail_balance;
                     console.log(availableBalance);
                     setAvailableBalance(availableBalance);
+                    const RechargeHistoryJson = await (async () => {
+                      if (prepaidFlag === 'Y') {
+                        return (
+                          await CISAPPApi.rechargeHistoryPrepaidPOSTStatusAndText(
+                            Constants,
+                            { action: rechargeHistoryBuildString(meterNo) }
+                          )
+                        )?.json;
+                      }
+                    })();
+                    rechargeHistoryBuildString(meterNo);
+                    console.log(RechargeHistoryJson);
+                    const rechargeData =
+                      RechargeHistoryJson && RechargeHistoryJson[0].data.data;
+                    setViewRechargeDetails(rechargeData);
                   } catch (err) {
                     console.error(err);
                   }
@@ -845,6 +999,8 @@ line two` ) and will not work with special characters inside of quotes ( example
               autoDismissKeyboard={true}
               rightIconName={'Feather/chevron-down'}
               placeholder={' '}
+              iconColor={theme.colors['Medium']}
+              placeholderTextColor={theme.colors['Medium']}
               defaultValue={Constants['name']}
             />
           </View>
@@ -856,10 +1012,15 @@ line two` ) and will not work with special characters inside of quotes ( example
                   StyleSheet.compose(GlobalStyles.ViewStyles(theme)['card'], {
                     backgroundColor: 'rgb(255, 255, 255)',
                     borderColor: 'rgb(199, 198, 198)',
+                    borderRadius: 8,
                     borderWidth: 1,
                     flexDirection: 'row',
                     justifyContent: 'space-between',
+                    marginBottom: 15,
                     marginTop: 30,
+                    paddingBottom: 10,
+                    paddingLeft: 20,
+                    paddingTop: 10,
                   }),
                   dimensions.width
                 )}
@@ -889,7 +1050,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                     style={StyleSheet.applyWidth(
                       {
                         color: theme.colors.strong,
-                        fontFamily: 'Roboto_400Regular',
+                        fontFamily: 'Roboto_700Bold',
                         fontSize: 14,
                         opacity: 1,
                       },
@@ -940,8 +1101,9 @@ line two` ) and will not work with special characters inside of quotes ( example
                   style={StyleSheet.applyWidth(
                     {
                       backgroundColor: theme.colors['GetFit Orange'],
-                      borderRadius: 8,
+                      borderRadius: 14,
                       fontFamily: 'Roboto_400Regular',
+                      fontSize: 16,
                       height: 36,
                       marginTop: 5,
                       textAlign: 'center',
@@ -967,6 +1129,8 @@ line two` ) and will not work with special characters inside of quotes ( example
                         RebateGiven: viewBillDetails?.RebateGiven,
                         netcurrbill: viewBillDetails?.netcurrbill,
                         BillIssueDate: viewBillDetails?.BillIssueDate,
+                        Billid: viewBillDetails?.BillDetailsId,
+                        accno: viewBillDetails?.AccNo,
                       });
                     } catch (err) {
                       console.error(err);
@@ -975,8 +1139,9 @@ line two` ) and will not work with special characters inside of quotes ( example
                   style={StyleSheet.applyWidth(
                     {
                       backgroundColor: theme.colors['GetFit Orange'],
-                      borderRadius: 8,
+                      borderRadius: 14,
                       fontFamily: 'Roboto_400Regular',
+                      fontSize: 16,
                       height: 36,
                       marginTop: 5,
                       textAlign: 'center',
@@ -989,66 +1154,6 @@ line two` ) and will not work with special characters inside of quotes ( example
               </View>
             )}
           </>
-          {/* Advance Payment */}
-          <>
-            {!(prepaidFlag === 'N') ? null : (
-              <View
-                style={StyleSheet.applyWidth(
-                  StyleSheet.compose(GlobalStyles.ViewStyles(theme)['card'], {
-                    alignItems: 'stretch',
-                    backgroundColor: 'rgb(255, 255, 255)',
-                    borderColor: 'rgb(199, 198, 198)',
-                    borderWidth: 1,
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    marginBottom: 30,
-                    marginTop: 30,
-                    paddingBottom: 10,
-                    paddingTop: 10,
-                  }),
-                  dimensions.width
-                )}
-              >
-                <View
-                  style={StyleSheet.applyWidth(
-                    {
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      paddingTop: 2,
-                    },
-                    dimensions.width
-                  )}
-                >
-                  {/* Advance Payment */}
-                  <Button
-                    onPress={() => {
-                      try {
-                        navigation.navigate('AdvancePayemntScreen', {
-                          Name: consumerName,
-                          serviceConNo: consumerScNo,
-                        });
-                      } catch (err) {
-                        console.error(err);
-                      }
-                    }}
-                    style={StyleSheet.applyWidth(
-                      {
-                        backgroundColor: theme.colors.primary,
-                        borderRadius: 8,
-                        fontFamily: 'Roboto_400Regular',
-                        height: 36,
-                        paddingBottom: 3,
-                        textAlign: 'center',
-                        width: '45%',
-                      },
-                      dimensions.width
-                    )}
-                    title={'Advance Payment'}
-                  />
-                </View>
-              </View>
-            )}
-          </>
           {/* prepaid */}
           <>
             {!(prepaidFlag === 'Y') ? null : (
@@ -1057,10 +1162,15 @@ line two` ) and will not work with special characters inside of quotes ( example
                   StyleSheet.compose(GlobalStyles.ViewStyles(theme)['card'], {
                     backgroundColor: 'rgb(255, 255, 255)',
                     borderColor: theme.colors['Community_Divider'],
+                    borderRadius: 8,
                     borderWidth: 1,
                     flexDirection: 'row',
                     justifyContent: 'space-between',
-                    marginTop: 20,
+                    marginBottom: 15,
+                    marginTop: 30,
+                    paddingBottom: 10,
+                    paddingLeft: 20,
+                    paddingTop: 10,
                   }),
                   dimensions.width
                 )}
@@ -1087,7 +1197,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                     try {
                       navigation.navigate('RechargeScreen', {
                         Name: consumerName,
-                        ServiceConNo: consumerScNo,
+                        serviceConNo: consumerScNo,
                       });
                     } catch (err) {
                       console.error(err);
@@ -1096,8 +1206,9 @@ line two` ) and will not work with special characters inside of quotes ( example
                   style={StyleSheet.applyWidth(
                     {
                       backgroundColor: theme.colors.primary,
-                      borderRadius: 8,
+                      borderRadius: 14,
                       fontFamily: 'Roboto_400Regular',
+                      fontSize: 16,
                       height: 36,
                       textAlign: 'center',
                       width: '45%',
@@ -1106,6 +1217,38 @@ line two` ) and will not work with special characters inside of quotes ( example
                   )}
                   title={'Recharge Now'}
                 />
+              </View>
+            )}
+          </>
+          {/* section header */}
+          <>
+            {!(prepaidFlag === 'N') ? null : (
+              <View
+                style={StyleSheet.applyWidth(
+                  {
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    marginTop: 30,
+                    paddingBottom: 12,
+                    paddingLeft: 20,
+                    paddingRight: 20,
+                  },
+                  dimensions.width
+                )}
+              >
+                <Text
+                  style={StyleSheet.applyWidth(
+                    StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+                      alignSelf: 'center',
+                      color: theme.colors['ShopAppBlue'],
+                      fontFamily: 'Roboto_400Regular',
+                      fontSize: 16,
+                    }),
+                    dimensions.width
+                  )}
+                >
+                  {'Payment History'}
+                </Text>
               </View>
             )}
           </>
@@ -1119,273 +1262,287 @@ line two` ) and will not work with special characters inside of quotes ( example
                     {
                       backgroundColor: 'rgb(255, 255, 255)',
                       borderColor: theme.colors['Community_Border'],
-                      borderRadius: 12,
-                      borderWidth: 1,
-                      marginTop: 20,
                       paddingBottom: 12,
-                      paddingLeft: 20,
-                      paddingRight: 20,
                       paddingTop: 12,
                     }
                   ),
                   dimensions.width
                 )}
               >
-                <AccordionGroup
+                {/* Details */}
+                <View
                   style={StyleSheet.applyWidth(
-                    {
-                      alignSelf: 'auto',
-                      color: theme.colors['ShopAppBlue'],
-                      fontFamily: 'Roboto_500Medium',
-                      fontSize: 16,
-                    },
+                    StyleSheet.compose(
+                      GlobalStyles.ViewStyles(theme)['Details'],
+                      {
+                        borderBottomWidth: 1,
+                        borderLeftWidth: 1,
+                        borderRightWidth: 1,
+                        borderTopWidth: 1,
+                      }
+                    ),
                     dimensions.width
                   )}
-                  label={'Payment History'}
-                  caretSize={24}
-                  iconSize={24}
-                  expanded={true}
                 >
-                  {/* Details */}
+                  {/* Date */}
                   <View
                     style={StyleSheet.applyWidth(
-                      StyleSheet.compose(
-                        GlobalStyles.ViewStyles(theme)['Details'],
-                        {
-                          borderBottomWidth: 1,
-                          borderLeftWidth: 1,
-                          borderRightWidth: 1,
-                          borderTopWidth: 1,
-                        }
-                      ),
+                      { borderRightWidth: 1, flex: 1 },
                       dimensions.width
                     )}
                   >
-                    {/* Date */}
                     <View
                       style={StyleSheet.applyWidth(
-                        { borderRightWidth: 1, flex: 1 },
+                        {
+                          backgroundColor: theme.colors.viewBG,
+                          height: 40,
+                          justifyContent: 'center',
+                        },
                         dimensions.width
                       )}
                     >
-                      <View
+                      <Text
                         style={StyleSheet.applyWidth(
                           {
-                            backgroundColor: theme.colors.viewBG,
-                            height: 40,
-                            justifyContent: 'center',
+                            color: theme.colors.strong,
+                            fontFamily: 'Roboto_700Bold',
+                            fontSize: 14,
+                            textAlign: 'center',
+                            textTransform: 'capitalize',
                           },
                           dimensions.width
                         )}
                       >
-                        <Text
-                          style={StyleSheet.applyWidth(
-                            {
-                              color: theme.colors.strong,
-                              fontFamily: 'Roboto_700Bold',
-                              fontSize: 14,
-                              textAlign: 'center',
-                              textTransform: 'capitalize',
-                            },
-                            dimensions.width
-                          )}
-                        >
-                          {'Date'}
-                        </Text>
-                      </View>
-                    </View>
-                    {/* Amount */}
-                    <View
-                      style={StyleSheet.applyWidth(
-                        { borderRightWidth: 1, flex: 1 },
-                        dimensions.width
-                      )}
-                    >
-                      <View
-                        style={StyleSheet.applyWidth(
-                          {
-                            backgroundColor: theme.colors.viewBG,
-                            height: 40,
-                            justifyContent: 'center',
-                          },
-                          dimensions.width
-                        )}
-                      >
-                        <Text
-                          style={StyleSheet.applyWidth(
-                            {
-                              color: theme.colors.strong,
-                              fontFamily: 'Roboto_700Bold',
-                              fontSize: 14,
-                              textAlign: 'center',
-                              textTransform: 'capitalize',
-                            },
-                            dimensions.width
-                          )}
-                        >
-                          {'Amount'}
-                        </Text>
-                      </View>
-                    </View>
-                    {/* Purpose */}
-                    <View
-                      style={StyleSheet.applyWidth(
-                        { flex: 1 },
-                        dimensions.width
-                      )}
-                    >
-                      <View
-                        style={StyleSheet.applyWidth(
-                          {
-                            backgroundColor: theme.colors.viewBG,
-                            height: 40,
-                            justifyContent: 'center',
-                          },
-                          dimensions.width
-                        )}
-                      >
-                        <Text
-                          style={StyleSheet.applyWidth(
-                            {
-                              color: theme.colors.strong,
-                              fontFamily: 'Roboto_700Bold',
-                              fontSize: 14,
-                              textAlign: 'center',
-                              textTransform: 'capitalize',
-                            },
-                            dimensions.width
-                          )}
-                        >
-                          {'Purpose'}
-                        </Text>
-                      </View>
+                        {'Date'}
+                      </Text>
                     </View>
                   </View>
-                  <FlatList
-                    renderItem={({ item }) => {
-                      const listData = item;
-                      return (
-                        <>
-                          {/* Details */}
+                  {/* Amount */}
+                  <View
+                    style={StyleSheet.applyWidth(
+                      { borderRightWidth: 1, flex: 1 },
+                      dimensions.width
+                    )}
+                  >
+                    <View
+                      style={StyleSheet.applyWidth(
+                        {
+                          backgroundColor: theme.colors.viewBG,
+                          height: 40,
+                          justifyContent: 'center',
+                        },
+                        dimensions.width
+                      )}
+                    >
+                      <Text
+                        style={StyleSheet.applyWidth(
+                          {
+                            color: theme.colors.strong,
+                            fontFamily: 'Roboto_700Bold',
+                            fontSize: 14,
+                            textAlign: 'center',
+                            textTransform: 'capitalize',
+                          },
+                          dimensions.width
+                        )}
+                      >
+                        {'Amount'}
+                      </Text>
+                    </View>
+                  </View>
+                  {/* Purpose */}
+                  <View
+                    style={StyleSheet.applyWidth({ flex: 1 }, dimensions.width)}
+                  >
+                    <View
+                      style={StyleSheet.applyWidth(
+                        {
+                          backgroundColor: theme.colors.viewBG,
+                          height: 40,
+                          justifyContent: 'center',
+                        },
+                        dimensions.width
+                      )}
+                    >
+                      <Text
+                        style={StyleSheet.applyWidth(
+                          {
+                            color: theme.colors.strong,
+                            fontFamily: 'Roboto_700Bold',
+                            fontSize: 14,
+                            textAlign: 'center',
+                            textTransform: 'capitalize',
+                          },
+                          dimensions.width
+                        )}
+                      >
+                        {'Purpose'}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+                <FlatList
+                  renderItem={({ item }) => {
+                    const listData = item;
+                    return (
+                      <>
+                        {/* Details */}
+                        <View
+                          style={StyleSheet.applyWidth(
+                            StyleSheet.compose(
+                              GlobalStyles.ViewStyles(theme)['Details'],
+                              {
+                                borderBottomWidth: 1,
+                                borderLeftWidth: 1,
+                                borderRightWidth: 1,
+                              }
+                            ),
+                            dimensions.width
+                          )}
+                        >
+                          {/* Date */}
                           <View
                             style={StyleSheet.applyWidth(
-                              StyleSheet.compose(
-                                GlobalStyles.ViewStyles(theme)['Details'],
-                                {
-                                  borderBottomWidth: 1,
-                                  borderLeftWidth: 1,
-                                  borderRightWidth: 1,
-                                }
-                              ),
+                              { borderRightWidth: 1, flex: 1 },
                               dimensions.width
                             )}
                           >
-                            {/* Date */}
                             <View
                               style={StyleSheet.applyWidth(
-                                { borderRightWidth: 1, flex: 1 },
+                                { height: 40, justifyContent: 'center' },
                                 dimensions.width
                               )}
                             >
-                              <View
+                              <Text
                                 style={StyleSheet.applyWidth(
-                                  { height: 40, justifyContent: 'center' },
+                                  {
+                                    fontFamily: 'Roboto_400Regular',
+                                    fontSize: 14,
+                                    textAlign: 'center',
+                                    textTransform: 'capitalize',
+                                  },
                                   dimensions.width
                                 )}
                               >
-                                <Text
-                                  style={StyleSheet.applyWidth(
-                                    {
-                                      fontFamily: 'Roboto_400Regular',
-                                      fontSize: 14,
-                                      textAlign: 'center',
-                                      textTransform: 'capitalize',
-                                    },
-                                    dimensions.width
-                                  )}
-                                >
-                                  {(() => {
-                                    const e = convertTimestampToDate(
-                                      listData?.paymentDate
-                                    );
-                                    console.log(e);
-                                    return e;
-                                  })()}
-                                </Text>
-                              </View>
-                            </View>
-                            {/* Amount */}
-                            <View
-                              style={StyleSheet.applyWidth(
-                                { borderRightWidth: 1, flex: 1 },
-                                dimensions.width
-                              )}
-                            >
-                              <View
-                                style={StyleSheet.applyWidth(
-                                  { height: 40, justifyContent: 'center' },
-                                  dimensions.width
-                                )}
-                              >
-                                <Text
-                                  style={StyleSheet.applyWidth(
-                                    {
-                                      fontFamily: 'Roboto_400Regular',
-                                      fontSize: 14,
-                                      textAlign: 'center',
-                                      textTransform: 'capitalize',
-                                    },
-                                    dimensions.width
-                                  )}
-                                >
-                                  {'₹'}
-                                  {listData?.amountPaid}
-                                </Text>
-                              </View>
-                            </View>
-                            {/* Purpose */}
-                            <View
-                              style={StyleSheet.applyWidth(
-                                { flex: 1 },
-                                dimensions.width
-                              )}
-                            >
-                              <View
-                                style={StyleSheet.applyWidth(
-                                  { height: 40, justifyContent: 'center' },
-                                  dimensions.width
-                                )}
-                              >
-                                <Text
-                                  style={StyleSheet.applyWidth(
-                                    {
-                                      fontFamily: 'Roboto_400Regular',
-                                      fontSize: 14,
-                                      textAlign: 'center',
-                                      textTransform: 'capitalize',
-                                    },
-                                    dimensions.width
-                                  )}
-                                >
-                                  {listData?.paymentMode}
-                                </Text>
-                              </View>
+                                {(() => {
+                                  const e = convertTimestampToDate(
+                                    listData?.paymentDate
+                                  );
+                                  console.log(e);
+                                  return e;
+                                })()}
+                              </Text>
                             </View>
                           </View>
-                        </>
-                      );
-                    }}
-                    data={viewPaymentDetails}
-                    listKey={'ab97FAva'}
-                    keyExtractor={listData =>
-                      listData?.id || listData?.uuid || JSON.stringify(listData)
-                    }
-                    numColumns={1}
-                    onEndReachedThreshold={0.5}
-                    showsHorizontalScrollIndicator={true}
-                    showsVerticalScrollIndicator={true}
-                  />
-                </AccordionGroup>
+                          {/* Amount */}
+                          <View
+                            style={StyleSheet.applyWidth(
+                              { borderRightWidth: 1, flex: 1 },
+                              dimensions.width
+                            )}
+                          >
+                            <View
+                              style={StyleSheet.applyWidth(
+                                {
+                                  alignItems: 'flex-end',
+                                  alignSelf: 'flex-end',
+                                  height: 40,
+                                  justifyContent: 'center',
+                                  padding: 12,
+                                },
+                                dimensions.width
+                              )}
+                            >
+                              <Text
+                                style={StyleSheet.applyWidth(
+                                  {
+                                    fontFamily: 'Roboto_400Regular',
+                                    fontSize: 14,
+                                    textAlign: 'center',
+                                    textTransform: 'capitalize',
+                                  },
+                                  dimensions.width
+                                )}
+                              >
+                                {'₹'}
+                                {listData?.amountPaid}
+                              </Text>
+                            </View>
+                          </View>
+                          {/* Purpose */}
+                          <View
+                            style={StyleSheet.applyWidth(
+                              { flex: 1 },
+                              dimensions.width
+                            )}
+                          >
+                            <View
+                              style={StyleSheet.applyWidth(
+                                { height: 40, justifyContent: 'center' },
+                                dimensions.width
+                              )}
+                            >
+                              <Text
+                                style={StyleSheet.applyWidth(
+                                  {
+                                    fontFamily: 'Roboto_400Regular',
+                                    fontSize: 14,
+                                    textAlign: 'center',
+                                    textTransform: 'capitalize',
+                                  },
+                                  dimensions.width
+                                )}
+                              >
+                                {listData?.paymentMode}
+                              </Text>
+                            </View>
+                          </View>
+                        </View>
+                      </>
+                    );
+                  }}
+                  data={viewPaymentDetails}
+                  listKey={'ab97FAva'}
+                  keyExtractor={listData =>
+                    listData?.id || listData?.uuid || JSON.stringify(listData)
+                  }
+                  numColumns={1}
+                  onEndReachedThreshold={0.5}
+                  showsHorizontalScrollIndicator={true}
+                  showsVerticalScrollIndicator={true}
+                />
+              </View>
+            )}
+          </>
+          {/* section header */}
+          <>
+            {!(prepaidFlag === 'Y') ? null : (
+              <View
+                style={StyleSheet.applyWidth(
+                  {
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    marginTop: 30,
+                    paddingBottom: 12,
+                    paddingLeft: 20,
+                    paddingRight: 20,
+                  },
+                  dimensions.width
+                )}
+              >
+                <Text
+                  style={StyleSheet.applyWidth(
+                    StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+                      alignSelf: 'center',
+                      color: theme.colors['ShopAppBlue'],
+                      fontFamily: 'Roboto_400Regular',
+                      fontSize: 16,
+                    }),
+                    dimensions.width
+                  )}
+                >
+                  {'Recharge History'}
+                </Text>
               </View>
             )}
           </>
@@ -1399,119 +1556,258 @@ line two` ) and will not work with special characters inside of quotes ( example
                     {
                       backgroundColor: 'rgb(255, 255, 255)',
                       borderColor: theme.colors['Community_Border'],
-                      borderRadius: 12,
-                      borderWidth: 1,
-                      marginTop: 20,
                       paddingBottom: 12,
-                      paddingLeft: 20,
-                      paddingRight: 20,
                       paddingTop: 12,
                     }
                   ),
                   dimensions.width
                 )}
               >
-                <AccordionGroup
+                {/* Prepaid Details */}
+                <View
                   style={StyleSheet.applyWidth(
-                    {
-                      alignSelf: 'auto',
-                      color: theme.colors['ShopAppBlue'],
-                      fontFamily: 'Roboto_500Medium',
-                      fontSize: 16,
-                    },
+                    StyleSheet.compose(
+                      GlobalStyles.ViewStyles(theme)['Details'],
+                      {
+                        borderBottomWidth: 1,
+                        borderLeftWidth: 1,
+                        borderRightWidth: 1,
+                        borderTopWidth: 1,
+                      }
+                    ),
                     dimensions.width
                   )}
-                  label={'Recharge History'}
-                  caretSize={24}
-                  iconSize={24}
-                  expanded={true}
                 >
-                  <FlatList
-                    renderItem={({ item }) => {
-                      const listData = item;
-                      return (
+                  {/* Date */}
+                  <View
+                    style={StyleSheet.applyWidth(
+                      { borderRightWidth: 1, flex: 1 },
+                      dimensions.width
+                    )}
+                  >
+                    <View
+                      style={StyleSheet.applyWidth(
+                        {
+                          backgroundColor: theme.colors.viewBG,
+                          height: 40,
+                          justifyContent: 'center',
+                        },
+                        dimensions.width
+                      )}
+                    >
+                      <Text
+                        style={StyleSheet.applyWidth(
+                          {
+                            color: theme.colors.strong,
+                            fontFamily: 'Roboto_700Bold',
+                            fontSize: 14,
+                            textAlign: 'center',
+                            textTransform: 'capitalize',
+                          },
+                          dimensions.width
+                        )}
+                      >
+                        {'Date'}
+                      </Text>
+                    </View>
+                  </View>
+                  {/* Amount */}
+                  <View
+                    style={StyleSheet.applyWidth(
+                      { borderRightWidth: 1, flex: 1 },
+                      dimensions.width
+                    )}
+                  >
+                    <View
+                      style={StyleSheet.applyWidth(
+                        {
+                          backgroundColor: theme.colors.viewBG,
+                          height: 40,
+                          justifyContent: 'center',
+                        },
+                        dimensions.width
+                      )}
+                    >
+                      <Text
+                        style={StyleSheet.applyWidth(
+                          {
+                            color: theme.colors.strong,
+                            fontFamily: 'Roboto_700Bold',
+                            fontSize: 14,
+                            textAlign: 'center',
+                            textTransform: 'capitalize',
+                          },
+                          dimensions.width
+                        )}
+                      >
+                        {'Amount'}
+                      </Text>
+                    </View>
+                  </View>
+                  {/* Purpose */}
+                  <View
+                    style={StyleSheet.applyWidth({ flex: 1 }, dimensions.width)}
+                  >
+                    <View
+                      style={StyleSheet.applyWidth(
+                        {
+                          backgroundColor: theme.colors.viewBG,
+                          height: 40,
+                          justifyContent: 'center',
+                        },
+                        dimensions.width
+                      )}
+                    >
+                      <Text
+                        style={StyleSheet.applyWidth(
+                          {
+                            color: theme.colors.strong,
+                            fontFamily: 'Roboto_700Bold',
+                            fontSize: 14,
+                            textAlign: 'center',
+                            textTransform: 'capitalize',
+                          },
+                          dimensions.width
+                        )}
+                      >
+                        {'Purpose'}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+                {/* Prepaid List */}
+                <FlatList
+                  renderItem={({ item }) => {
+                    const prepaidListData = item;
+                    return (
+                      <>
+                        {/* Details */}
                         <View
                           style={StyleSheet.applyWidth(
-                            {
-                              alignContent: 'stretch',
-                              backgroundColor: 'rgb(255, 255, 255)',
-                              flexDirection: 'column',
-                              justifyContent: 'flex-start',
-                              paddingTop: 8,
-                            },
+                            StyleSheet.compose(
+                              GlobalStyles.ViewStyles(theme)['Details'],
+                              {
+                                borderBottomWidth: 1,
+                                borderLeftWidth: 1,
+                                borderRightWidth: 1,
+                              }
+                            ),
                             dimensions.width
                           )}
                         >
-                          <Touchable>
+                          {/* Date */}
+                          <View
+                            style={StyleSheet.applyWidth(
+                              { borderRightWidth: 1, flex: 1 },
+                              dimensions.width
+                            )}
+                          >
+                            <View
+                              style={StyleSheet.applyWidth(
+                                { height: 40, justifyContent: 'center' },
+                                dimensions.width
+                              )}
+                            >
+                              <Text
+                                style={StyleSheet.applyWidth(
+                                  {
+                                    fontFamily: 'Roboto_400Regular',
+                                    fontSize: 14,
+                                    textAlign: 'center',
+                                    textTransform: 'capitalize',
+                                  },
+                                  dimensions.width
+                                )}
+                              >
+                                {(() => {
+                                  const e = converDateTimeToDate(
+                                    prepaidListData?.prstRdgDate
+                                  );
+                                  console.log(e);
+                                  return e;
+                                })()}
+                              </Text>
+                            </View>
+                          </View>
+                          {/* Amount */}
+                          <View
+                            style={StyleSheet.applyWidth(
+                              { borderRightWidth: 1, flex: 1 },
+                              dimensions.width
+                            )}
+                          >
                             <View
                               style={StyleSheet.applyWidth(
                                 {
-                                  alignItems: 'flex-start',
-                                  borderBottomWidth: 1,
-                                  borderColor:
-                                    theme.colors['Community_Divider'],
-                                  flexDirection: 'row',
-                                  justifyContent: 'space-between',
+                                  alignItems: 'flex-end',
+                                  alignSelf: 'flex-end',
+                                  height: 40,
+                                  justifyContent: 'center',
+                                  padding: 12,
                                 },
                                 dimensions.width
                               )}
                             >
-                              <Icon
-                                size={24}
-                                name={'Foundation/page-export-pdf'}
-                              />
-                              <View
+                              <Text
                                 style={StyleSheet.applyWidth(
-                                  { flex: 1, paddingLeft: 16 },
+                                  {
+                                    fontFamily: 'Roboto_400Regular',
+                                    fontSize: 14,
+                                    textAlign: 'center',
+                                    textTransform: 'capitalize',
+                                  },
                                   dimensions.width
                                 )}
                               >
-                                {/* Title */}
-                                <Text
-                                  style={StyleSheet.applyWidth(
-                                    {
-                                      color: theme.colors.strong,
-                                      fontFamily: 'Roboto_400Regular',
-                                      fontSize: 14,
-                                      lineHeight: 20,
-                                    },
-                                    dimensions.width
-                                  )}
-                                >
-                                  {'Advance  Paid: ₹ '}
-                                  {listData?.amountPaid} {listData?.paymentMode}
-                                  {'\n'}
-                                  {listData?.paymentDate}
-                                </Text>
-                              </View>
-
-                              <View
-                                style={StyleSheet.applyWidth(
-                                  { alignItems: 'flex-end', width: 40 },
-                                  dimensions.width
-                                )}
-                              >
-                                <Icon
-                                  size={24}
-                                  name={'SimpleLineIcons/arrow-down-circle'}
-                                />
-                              </View>
+                                {'₹'}
+                                {prepaidListData?.closingBalance}
+                              </Text>
                             </View>
-                          </Touchable>
+                          </View>
+                          {/* Purpose */}
+                          <View
+                            style={StyleSheet.applyWidth(
+                              { flex: 1 },
+                              dimensions.width
+                            )}
+                          >
+                            <View
+                              style={StyleSheet.applyWidth(
+                                { height: 40, justifyContent: 'center' },
+                                dimensions.width
+                              )}
+                            >
+                              <Text
+                                style={StyleSheet.applyWidth(
+                                  {
+                                    fontFamily: 'Roboto_400Regular',
+                                    fontSize: 14,
+                                    textAlign: 'center',
+                                    textTransform: 'capitalize',
+                                  },
+                                  dimensions.width
+                                )}
+                              >
+                                {prepaidListData?.billType}
+                              </Text>
+                            </View>
+                          </View>
                         </View>
-                      );
-                    }}
-                    data={[]}
-                    listKey={'QNnMvTpF'}
-                    keyExtractor={listData =>
-                      listData?.id || listData?.uuid || JSON.stringify(listData)
-                    }
-                    numColumns={1}
-                    onEndReachedThreshold={0.5}
-                    showsHorizontalScrollIndicator={true}
-                    showsVerticalScrollIndicator={true}
-                  />
-                </AccordionGroup>
+                      </>
+                    );
+                  }}
+                  data={viewRechargeDetails}
+                  listKey={'aHssmBVz'}
+                  keyExtractor={prepaidListData =>
+                    prepaidListData?.id ||
+                    prepaidListData?.uuid ||
+                    JSON.stringify(prepaidListData)
+                  }
+                  numColumns={1}
+                  onEndReachedThreshold={0.5}
+                  showsHorizontalScrollIndicator={true}
+                  showsVerticalScrollIndicator={true}
+                />
               </View>
             )}
           </>

@@ -2,16 +2,27 @@ import React from 'react';
 import { View } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 
-export function LineChartComponent() {
+export function LineChartComponent({ billingHistoryScreen }) {
+  let newData = [];
+  let newBillDates = [];
+  if (billingHistoryScreen.length) {
+    newData = billingHistoryScreen.map(item => item.BillAmount);
+    newBillDates = billingHistoryScreen.map(item => item.BillMonth);
+  }
+  console.log('from custom code', billingHistoryScreen);
   const data = {
-    labels: ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Fri'],
+    //lables: billingHistoryScreen.BillIssueDate,
+    labels: newBillDates,
+    //labels: ["Sat", "Sun", "Mon", "Tue", "Wed", "Fri"],
     datasets: [
       {
-        data: [20, 45, 28, 80, 99, 43],
+        data: newData,
+        //data: [20, 45, 28, 80, 99, 43],
         color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
       },
       {
-        data: [50, 30, 90, 41, 86, 24],
+        data: newData,
+        //data: [50, 30, 90, 41, 86, 24],
         color: (opacity = 1) => `rgba(255, 0, 0, ${opacity})`,
       },
     ],

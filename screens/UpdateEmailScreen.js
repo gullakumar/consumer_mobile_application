@@ -9,16 +9,19 @@ import * as StyleSheet from '../utils/StyleSheet';
 import {
   Button,
   Checkbox,
+  Circle,
+  CircleImage,
   DatePicker,
   Icon,
   ScreenContainer,
+  Surface,
   TextInput,
   Touchable,
   withTheme,
 } from '@draftbit/ui';
 import { Image, Text, View, useWindowDimensions } from 'react-native';
 
-const ServiceConnectionDetailsScreen = props => {
+const UpdateEmailScreen = props => {
   const dimensions = useWindowDimensions();
   const Constants = GlobalVariables.useValues();
   const Variables = Constants;
@@ -75,10 +78,9 @@ const ServiceConnectionDetailsScreen = props => {
   const [date, setDate] = React.useState(new Date());
   const [datePickerValue, setDatePickerValue] = React.useState(new Date());
   const [existAcct, setExistAcct] = React.useState('');
-  const [hiddenHindi, setHiddenHindi] = React.useState(true);
   const [newAcct, setNewAcct] = React.useState('');
+  const [newEmail, setNewEmail] = React.useState('');
   const [showNav, setShowNav] = React.useState(false);
-  const [visibleHindi, setVisibleHindi] = React.useState(false);
 
   return (
     <ScreenContainer
@@ -95,10 +97,10 @@ const ServiceConnectionDetailsScreen = props => {
           dimensions.width
         )}
       >
-        {/* Header */}
+        {/* headerp */}
         <View
           style={StyleSheet.applyWidth(
-            StyleSheet.compose(GlobalStyles.ViewStyles(theme)['Header 3'], {
+            StyleSheet.compose(GlobalStyles.ViewStyles(theme)['headerp 5'], {
               marginTop: 45,
             }),
             dimensions.width
@@ -140,7 +142,7 @@ const ServiceConnectionDetailsScreen = props => {
               dimensions.width
             )}
           >
-            {'Add New Service Connection'}
+            {'View Bill '}
           </Text>
         </View>
         {/* amblock */}
@@ -148,7 +150,7 @@ const ServiceConnectionDetailsScreen = props => {
           style={StyleSheet.applyWidth(
             {
               justifyContent: 'flex-start',
-              marginTop: 60,
+              marginTop: 40,
               paddingLeft: 20,
               paddingRight: 20,
             },
@@ -173,15 +175,15 @@ const ServiceConnectionDetailsScreen = props => {
           <View
             style={StyleSheet.applyWidth(
               StyleSheet.compose(GlobalStyles.ViewStyles(theme)['user name'], {
-                marginBottom: 15,
+                marginBottom: 30,
               }),
               dimensions.width
             )}
           >
             <Icon
-              color={theme.colors['Medium']}
               size={24}
-              name={'MaterialIcons/house'}
+              name={'Ionicons/mail'}
+              color={theme.colors['Medium']}
             />
             <View
               style={StyleSheet.applyWidth(
@@ -192,7 +194,7 @@ const ServiceConnectionDetailsScreen = props => {
               <TextInput
                 onChangeText={newTextInputValue => {
                   try {
-                    setNewAcct(newTextInputValue);
+                    setNewEmail(newTextInputValue);
                   } catch (err) {
                     console.error(err);
                   }
@@ -208,26 +210,23 @@ const ServiceConnectionDetailsScreen = props => {
                   },
                   dimensions.width
                 )}
-                value={newAcct}
-                placeholder={'Enter new service connection'}
-                editable={true}
+                placeholder={'New Email'}
                 placeholderTextColor={theme.colors['Medium']}
+                editable={true}
               />
             </View>
           </View>
           {/* Meter Number */}
           <View
             style={StyleSheet.applyWidth(
-              StyleSheet.compose(GlobalStyles.ViewStyles(theme)['user name'], {
-                marginTop: 10,
-              }),
+              GlobalStyles.ViewStyles(theme)['user name'],
               dimensions.width
             )}
           >
             <Icon
               size={24}
               color={theme.colors['Medium']}
-              name={'MaterialIcons/house'}
+              name={'Ionicons/mail'}
             />
             <View
               style={StyleSheet.applyWidth(
@@ -236,6 +235,16 @@ const ServiceConnectionDetailsScreen = props => {
               )}
             >
               <TextInput
+                onChangeText={newTextInputValue => {
+                  try {
+                    setGlobalVariableValue({
+                      key: 'email',
+                      value: newTextInputValue,
+                    });
+                  } catch (err) {
+                    console.error(err);
+                  }
+                }}
                 style={StyleSheet.applyWidth(
                   {
                     borderRadius: 8,
@@ -247,8 +256,8 @@ const ServiceConnectionDetailsScreen = props => {
                   },
                   dimensions.width
                 )}
-                value={Constants['name']}
-                placeholder={'Exiting service connection number'}
+                value={Constants['email']}
+                placeholder={'Old Email'}
                 editable={true}
                 placeholderTextColor={theme.colors['Medium']}
               />
@@ -260,17 +269,28 @@ const ServiceConnectionDetailsScreen = props => {
               const handler = async () => {
                 try {
                   const adsercondetresult = (
-                    await CISAPPApi.addServiceConnectionAccountPOSTStatusAndText(
-                      Constants,
-                      {
-                        existAcct: (() => {
-                          const e = Constants['name'];
-                          console.log(e);
-                          return e;
-                        })(),
-                        newAcct: newAcct,
-                      }
-                    )
+                    await CISAPPApi.updateEmailPOSTStatusAndText(Constants, {
+                      accno: (() => {
+                        const e = Constants['name'];
+                        console.log(e);
+                        return e;
+                      })(),
+                      newEmail: (() => {
+                        const e = newEmail;
+                        console.log(e);
+                        return e;
+                      })(),
+                      oldEmail: (() => {
+                        const e = Constants['email'];
+                        console.log(e);
+                        return e;
+                      })(),
+                      userId: (() => {
+                        const e = Constants['userId'];
+                        console.log(e);
+                        return e;
+                      })(),
+                    })
                   )?.json;
                   console.log(adsercondetresult);
                   const messagejson =
@@ -289,12 +309,16 @@ const ServiceConnectionDetailsScreen = props => {
                     key: 'new_acc',
                     value: newAcct,
                   });
+                  setGlobalVariableValue({
+                    key: 'exi_acc',
+                    value: existAcct,
+                  });
                   if (messagejson?.length) {
                     return;
                   }
-                  navigation.navigate(
-                    'ConfirmOTPAddNewServiceConnectionScreen'
-                  );
+                  navigation.navigate('ConfirmOTPEmailUpdateScreen', {
+                    newEmail: newEmail,
+                  });
                 } catch (err) {
                   console.error(err);
                 }
@@ -323,4 +347,4 @@ const ServiceConnectionDetailsScreen = props => {
   );
 };
 
-export default withTheme(ServiceConnectionDetailsScreen);
+export default withTheme(UpdateEmailScreen);

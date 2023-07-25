@@ -1,7 +1,9 @@
 import React from 'react';
 import * as GlobalStyles from '../GlobalStyles.js';
 import * as CISAPPApi from '../apis/CISAPPApi.js';
+import * as GlobalVariables from '../config/GlobalVariableContext';
 import Images from '../config/Images';
+import * as CustomCode from '../custom-files/CustomCode';
 import Breakpoints from '../utils/Breakpoints';
 import * as StyleSheet from '../utils/StyleSheet';
 import {
@@ -9,37 +11,80 @@ import {
   Checkbox,
   Circle,
   CircleImage,
+  DatePicker,
   Icon,
   ScreenContainer,
   Surface,
-  Swiper,
-  SwiperItem,
+  TextInput,
   Touchable,
   withTheme,
 } from '@draftbit/ui';
-import { useIsFocused } from '@react-navigation/native';
-import * as WebBrowser from 'expo-web-browser';
-import {
-  ActivityIndicator,
-  Image,
-  Text,
-  View,
-  useWindowDimensions,
-} from 'react-native';
-import { Fetch } from 'react-request';
+import { Image, Text, View, useWindowDimensions } from 'react-native';
 
-const WelcomeScreen = props => {
+const UpdatePhonenumberScreen = props => {
   const dimensions = useWindowDimensions();
+  const Constants = GlobalVariables.useValues();
+  const Variables = Constants;
+  const setGlobalVariableValue = GlobalVariables.useSetValue();
+
+  const processErrorMessage = msg => {
+    const scheme = {
+      msg1: 'Password Changed Successfully',
+      msg2: 'Problem while Sending OTP SMS',
+      msg3: 'OTP send SuccessFully TO the existing Mobile',
+      msg4: 'Input password details not same as in DB !',
+      msg5: 'The user is already registered',
+      msg6: 'You are not smart meter consumer',
+      msg7: 'Invalid OTP',
+      msg8: 'Problem while creating an user',
+      msg9: 'User Creation Done Successfully',
+      msg10: 'Mobile Number Doesnot exist for this consumer!',
+      msg11: 'Problem while generating OTP!',
+      msg12: 'Email ID Doesnot exist for this consumer in registration Table',
+      msg13: 'OTP sent to your Registred Email Address',
+      msg14: 'The OTP has expired!',
+      msg15: 'Problem while updating password!',
+      msg16: 'Existing email not Found',
+      msg17: 'password details not found in the input data!',
+      msg18: 'Old password and New Password must not be same !',
+      msg19: 'Problem while updating password',
+      msg20: 'OTP sent SuccessFully',
+      msg21: 'Phone Number Changed Successfully',
+      msg22: 'Logical Error',
+      msg23: 'Entered consumer number is already registered',
+      msg24: 'Entered consumer number already mapped',
+      msg26: 'Accounts added for the existing consumer limit is exceeded',
+      msg27: 'Should not same login account and entered account',
+      msg28: '* Invalid Consumer Number',
+      msg29: '* Invalid Credentials',
+      msg30: 'Invalid Password',
+      msg31: 'OTP Limit Exceeded, Please Try Again!',
+      msg32: "Account Dosen't Have SmartMeter",
+      msg31: 'OTP Limit Exceeded, Please Try Again!',
+      msg32: "Account Dosen't Have SmartMeter",
+      msg33: 'Group Created',
+      msg34: 'Group Creation Error',
+      msg35: 'Added Group is Valid',
+      msg36: 'Account Added Successfully',
+      msg37: 'Add Account Error',
+    };
+
+    return scheme[msg];
+  };
 
   const { theme } = props;
   const { navigation } = props;
 
+  const [date, setDate] = React.useState(new Date());
+  const [datePickerValue, setDatePickerValue] = React.useState(new Date());
+  const [existAcct, setExistAcct] = React.useState('');
+  const [newAcct, setNewAcct] = React.useState('');
   const [showNav, setShowNav] = React.useState(false);
 
   return (
     <ScreenContainer
       style={StyleSheet.applyWidth(
-        { flex: 1, flexDirection: 'row' },
+        { flex: 1, flexDirection: 'column' },
         dimensions.width
       )}
       hasTopSafeArea={false}
@@ -84,7 +129,7 @@ const WelcomeScreen = props => {
                   onPress={() => {
                     try {
                       setShowNav(false);
-                      navigation.navigate('WelcomeScreen');
+                      navigation.navigate('DashboardScreen');
                     } catch (err) {
                       console.error(err);
                     }
@@ -119,12 +164,12 @@ const WelcomeScreen = props => {
                     </Text>
                   </View>
                 </Touchable>
-                {/* Quick Pay */}
+                {/* Manage Account */}
                 <Touchable
                   onPress={() => {
                     try {
                       setShowNav(false);
-                      navigation.navigate('QuickPayScreen');
+                      navigation.navigate('ManageAccountScreen');
                     } catch (err) {
                       console.error(err);
                     }
@@ -146,7 +191,7 @@ const WelcomeScreen = props => {
                     <Icon
                       size={24}
                       name={
-                        'MaterialCommunityIcons/contactless-payment-circle-outline'
+                        'MaterialCommunityIcons/account-arrow-right-outline'
                       }
                     />
                     <Text
@@ -160,16 +205,16 @@ const WelcomeScreen = props => {
                         dimensions.width
                       )}
                     >
-                      {'Quick Pay'}
+                      {'Manage Account'}
                     </Text>
                   </View>
                 </Touchable>
-                {/* Raise Ticket */}
+                {/* Notifications */}
                 <Touchable
                   onPress={() => {
                     try {
                       setShowNav(false);
-                      navigation.navigate('AddTicketProcessGuestScreen');
+                      navigation.navigate('NotificationsScreen');
                     } catch (err) {
                       console.error(err);
                     }
@@ -190,7 +235,7 @@ const WelcomeScreen = props => {
                   >
                     <Icon
                       size={24}
-                      name={'MaterialCommunityIcons/sticker-check-outline'}
+                      name={'Ionicons/ios-notifications-circle-outline'}
                     />
                     <Text
                       style={StyleSheet.applyWidth(
@@ -203,60 +248,15 @@ const WelcomeScreen = props => {
                         dimensions.width
                       )}
                     >
-                      {'Raise Ticket'}
+                      {'Notifications'}
                     </Text>
                   </View>
                 </Touchable>
-                {/* New Service Connection */}
-                <Touchable
-                  onPress={() => {
-                    const handler = async () => {
-                      try {
-                        await WebBrowser.openBrowserAsync(
-                          'http://20.192.2.50:9388/cportal/#/ltReg'
-                        );
-                      } catch (err) {
-                        console.error(err);
-                      }
-                    };
-                    handler();
-                  }}
-                >
-                  <View
-                    style={StyleSheet.applyWidth(
-                      {
-                        alignItems: 'center',
-                        flexDirection: 'row',
-                        paddingBottom: 12,
-                        paddingLeft: 24,
-                        paddingRight: 24,
-                        paddingTop: 12,
-                      },
-                      dimensions.width
-                    )}
-                  >
-                    <Icon size={24} name={'Ionicons/person-add-outline'} />
-                    <Text
-                      style={StyleSheet.applyWidth(
-                        {
-                          color: theme.colors.strong,
-                          fontFamily: 'Roboto_400Regular',
-                          fontSize: 16,
-                          marginLeft: 8,
-                        },
-                        dimensions.width
-                      )}
-                    >
-                      {'New Service Connection'}
-                    </Text>
-                  </View>
-                </Touchable>
-                {/* Check Ticket Status */}
+                {/* Load and Quality */}
                 <Touchable
                   onPress={() => {
                     try {
-                      setShowNav(false);
-                      navigation.navigate('CheckTicketStatusforGuestScreen');
+                      navigation.navigate('LoadQualityScreen');
                     } catch (err) {
                       console.error(err);
                     }
@@ -275,7 +275,7 @@ const WelcomeScreen = props => {
                       dimensions.width
                     )}
                   >
-                    <Icon size={24} name={'MaterialIcons/work-outline'} />
+                    <Icon size={24} name={'Feather/loader'} />
                     <Text
                       style={StyleSheet.applyWidth(
                         {
@@ -287,7 +287,7 @@ const WelcomeScreen = props => {
                         dimensions.width
                       )}
                     >
-                      {'Check Ticket Status'}
+                      {'Load & Quality'}
                     </Text>
                   </View>
                 </Touchable>
@@ -295,7 +295,7 @@ const WelcomeScreen = props => {
                 <Touchable
                   onPress={() => {
                     try {
-                      navigation.navigate('DownloadGuestScreen');
+                      navigation.navigate('DownloadsScreen');
                     } catch (err) {
                       console.error(err);
                     }
@@ -334,7 +334,7 @@ const WelcomeScreen = props => {
                 <Touchable
                   onPress={() => {
                     try {
-                      navigation.navigate('HelpCenterGuestScreen');
+                      navigation.navigate('HelpCenterScreen');
                     } catch (err) {
                       console.error(err);
                     }
@@ -373,7 +373,7 @@ const WelcomeScreen = props => {
                 <Touchable
                   onPress={() => {
                     try {
-                      navigation.navigate('FeedbackGuestScreen');
+                      navigation.navigate('FeedbackScreen');
                     } catch (err) {
                       console.error(err);
                     }
@@ -412,7 +412,7 @@ const WelcomeScreen = props => {
                 <Touchable
                   onPress={() => {
                     try {
-                      navigation.navigate('HelpCenterGuestScreen');
+                      navigation.navigate('HelpCenterScreen');
                     } catch (err) {
                       console.error(err);
                     }
@@ -489,326 +489,255 @@ const WelcomeScreen = props => {
       {/* Content */}
       <View
         style={StyleSheet.applyWidth(
-          {
-            flex: 1,
-            justifyContent: 'space-around',
-            paddingBottom: 60,
-            paddingTop: 30,
-          },
+          { flex: 1, flexBasis: 1, justifyContent: 'flex-start' },
           dimensions.width
         )}
       >
-        {/* Header */}
+        {/* headerp */}
+        <View
+          style={StyleSheet.applyWidth(
+            StyleSheet.compose(GlobalStyles.ViewStyles(theme)['headerp 4'], {
+              marginTop: 45,
+            }),
+            dimensions.width
+          )}
+        >
+          {/* Back btn */}
+          <Touchable
+            onPress={() => {
+              try {
+                navigation.goBack();
+              } catch (err) {
+                console.error(err);
+              }
+            }}
+          >
+            <View
+              style={StyleSheet.applyWidth(
+                {
+                  alignItems: 'center',
+                  height: 44,
+                  justifyContent: 'center',
+                  width: 44,
+                },
+                dimensions.width
+              )}
+            >
+              <Icon size={24} name={'AntDesign/arrowleft'} />
+            </View>
+          </Touchable>
+          {/* Update Phone Number */}
+          <Text
+            style={StyleSheet.applyWidth(
+              {
+                color: theme.colors.strong,
+                fontFamily: 'Roboto_700Bold',
+                fontSize: 18,
+                marginLeft: 10,
+              },
+              dimensions.width
+            )}
+          >
+            {'Update Phone Number'}
+          </Text>
+        </View>
+        {/* amblock */}
         <View
           style={StyleSheet.applyWidth(
             {
-              alignItems: 'center',
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              marginTop: 12,
+              justifyContent: 'flex-start',
+              marginTop: 40,
               paddingLeft: 20,
               paddingRight: 20,
             },
             dimensions.width
           )}
         >
-          <Checkbox
-            onPress={newCheckboxValue => {
-              try {
-                setShowNav(newCheckboxValue);
-              } catch (err) {
-                console.error(err);
-              }
+          {/* error message */}
+          <Text
+            style={StyleSheet.applyWidth(
+              StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+                alignSelf: 'center',
+                color: theme.colors['Community_Dark_Red'],
+                fontFamily: 'Roboto_400Regular',
+                paddingBottom: 20,
+              }),
+              dimensions.width
+            )}
+          >
+            {processErrorMessage(Constants['ERROR_MESSAGE'])}
+          </Text>
+          {/* Service connection number */}
+          <View
+            style={StyleSheet.applyWidth(
+              StyleSheet.compose(GlobalStyles.ViewStyles(theme)['user name'], {
+                marginBottom: 30,
+              }),
+              dimensions.width
+            )}
+          >
+            <Icon
+              size={24}
+              name={'Entypo/phone'}
+              color={theme.colors['Medium']}
+            />
+            <View
+              style={StyleSheet.applyWidth(
+                { flex: 1, paddingLeft: 10, paddingRight: 10 },
+                dimensions.width
+              )}
+            >
+              <TextInput
+                onChangeText={newTextInputValue => {
+                  try {
+                    setNewAcct(newTextInputValue);
+                  } catch (err) {
+                    console.error(err);
+                  }
+                }}
+                style={StyleSheet.applyWidth(
+                  {
+                    borderRadius: 8,
+                    fontFamily: 'Roboto_400Regular',
+                    paddingBottom: 8,
+                    paddingLeft: 8,
+                    paddingRight: 8,
+                    paddingTop: 8,
+                  },
+                  dimensions.width
+                )}
+                value={newAcct}
+                placeholder={'New Mobile Number'}
+                editable={true}
+                placeholderTextColor={theme.colors['Medium']}
+              />
+            </View>
+          </View>
+          {/* Meter Number */}
+          <View
+            style={StyleSheet.applyWidth(
+              GlobalStyles.ViewStyles(theme)['user name'],
+              dimensions.width
+            )}
+          >
+            <Icon
+              size={24}
+              color={theme.colors['Medium']}
+              name={'Entypo/phone'}
+            />
+            <View
+              style={StyleSheet.applyWidth(
+                { flex: 1, paddingLeft: 10, paddingRight: 10 },
+                dimensions.width
+              )}
+            >
+              <TextInput
+                onChangeText={newTextInputValue => {
+                  try {
+                    setGlobalVariableValue({
+                      key: 'mobileNumber',
+                      value: newTextInputValue,
+                    });
+                  } catch (err) {
+                    console.error(err);
+                  }
+                }}
+                style={StyleSheet.applyWidth(
+                  {
+                    borderRadius: 8,
+                    fontFamily: 'Roboto_400Regular',
+                    paddingBottom: 8,
+                    paddingLeft: 8,
+                    paddingRight: 8,
+                    paddingTop: 8,
+                  },
+                  dimensions.width
+                )}
+                value={Constants['mobileNumber']}
+                placeholder={'Old Mobile Number'}
+                editable={true}
+                placeholderTextColor={theme.colors['Medium']}
+              />
+            </View>
+          </View>
+          {/* Submit */}
+          <Button
+            onPress={() => {
+              const handler = async () => {
+                try {
+                  const adsercondetresult = (
+                    await CISAPPApi.updateProfileMobileNumberPOSTStatusAndText(
+                      Constants,
+                      {
+                        accno: (() => {
+                          const e = Constants['name'];
+                          console.log(e);
+                          return e;
+                        })(),
+                        newMobile: (() => {
+                          const e = newAcct;
+                          console.log(e);
+                          return e;
+                        })(),
+                        oldMobile: (() => {
+                          const e = Constants['mobileNumber'];
+                          console.log(e);
+                          return e;
+                        })(),
+                        userId: (() => {
+                          const e = Constants['userId'];
+                          console.log(e);
+                          return e;
+                        })(),
+                      }
+                    )
+                  )?.json;
+                  console.log(adsercondetresult);
+                  const messagejson =
+                    adsercondetresult?.[0].data?.error?.message;
+                  setGlobalVariableValue({
+                    key: 'ERROR_MESSAGE',
+                    value: messagejson,
+                  });
+                  const test = setGlobalVariableValue({
+                    key: 'OTP_ACK_NUMBER',
+                    value: JSON.parse(
+                      (adsercondetresult && adsercondetresult[0])?.data[0]?.data
+                    )?.id,
+                  });
+                  console.log(test);
+                  if (messagejson?.length) {
+                    return;
+                  }
+                  navigation.navigate('ConfirmOTPPhonenumberupdateScreen', {
+                    newMobileNumber: newAcct,
+                  });
+                } catch (err) {
+                  console.error(err);
+                }
+              };
+              handler();
             }}
-            status={showNav}
-            checkedIcon={'Feather/x'}
-            uncheckedIcon={'Feather/menu'}
-            color={theme.colors['Custom Color_22']}
-            uncheckedColor={theme.colors['Custom Color_22']}
-            size={30}
+            style={StyleSheet.applyWidth(
+              StyleSheet.compose(GlobalStyles.ButtonStyles(theme)['Submit'], {
+                borderRadius: 14,
+                fontSize: 16,
+              }),
+              dimensions.width
+            )}
+            title={'Submit'}
           />
         </View>
         {/* Body */}
         <View
           style={StyleSheet.applyWidth(
-            { flex: 0, justifyContent: 'space-around' },
+            { justifyContent: 'space-around' },
             dimensions.width
           )}
-        >
-          <View
-            style={StyleSheet.applyWidth(
-              { alignItems: 'center', marginBottom: 50, marginTop: -20 },
-              dimensions.width
-            )}
-          >
-            <Image
-              style={StyleSheet.applyWidth(
-                StyleSheet.compose(
-                  GlobalStyles.ImageStyles(theme)['banner 3'],
-                  { height: 128, width: 128 }
-                ),
-                dimensions.width
-              )}
-              resizeMode={'cover'}
-              source={Images.JBNL}
-            />
-          </View>
-          {/* Home buttons */}
-          <View
-            style={StyleSheet.applyWidth(
-              StyleSheet.compose(
-                GlobalStyles.ViewStyles(theme)['Home buttons'],
-                { marginBottom: 50 }
-              ),
-              dimensions.width
-            )}
-          >
-            {/* Button Solid login sign up */}
-            <Button
-              onPress={() => {
-                try {
-                  navigation.navigate('LoginScreen');
-                } catch (err) {
-                  console.error(err);
-                }
-              }}
-              style={StyleSheet.applyWidth(
-                {
-                  borderRadius: 14,
-                  fontFamily: 'Roboto_400Regular',
-                  fontSize: 16,
-                  marginBottom: 30,
-                },
-                dimensions.width
-              )}
-              type={'solid'}
-              title={'Login'}
-            >
-              {'Sign up'}
-            </Button>
-            {/* Button Solid Quick Pay */}
-            <Button
-              onPress={() => {
-                try {
-                  navigation.navigate('QuickPayScreen');
-                } catch (err) {
-                  console.error(err);
-                }
-              }}
-              style={StyleSheet.applyWidth(
-                {
-                  backgroundColor: theme.colors['GetFit Orange'],
-                  borderRadius: 14,
-                  fontFamily: 'Roboto_400Regular',
-                  fontSize: 16,
-                  marginBottom: 10,
-                },
-                dimensions.width
-              )}
-              type={'solid'}
-              title={'Quick Pay'}
-            >
-              {'Sign up'}
-            </Button>
-          </View>
-          {/* Announcements */}
-          <View
-            style={StyleSheet.applyWidth(
-              StyleSheet.compose(
-                GlobalStyles.ViewStyles(theme)['Announcements'],
-                { marginBottom: 50 }
-              ),
-              dimensions.width
-            )}
-          >
-            <CISAPPApi.FetchANNOUNCEMENTSPOST>
-              {({ loading, error, data, refetchANNOUNCEMENTS }) => {
-                const fetchData = data;
-                if (loading) {
-                  return <ActivityIndicator />;
-                }
-
-                if (error) {
-                  return <ActivityIndicator />;
-                }
-
-                return (
-                  <Swiper
-                    renderItem={({ item }) => {
-                      const swiperData = item;
-                      return (
-                        <>
-                          {!swiperData ? null : (
-                            <SwiperItem
-                              style={StyleSheet.applyWidth(
-                                {
-                                  alignSelf: 'stretch',
-                                  height: 108,
-                                  width: '100%',
-                                },
-                                dimensions.width
-                              )}
-                            >
-                              <Text
-                                style={StyleSheet.applyWidth(
-                                  {
-                                    alignSelf: 'stretch',
-                                    fontFamily: 'Roboto_700Bold',
-                                    fontSize: 15,
-                                    paddingBottom: 2,
-                                    paddingLeft: 5,
-                                    paddingRight: 5,
-                                    paddingTop: 8,
-                                    textAlign: 'center',
-                                  },
-                                  dimensions.width
-                                )}
-                              >
-                                {swiperData?.news_source}
-                              </Text>
-
-                              <Text
-                                style={StyleSheet.applyWidth(
-                                  {
-                                    alignSelf: 'stretch',
-                                    fontFamily: 'Roboto_400Regular',
-                                    fontSize: 13,
-                                    paddingBottom: 2,
-                                    paddingLeft: 5,
-                                    paddingRight: 5,
-                                    paddingTop: 8,
-                                    textAlign: 'center',
-                                  },
-                                  dimensions.width
-                                )}
-                              >
-                                {swiperData?.description}
-                              </Text>
-                            </SwiperItem>
-                          )}
-                        </>
-                      );
-                    }}
-                    data={fetchData && fetchData[0].data}
-                    listKey={'RXtlz9Ta'}
-                    keyExtractor={swiperData =>
-                      swiperData?.id ||
-                      swiperData?.uuid ||
-                      JSON.stringify(swiperData)
-                    }
-                    style={StyleSheet.applyWidth(
-                      StyleSheet.compose(
-                        GlobalStyles.SwiperStyles(theme)['Swiper'],
-                        {
-                          alignSelf: 'auto',
-                          backgroundColor: 'rgb(255, 255, 255)',
-                          borderColor: 'rgb(222, 221, 221)',
-                          borderRadius: 5,
-                          borderWidth: 1,
-                          height: 108,
-                          position: 'relative',
-                        }
-                      ),
-                      dimensions.width
-                    )}
-                    dotColor={theme.colors.light}
-                    dotActiveColor={theme.colors.primary}
-                    dotsTouchable={true}
-                  />
-                );
-              }}
-            </CISAPPApi.FetchANNOUNCEMENTSPOST>
-          </View>
-          {/* Promotions 2 */}
-          <View
-            style={StyleSheet.applyWidth(
-              StyleSheet.compose(GlobalStyles.ViewStyles(theme)['Promotions'], {
-                marginBottom: 50,
-              }),
-              dimensions.width
-            )}
-          >
-            <CISAPPApi.FetchBANNERSPOST>
-              {({ loading, error, data, refetchBANNERS }) => {
-                const fetchData = data;
-                if (loading) {
-                  return <ActivityIndicator />;
-                }
-
-                if (error) {
-                  return <ActivityIndicator />;
-                }
-
-                return (
-                  <Swiper
-                    renderItem={({ item }) => {
-                      const swiperData = item;
-                      return (
-                        <>
-                          <>
-                            {!swiperData ? null : (
-                              <SwiperItem
-                                style={StyleSheet.applyWidth(
-                                  {
-                                    alignSelf: 'stretch',
-                                    height: 108,
-                                    width: '100%',
-                                  },
-                                  dimensions.width
-                                )}
-                              >
-                                {/* banner */}
-                                <Image
-                                  style={StyleSheet.applyWidth(
-                                    StyleSheet.compose(
-                                      GlobalStyles.ImageStyles(theme)['banner'],
-                                      { borderRadius: 8, height: 108 }
-                                    ),
-                                    dimensions.width
-                                  )}
-                                  resizeMode={'cover'}
-                                  source={{ uri: `${swiperData?.attachment}` }}
-                                />
-                              </SwiperItem>
-                            )}
-                          </>
-                        </>
-                      );
-                    }}
-                    data={fetchData && fetchData[0].data}
-                    listKey={'NA7Jid6h'}
-                    keyExtractor={swiperData =>
-                      swiperData?.id ||
-                      swiperData?.uuid ||
-                      JSON.stringify(swiperData)
-                    }
-                    style={StyleSheet.applyWidth(
-                      StyleSheet.compose(
-                        GlobalStyles.SwiperStyles(theme)['Swiper'],
-                        {
-                          alignSelf: 'auto',
-                          backgroundColor: 'rgb(255, 255, 255)',
-                          borderColor: 'rgb(222, 221, 221)',
-                          borderRadius: 5,
-                          borderWidth: 1,
-                          height: 108,
-                          position: 'relative',
-                        }
-                      ),
-                      dimensions.width
-                    )}
-                    dotColor={theme.colors.light}
-                    dotActiveColor={theme.colors.primary}
-                    dotsTouchable={true}
-                  />
-                );
-              }}
-            </CISAPPApi.FetchBANNERSPOST>
-          </View>
-        </View>
+        />
       </View>
     </ScreenContainer>
   );
 };
 
-export default withTheme(WelcomeScreen);
+export default withTheme(UpdatePhonenumberScreen);

@@ -11,13 +11,18 @@ import LinkingConfiguration from './LinkingConfiguration.js';
 import AddTicketProcessGuestScreen from './screens/AddTicketProcessGuestScreen';
 import AdvancePayemntConfirmationScreen from './screens/AdvancePayemntConfirmationScreen';
 import AdvancePayemntScreen from './screens/AdvancePayemntScreen';
+import BillingCopyScreen from './screens/BillingCopyScreen';
 import BillingScreen from './screens/BillingScreen';
 import CheckTicketStatusScreen from './screens/CheckTicketStatusScreen';
 import CheckTicketStatusforGuestScreen from './screens/CheckTicketStatusforGuestScreen';
 import ConfirmOTPAddNewServiceConnectionScreen from './screens/ConfirmOTPAddNewServiceConnectionScreen';
 import ConfirmOTPAddTicketprocessScreen from './screens/ConfirmOTPAddTicketprocessScreen';
+import ConfirmOTPEmailUpdateScreen from './screens/ConfirmOTPEmailUpdateScreen';
 import ConfirmOTPForgotpasswordScreen from './screens/ConfirmOTPForgotpasswordScreen';
+import ConfirmOTPLoginScreen from './screens/ConfirmOTPLoginScreen';
+import ConfirmOTPPhonenumberupdateScreen from './screens/ConfirmOTPPhonenumberupdateScreen';
 import DashboardScreen from './screens/DashboardScreen';
+import DeleteServiceConnectionScreen from './screens/DeleteServiceConnectionScreen';
 import DownloadGuestScreen from './screens/DownloadGuestScreen';
 import DownloadsScreen from './screens/DownloadsScreen';
 import FeedbackGuestScreen from './screens/FeedbackGuestScreen';
@@ -26,6 +31,7 @@ import ForgotpasswordScreen from './screens/ForgotpasswordScreen';
 import HelpCenterGuestScreen from './screens/HelpCenterGuestScreen';
 import HelpCenterScreen from './screens/HelpCenterScreen';
 import LoadQualityScreen from './screens/LoadQualityScreen';
+import LoginOTPScreen from './screens/LoginOTPScreen';
 import LoginScreen from './screens/LoginScreen';
 import MakePaymentGuestScreen from './screens/MakePaymentGuestScreen';
 import MakePaymentScreen from './screens/MakePaymentScreen';
@@ -45,7 +51,10 @@ import RechargeConfirmationScreen from './screens/RechargeConfirmationScreen';
 import RechargeScreen from './screens/RechargeScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import ServiceConnectionDetailsScreen from './screens/ServiceConnectionDetailsScreen';
+import UpdateEmailScreen from './screens/UpdateEmailScreen';
 import UpdateNewPasswordScreen from './screens/UpdateNewPasswordScreen';
+import UpdatePhoneandEmailScreen from './screens/UpdatePhoneandEmailScreen';
+import UpdatePhonenumberScreen from './screens/UpdatePhonenumberScreen';
 import UsageScreen from './screens/UsageScreen';
 import ViewBillGuestScreen from './screens/ViewBillGuestScreen';
 import ViewBillScreen from './screens/ViewBillScreen';
@@ -160,13 +169,6 @@ export default function RootAppNavigator() {
           component={UpdateNewPasswordScreen}
           options={{
             title: 'Update New Password',
-          }}
-        />
-        <Stack.Screen
-          name="MakePaymentScreen"
-          component={MakePaymentScreen}
-          options={{
-            title: 'Make Payment',
           }}
         />
         <Stack.Screen
@@ -290,13 +292,6 @@ export default function RootAppNavigator() {
           }}
         />
         <Stack.Screen
-          name="RechargeScreen"
-          component={RechargeScreen}
-          options={{
-            title: 'Recharge',
-          }}
-        />
-        <Stack.Screen
           name="RechargeConfirmationScreen"
           component={RechargeConfirmationScreen}
           options={{
@@ -413,6 +408,83 @@ export default function RootAppNavigator() {
           component={ReceiptGuestScreen}
           options={{
             title: 'Receipt Guest',
+          }}
+        />
+        <Stack.Screen
+          name="UpdatePhoneandEmailScreen"
+          component={UpdatePhoneandEmailScreen}
+          options={{
+            title: 'Update Phone and Email',
+          }}
+        />
+        <Stack.Screen
+          name="UpdatePhonenumberScreen"
+          component={UpdatePhonenumberScreen}
+          options={{
+            title: 'Update Phone number',
+          }}
+        />
+        <Stack.Screen
+          name="UpdateEmailScreen"
+          component={UpdateEmailScreen}
+          options={{
+            title: 'Update Email',
+          }}
+        />
+        <Stack.Screen
+          name="ConfirmOTPPhonenumberupdateScreen"
+          component={ConfirmOTPPhonenumberupdateScreen}
+          options={{
+            title: 'Confirm OTP Phone number update',
+          }}
+        />
+        <Stack.Screen
+          name="ConfirmOTPEmailUpdateScreen"
+          component={ConfirmOTPEmailUpdateScreen}
+          options={{
+            title: 'Confirm OTP Email Update',
+          }}
+        />
+        <Stack.Screen
+          name="MakePaymentScreen"
+          component={MakePaymentScreen}
+          options={{
+            title: 'Make Payment',
+          }}
+        />
+        <Stack.Screen
+          name="LoginOTPScreen"
+          component={LoginOTPScreen}
+          options={{
+            title: 'Login OTP',
+          }}
+        />
+        <Stack.Screen
+          name="ConfirmOTPLoginScreen"
+          component={ConfirmOTPLoginScreen}
+          options={{
+            title: 'Confirm OTP Login',
+          }}
+        />
+        <Stack.Screen
+          name="DeleteServiceConnectionScreen"
+          component={DeleteServiceConnectionScreen}
+          options={{
+            title: 'Delete Service Connection',
+          }}
+        />
+        <Stack.Screen
+          name="RechargeScreen"
+          component={RechargeScreen}
+          options={{
+            title: 'Recharge',
+          }}
+        />
+        <Stack.Screen
+          name="BillingCopyScreen"
+          component={BillingCopyScreen}
+          options={{
+            title: 'Billing Copy',
           }}
         />
       </Stack.Navigator>

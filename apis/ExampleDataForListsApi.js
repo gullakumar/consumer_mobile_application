@@ -7,40 +7,32 @@ import {
 } from 'react-query';
 import useFetch from 'react-fetch-hook';
 import { useIsFocused } from '@react-navigation/native';
+import { handleResponse, isOkStatus } from '../utils/handleRestApiResponse';
 import usePrevious from '../utils/usePrevious';
 import * as GlobalVariables from '../config/GlobalVariableContext';
 
-export const $SampleRecordsGETStatusAndText = Constants =>
+export const $SampleRecordsGETStatusAndText = (
+  Constants,
+  _args,
+  handlers = {}
+) =>
   fetch(`https://example-data.draftbit.com/podcasts?_limit=4`, {
     headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
-  }).then(async res => ({
-    status: res.status,
-    statusText: res.statusText,
-    text: await res.text(),
-  }));
+  }).then(res => handleResponse(res, handlers));
 
-export const $SampleRecordsGET = Constants =>
-  $SampleRecordsGETStatusAndText(Constants).then(
-    ({ status, statusText, text }) => {
-      try {
-        return JSON.parse(text);
-      } catch (e) {
-        console.error(
-          [
-            'Failed to parse response text as JSON.',
-            `Error: ${e.message}`,
-            `Text: ${JSON.stringify(text)}`,
-          ].join('\n\n')
-        );
-      }
-    }
+export const $SampleRecordsGET = (Constants, _args, handlers = {}) =>
+  $SampleRecordsGETStatusAndText(Constants, {}, handlers).then(res =>
+    !isOkStatus(res.status) ? Promise.reject(res) : res.json
   );
 
-export const use5SampleRecordsGET = (args, { refetchInterval } = {}) => {
+export const use5SampleRecordsGET = (
+  args,
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
   return useQuery(
     ['Examples', args],
-    () => $SampleRecordsGET(Constants, args),
+    () => $SampleRecordsGET(Constants, args, handlers),
     {
       refetchInterval,
     }
@@ -50,15 +42,21 @@ export const use5SampleRecordsGET = (args, { refetchInterval } = {}) => {
 export const Fetch5SampleRecordsGET = ({
   children,
   onData = () => {},
+  handlers = {},
   refetchInterval,
 }) => {
   const Constants = GlobalVariables.useValues();
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const { loading, data, error, refetch } = use5SampleRecordsGET(
+  const {
+    isLoading: loading,
+    data,
+    error,
+    refetch,
+  } = use5SampleRecordsGET(
     {},
-    { refetchInterval }
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -73,46 +71,32 @@ export const Fetch5SampleRecordsGET = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    if (data) {
-      onData(data);
-    }
-  }, [data]);
 
   return children({ loading, data, error, refetch5SampleRecords: refetch });
 };
 
-export const getSampleDataList10GETStatusAndText = Constants =>
+export const getSampleDataList10GETStatusAndText = (
+  Constants,
+  _args,
+  handlers = {}
+) =>
   fetch(`https://example-data.draftbit.com/podcasts?_limit=10`, {
     headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
-  }).then(async res => ({
-    status: res.status,
-    statusText: res.statusText,
-    text: await res.text(),
-  }));
+  }).then(res => handleResponse(res, handlers));
 
-export const getSampleDataList10GET = Constants =>
-  getSampleDataList10GETStatusAndText(Constants).then(
-    ({ status, statusText, text }) => {
-      try {
-        return JSON.parse(text);
-      } catch (e) {
-        console.error(
-          [
-            'Failed to parse response text as JSON.',
-            `Error: ${e.message}`,
-            `Text: ${JSON.stringify(text)}`,
-          ].join('\n\n')
-        );
-      }
-    }
+export const getSampleDataList10GET = (Constants, _args, handlers = {}) =>
+  getSampleDataList10GETStatusAndText(Constants, {}, handlers).then(res =>
+    !isOkStatus(res.status) ? Promise.reject(res) : res.json
   );
 
-export const useGetSampleDataList10GET = (args, { refetchInterval } = {}) => {
+export const useGetSampleDataList10GET = (
+  args,
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
   return useQuery(
     ['Sample Data', args],
-    () => getSampleDataList10GET(Constants, args),
+    () => getSampleDataList10GET(Constants, args, handlers),
     {
       refetchInterval,
     }
@@ -122,15 +106,21 @@ export const useGetSampleDataList10GET = (args, { refetchInterval } = {}) => {
 export const FetchGetSampleDataList10GET = ({
   children,
   onData = () => {},
+  handlers = {},
   refetchInterval,
 }) => {
   const Constants = GlobalVariables.useValues();
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const { loading, data, error, refetch } = useGetSampleDataList10GET(
+  const {
+    isLoading: loading,
+    data,
+    error,
+    refetch,
+  } = useGetSampleDataList10GET(
     {},
-    { refetchInterval }
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -145,11 +135,6 @@ export const FetchGetSampleDataList10GET = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    if (data) {
-      onData(data);
-    }
-  }, [data]);
 
   return children({
     loading,

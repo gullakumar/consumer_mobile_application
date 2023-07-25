@@ -7,45 +7,42 @@ import {
 } from 'react-query';
 import useFetch from 'react-fetch-hook';
 import { useIsFocused } from '@react-navigation/native';
+import { handleResponse, isOkStatus } from '../utils/handleRestApiResponse';
 import usePrevious from '../utils/usePrevious';
 import * as GlobalVariables from '../config/GlobalVariableContext';
 
-export const doctorsListGETStatusAndText = (Constants, { count }) =>
+export const doctorsListGETStatusAndText = (
+  Constants,
+  { count },
+  handlers = {}
+) =>
   fetch(`https://example-data.draftbit.com/people?_limit=${count ?? ''}`, {
     headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
-  }).then(async res => ({
-    status: res.status,
-    statusText: res.statusText,
-    text: await res.text(),
-  }));
+  }).then(res => handleResponse(res, handlers));
 
-export const doctorsListGET = (Constants, { count }) =>
-  doctorsListGETStatusAndText(Constants, { count }).then(
-    ({ status, statusText, text }) => {
-      try {
-        return JSON.parse(text);
-      } catch (e) {
-        console.error(
-          [
-            'Failed to parse response text as JSON.',
-            `Error: ${e.message}`,
-            `Text: ${JSON.stringify(text)}`,
-          ].join('\n\n')
-        );
-      }
-    }
+export const doctorsListGET = (Constants, { count }, handlers = {}) =>
+  doctorsListGETStatusAndText(Constants, { count }, handlers).then(res =>
+    !isOkStatus(res.status) ? Promise.reject(res) : res.json
   );
 
-export const useDoctorsListGET = (args, { refetchInterval } = {}) => {
+export const useDoctorsListGET = (
+  args,
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  return useQuery(['doctors', args], () => doctorsListGET(Constants, args), {
-    refetchInterval,
-  });
+  return useQuery(
+    ['doctors', args],
+    () => doctorsListGET(Constants, args, handlers),
+    {
+      refetchInterval,
+    }
+  );
 };
 
 export const FetchDoctorsListGET = ({
   children,
   onData = () => {},
+  handlers = {},
   refetchInterval,
   count,
 }) => {
@@ -53,9 +50,14 @@ export const FetchDoctorsListGET = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const { loading, data, error, refetch } = useDoctorsListGET(
+  const {
+    isLoading: loading,
+    data,
+    error,
+    refetch,
+  } = useDoctorsListGET(
     { count },
-    { refetchInterval }
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -70,11 +72,6 @@ export const FetchDoctorsListGET = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    if (data) {
-      onData(data);
-    }
-  }, [data]);
 
   return children({ loading, data, error, refetchDoctorsList: refetch });
 };

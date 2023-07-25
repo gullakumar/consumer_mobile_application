@@ -2,6 +2,7 @@ import React from 'react';
 import * as GlobalStyles from '../GlobalStyles.js';
 import * as CISAPPApi from '../apis/CISAPPApi.js';
 import * as GlobalVariables from '../config/GlobalVariableContext';
+import * as CustomCode from '../custom-files/CustomCode';
 import Breakpoints from '../utils/Breakpoints';
 import * as StyleSheet from '../utils/StyleSheet';
 import {
@@ -20,11 +21,22 @@ const UpdateNewPasswordScreen = props => {
   const Constants = GlobalVariables.useValues();
   const Variables = Constants;
 
+  const passwordUpdate = (newPwd, confirmPwd) => {
+    console.log('newPassword' + newPwd);
+    console.log('confirmPassword' + confirmPwd);
+    let customErrorMessage = null;
+    if (newPwd != confirmPwd) {
+      customErrorMessage = 'Passwords do not match';
+      return customErrorMessage;
+    }
+  };
+
   const { theme } = props;
   const { navigation } = props;
 
   const [checkboxValue, setCheckboxValue] = React.useState(false);
   const [confirmpassword, setConfirmpassword] = React.useState('');
+  const [errorMessage, setErrorMessage] = React.useState('');
   const [hiddenPassword, setHiddenPassword] = React.useState(true);
   const [newpassword, setNewpassword] = React.useState('');
   const [visiblePassword, setVisiblePassword] = React.useState(false);
@@ -89,6 +101,27 @@ const UpdateNewPasswordScreen = props => {
           {'Update  Password'}
         </Text>
       </View>
+      {/* Error Message */}
+      <Text
+        style={StyleSheet.applyWidth(
+          {
+            alignSelf: 'center',
+            color: theme.colors['Error'],
+            fontFamily: 'Roboto_400Regular',
+            fontSize: 14,
+            letterSpacing: 0.3,
+            lineHeight: 21,
+            marginLeft: 20,
+            marginRight: 20,
+            marginTop: 75,
+            opacity: 1,
+            textAlign: 'center',
+          },
+          dimensions.width
+        )}
+      >
+        {errorMessage}
+      </Text>
       {/* OTP */}
       <View
         style={StyleSheet.applyWidth(
@@ -113,8 +146,8 @@ const UpdateNewPasswordScreen = props => {
               )}
             >
               <Icon
+                color={theme.colors['Medium']}
                 size={24}
-                color={theme.colors['Custom Color_20']}
                 name={'FontAwesome/lock'}
               />
               <View
@@ -144,8 +177,8 @@ const UpdateNewPasswordScreen = props => {
                   )}
                   value={newpassword}
                   placeholder={'Enter new password'}
+                  placeholderTextColor={theme.colors['Medium']}
                   editable={true}
-                  placeholderTextColor={theme.colors['Custom Color_20']}
                   secureTextEntry={true}
                 />
               </View>
@@ -240,8 +273,8 @@ const UpdateNewPasswordScreen = props => {
         >
           <Icon
             size={24}
-            color={theme.colors['Custom Color_20']}
             name={'FontAwesome/lock'}
+            color={theme.colors['Medium']}
           />
           <View
             style={StyleSheet.applyWidth(
@@ -271,8 +304,8 @@ const UpdateNewPasswordScreen = props => {
               value={confirmpassword}
               placeholder={'Confirm password'}
               editable={true}
-              placeholderTextColor={theme.colors['Custom Color_20']}
               secureTextEntry={true}
+              placeholderTextColor={theme.colors['Medium']}
             />
           </View>
         </View>
@@ -289,16 +322,36 @@ const UpdateNewPasswordScreen = props => {
           onPress={() => {
             const handler = async () => {
               try {
-                await CISAPPApi.aftersentOTPforgorpasswordPOST(Constants, {
-                  accno: Constants['OTP_SERVICE_NUMBER'],
-                  newPassword: newpassword,
-                  otp: props.route?.params?.userEnteredOTP ?? '',
-                  transid: Constants['OTP_ACK_NUMBER'],
-                });
-                navigation.navigate('LoginScreen');
-                if (newpassword !== confirmpassword) {
+                setErrorMessage('');
+                (
+                  await CISAPPApi.aftersentOTPforgorpasswordPOSTStatusAndText(
+                    Constants,
+                    {
+                      accno: Constants['OTP_SERVICE_NUMBER'],
+                      newPassword: newpassword,
+                      otp: props.route?.params?.userEnteredOTP ?? '',
+                      transid: Constants['OTP_ACK_NUMBER'],
+                    }
+                  )
+                )?.json;
+                const passwordResult = passwordUpdate(
+                  (() => {
+                    const e = newpassword;
+                    console.log(e);
+                    return e;
+                  })(),
+                  (() => {
+                    const e = confirmpassword;
+                    console.log(e);
+                    return e;
+                  })()
+                );
+                console.log(passwordResult);
+                setErrorMessage(passwordResult);
+                if (passwordResult?.length) {
                   return;
                 }
+                navigation.navigate('LoginScreen');
               } catch (err) {
                 console.error(err);
               }
@@ -306,7 +359,12 @@ const UpdateNewPasswordScreen = props => {
             handler();
           }}
           style={StyleSheet.applyWidth(
-            { fontFamily: 'Roboto_400Regular', marginTop: 50 },
+            {
+              borderRadius: 14,
+              fontFamily: 'Roboto_400Regular',
+              fontSize: 16,
+              marginTop: 50,
+            },
             dimensions.width
           )}
           title={'Submit'}

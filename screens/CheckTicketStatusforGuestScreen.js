@@ -3,6 +3,7 @@ import * as GlobalStyles from '../GlobalStyles.js';
 import * as CISAPPApi from '../apis/CISAPPApi.js';
 import * as GlobalVariables from '../config/GlobalVariableContext';
 import Images from '../config/Images';
+import * as CustomCode from '../custom-files/CustomCode';
 import Breakpoints from '../utils/Breakpoints';
 import * as StyleSheet from '../utils/StyleSheet';
 import {
@@ -164,25 +165,29 @@ const CheckTicketStatusforGuestScreen = props => {
               )}
               value={consId}
               placeholder={'Enter service connection no'}
-              placeholderTextColor={theme.colors.textPlaceholder}
+              placeholderTextColor={theme.colors['Medium']}
             />
             <Touchable
               onPress={() => {
                 const handler = async () => {
                   try {
-                    const consumerDetailsJson =
-                      await CISAPPApi.consumerDetailsPOST(Constants, {
-                        action: buildConsumerString(consId),
-                      });
+                    const consumerDetailsJson = (
+                      await CISAPPApi.consumerDetailsPOSTStatusAndText(
+                        Constants,
+                        { action: buildConsumerString(consId) }
+                      )
+                    )?.json;
                     buildConsumerString(consId);
                     const consumerId = (
                       consumerDetailsJson && consumerDetailsJson[0]
                     )?.data?.consumerId;
                     setConsumerId(consumerId);
-                    const gettickerdata = await CISAPPApi.getticketdeatilsPOST(
-                      Constants,
-                      { consId: consumerId }
-                    );
+                    const gettickerdata = (
+                      await CISAPPApi.getticketdeatilsPOSTStatusAndText(
+                        Constants,
+                        { consId: consumerId }
+                      )
+                    )?.json;
                     console.log(gettickerdata);
                     setTableData(
                       (
@@ -200,7 +205,7 @@ const CheckTicketStatusforGuestScreen = props => {
               <Icon
                 name={'Feather/search'}
                 size={24}
-                color={theme.colors.textPlaceholder}
+                color={theme.colors['Medium']}
               />
             </Touchable>
           </Surface>
@@ -218,7 +223,11 @@ const CheckTicketStatusforGuestScreen = props => {
               }
             }}
           >
-            <Icon size={30} name={'Ionicons/add-circle-outline'} />
+            <Icon
+              size={30}
+              name={'Ionicons/add-circle-outline'}
+              color={theme.colors['Medium']}
+            />
           </Touchable>
         </View>
       </View>

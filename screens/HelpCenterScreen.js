@@ -282,26 +282,24 @@ const HelpCenterScreen = props => {
               bounces={true}
             >
               <CISAPPApi.FetchFaqsPOST
-                onData={fetchData => {
-                  try {
-                    console.log(fetchData?.data);
-                  } catch (err) {
-                    console.error(err);
-                  }
+                handlers={{
+                  onData: fetchData => {
+                    try {
+                      console.log(fetchData?.data);
+                    } catch (err) {
+                      console.error(err);
+                    }
+                  },
                 }}
               >
                 {({ loading, error, data, refetchFaqs }) => {
                   const fetchData = data;
-                  if (!fetchData || loading) {
+                  if (loading) {
                     return <ActivityIndicator />;
                   }
 
                   if (error) {
-                    return (
-                      <Text style={{ textAlign: 'center' }}>
-                        There was a problem fetching this data
-                      </Text>
-                    );
+                    return <ActivityIndicator />;
                   }
 
                   return (

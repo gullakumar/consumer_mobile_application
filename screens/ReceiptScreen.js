@@ -503,7 +503,12 @@ const ReceiptScreen = props => {
           {/* Download print */}
           <Button
             style={StyleSheet.applyWidth(
-              { fontFamily: 'Roboto_400Regular', textAlign: 'center' },
+              {
+                borderRadius: 14,
+                fontFamily: 'Roboto_400Regular',
+                fontSize: 16,
+                textAlign: 'center',
+              },
               dimensions.width
             )}
             activeOpacity={0.8}
@@ -514,7 +519,7 @@ const ReceiptScreen = props => {
           <Button
             onPress={() => {
               try {
-                navigation.navigate('WelcomeScreen');
+                navigation.navigate('DashboardScreen');
               } catch (err) {
                 console.error(err);
               }
@@ -523,9 +528,11 @@ const ReceiptScreen = props => {
               {
                 backgroundColor: theme.colors['Error'],
                 borderColor: 'rgb(215, 213, 213)',
+                borderRadius: 14,
                 borderWidth: 1,
                 color: 'rgb(255, 255, 255)',
                 fontFamily: 'Roboto_400Regular',
+                fontSize: 16,
                 marginTop: 20,
                 textAlign: 'center',
               },

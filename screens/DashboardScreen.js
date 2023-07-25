@@ -3,6 +3,7 @@ import * as GlobalStyles from '../GlobalStyles.js';
 import * as CISAPPApi from '../apis/CISAPPApi.js';
 import * as GlobalVariables from '../config/GlobalVariableContext';
 import Images from '../config/Images';
+import * as CustomCode from '../custom-files/CustomCode';
 import Breakpoints from '../utils/Breakpoints';
 import * as StyleSheet from '../utils/StyleSheet';
 import {
@@ -21,6 +22,7 @@ import {
   withTheme,
 } from '@draftbit/ui';
 import { useIsFocused } from '@react-navigation/native';
+import * as WebBrowser from 'expo-web-browser';
 import {
   ActivityIndicator,
   Image,
@@ -78,10 +80,11 @@ line two` ) and will not work with special characters inside of quotes ( example
           return;
         }
         setTextInputValue(Constants['name']);
-        const consumerDetailsJson = await CISAPPApi.consumerDetailsPOST(
-          Constants,
-          { action: buildConsumerString(Constants['name']) }
-        );
+        const consumerDetailsJson = (
+          await CISAPPApi.consumerDetailsPOSTStatusAndText(Constants, {
+            action: buildConsumerString(Constants['name']),
+          })
+        )?.json;
         console.log(consumerDetailsJson);
         buildConsumerString(Constants['name']);
         const prepaidFlag = (consumerDetailsJson && consumerDetailsJson[0])
@@ -100,9 +103,11 @@ line two` ) and will not work with special characters inside of quotes ( example
         setConsumerName(Name);
         const Billdetailsjson = await (async () => {
           if (prepaidFlag === 'N') {
-            return await CISAPPApi.viewBillDetailsPOST(Constants, {
-              action: buildString(Constants['name']),
-            });
+            return (
+              await CISAPPApi.viewBillDetailsPOSTStatusAndText(Constants, {
+                action: buildString(Constants['name']),
+              })
+            )?.json;
           }
         })();
         buildString(Constants['name']);
@@ -113,9 +118,11 @@ line two` ) and will not work with special characters inside of quotes ( example
         const Billdetailslog = value0Ldb8r2G;
         const prepaiddetailsJson = await (async () => {
           if (prepaidFlag === 'Y') {
-            return await CISAPPApi.prepaidApiPOST(Constants, {
-              mtrno: meterNo,
-            });
+            return (
+              await CISAPPApi.prepaidApiPOSTStatusAndText(Constants, {
+                mtrno: meterNo,
+              })
+            )?.json;
           }
         })();
         console.log(prepaiddetailsJson);
@@ -123,10 +130,11 @@ line two` ) and will not work with special characters inside of quotes ( example
           ?.data[0]?.avail_balance;
         console.log(availableBalance);
         setAvailableBalance(availableBalance);
-        const ManageAccountDetails = await CISAPPApi.manageAccountsPOST(
-          Constants,
-          { accountNumber: Constants['name'] }
-        );
+        const ManageAccountDetails = (
+          await CISAPPApi.manageAccountsPOSTStatusAndText(Constants, {
+            accountNumber: Constants['name'],
+          })
+        )?.json;
         console.log(ManageAccountDetails);
         const result = setGlobalVariableValue({
           key: 'manageaccount_picker',
@@ -146,6 +154,7 @@ line two` ) and will not work with special characters inside of quotes ( example
   const [availableBalance, setAvailableBalance] = React.useState('');
   const [consumerName, setConsumerName] = React.useState('');
   const [consumerScNo, setConsumerScNo] = React.useState('');
+  const [hiddenHindi, setHiddenHindi] = React.useState(true);
   const [meterNumber, setMeterNumber] = React.useState('');
   const [password1, setPassword1] = React.useState('');
   const [pickerValue, setPickerValue] = React.useState('');
@@ -155,6 +164,7 @@ line two` ) and will not work with special characters inside of quotes ( example
   const [textInputValue, setTextInputValue] = React.useState('');
   const [viewPrepaidDetails, setViewPrepaidDetails] = React.useState({});
   const [viewbilldetails, setViewbilldetails] = React.useState({});
+  const [visibleHindi, setVisibleHindi] = React.useState(false);
 
   return (
     <ScreenContainer
@@ -285,46 +295,6 @@ line two` ) and will not work with special characters inside of quotes ( example
                     </Text>
                   </View>
                 </Touchable>
-                {/* On Demand Reading */}
-                <Touchable
-                  onPress={() => {
-                    try {
-                      setShowNav(false);
-                      navigation.navigate('UsageScreen');
-                    } catch (err) {
-                      console.error(err);
-                    }
-                  }}
-                >
-                  <View
-                    style={StyleSheet.applyWidth(
-                      {
-                        alignItems: 'center',
-                        flexDirection: 'row',
-                        paddingBottom: 12,
-                        paddingLeft: 24,
-                        paddingRight: 24,
-                        paddingTop: 12,
-                      },
-                      dimensions.width
-                    )}
-                  >
-                    <Icon size={24} name={'Ionicons/speedometer-outline'} />
-                    <Text
-                      style={StyleSheet.applyWidth(
-                        {
-                          color: theme.colors['Strong'],
-                          fontFamily: 'Roboto_400Regular',
-                          fontSize: 16,
-                          marginLeft: 8,
-                        },
-                        dimensions.width
-                      )}
-                    >
-                      {'On-Demand Reading'}
-                    </Text>
-                  </View>
-                </Touchable>
                 {/* Notifications */}
                 <Touchable
                   onPress={() => {
@@ -404,6 +374,99 @@ line two` ) and will not work with special characters inside of quotes ( example
                       )}
                     >
                       {'Load & Quality'}
+                    </Text>
+                  </View>
+                </Touchable>
+                {/* Load Enhancement */}
+                <Touchable
+                  onPress={() => {
+                    const handler = async () => {
+                      try {
+                        navigation.navigate('LoadQualityScreen');
+                        await WebBrowser.openBrowserAsync(
+                          'http://20.192.2.50:9388/cportal/#/bltLec/KUM188'
+                        );
+                      } catch (err) {
+                        console.error(err);
+                      }
+                    };
+                    handler();
+                  }}
+                >
+                  <View
+                    style={StyleSheet.applyWidth(
+                      {
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                        paddingBottom: 12,
+                        paddingLeft: 24,
+                        paddingRight: 24,
+                        paddingTop: 12,
+                      },
+                      dimensions.width
+                    )}
+                  >
+                    <Icon
+                      size={24}
+                      name={'MaterialCommunityIcons/alert-outline'}
+                    />
+                    <Text
+                      style={StyleSheet.applyWidth(
+                        {
+                          color: theme.colors['Strong'],
+                          fontFamily: 'Roboto_400Regular',
+                          fontSize: 16,
+                          marginLeft: 8,
+                        },
+                        dimensions.width
+                      )}
+                    >
+                      {'Load Enhancement'}
+                    </Text>
+                  </View>
+                </Touchable>
+                {/* Load Reduction */}
+                <Touchable
+                  onPress={() => {
+                    const handler = async () => {
+                      try {
+                        navigation.navigate('LoadQualityScreen');
+                        await WebBrowser.openBrowserAsync(
+                          'http://20.192.2.50:9388/cportal/#/bltLrc/KUM188'
+                        );
+                      } catch (err) {
+                        console.error(err);
+                      }
+                    };
+                    handler();
+                  }}
+                >
+                  <View
+                    style={StyleSheet.applyWidth(
+                      {
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                        paddingBottom: 12,
+                        paddingLeft: 24,
+                        paddingRight: 24,
+                        paddingTop: 12,
+                      },
+                      dimensions.width
+                    )}
+                  >
+                    <Icon size={24} name={'FontAwesome/exclamation-triangle'} />
+                    <Text
+                      style={StyleSheet.applyWidth(
+                        {
+                          color: theme.colors['Strong'],
+                          fontFamily: 'Roboto_400Regular',
+                          fontSize: 16,
+                          marginLeft: 8,
+                        },
+                        dimensions.width
+                      )}
+                    >
+                      {'Load Reduction'}
                     </Text>
                   </View>
                 </Touchable>
@@ -653,21 +716,59 @@ line two` ) and will not work with special characters inside of quotes ( example
           >
             {'Home'}
           </Text>
-
-          <Touchable>
-            {/* EN */}
-            <Text
-              style={StyleSheet.applyWidth(
-                StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
-                  paddingRight: 2,
-                }),
-                dimensions.width
-              )}
-            >
-              {'EN'}
-            </Text>
-          </Touchable>
-
+          <>
+            {!hiddenHindi ? null : (
+              <Touchable
+                onPress={() => {
+                  try {
+                    setVisibleHindi(true);
+                    setHiddenHindi(false);
+                  } catch (err) {
+                    console.error(err);
+                  }
+                }}
+              >
+                {/* EN */}
+                <Text
+                  style={StyleSheet.applyWidth(
+                    StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+                      paddingRight: 2,
+                    }),
+                    dimensions.width
+                  )}
+                >
+                  {'EN'}
+                </Text>
+              </Touchable>
+            )}
+          </>
+          <>
+            {!visibleHindi ? null : (
+              <Touchable
+                onPress={() => {
+                  try {
+                    setHiddenHindi(true);
+                    setVisibleHindi(false);
+                  } catch (err) {
+                    console.error(err);
+                  }
+                }}
+              >
+                {/* HI */}
+                <Text
+                  style={StyleSheet.applyWidth(
+                    StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+                      paddingLeft: 5,
+                      paddingRight: 2,
+                    }),
+                    dimensions.width
+                  )}
+                >
+                  {'HI'}
+                </Text>
+              </Touchable>
+            )}
+          </>
           <Touchable
             onPress={() => {
               try {
@@ -727,7 +828,7 @@ line two` ) and will not work with special characters inside of quotes ( example
               style={StyleSheet.applyWidth(
                 StyleSheet.compose(
                   GlobalStyles.ViewStyles(theme)['viewbilldetails'],
-                  { justifyContent: 'flex-start' }
+                  { height: 50, justifyContent: 'flex-start' }
                 ),
                 dimensions.width
               )}
@@ -740,8 +841,8 @@ line two` ) and will not work with special characters inside of quotes ( example
                 )}
               >
                 <Icon
+                  color={theme.colors['Medium']}
                   size={24}
-                  color={theme.colors['Custom Color_20']}
                   name={'MaterialIcons/house'}
                 />
                 <Picker
@@ -749,10 +850,12 @@ line two` ) and will not work with special characters inside of quotes ( example
                     const handler = async () => {
                       try {
                         setTextInputValue(newPickerValue);
-                        const consumerDetailsJson =
-                          await CISAPPApi.consumerDetailsPOST(Constants, {
-                            action: buildConsumerString(newPickerValue),
-                          });
+                        const consumerDetailsJson = (
+                          await CISAPPApi.consumerDetailsPOSTStatusAndText(
+                            Constants,
+                            { action: buildConsumerString(newPickerValue) }
+                          )
+                        )?.json;
                         console.log(consumerDetailsJson);
                         buildConsumerString(newPickerValue);
                         const prepaidFlag = (
@@ -775,10 +878,12 @@ line two` ) and will not work with special characters inside of quotes ( example
                         setConsumerName(Name);
                         const Billdetailsjson = await (async () => {
                           if (prepaidFlag === 'N') {
-                            return await CISAPPApi.viewBillDetailsPOST(
-                              Constants,
-                              { action: buildString(newPickerValue) }
-                            );
+                            return (
+                              await CISAPPApi.viewBillDetailsPOSTStatusAndText(
+                                Constants,
+                                { action: buildString(newPickerValue) }
+                              )
+                            )?.json;
                           }
                         })();
                         buildString(newPickerValue);
@@ -790,9 +895,12 @@ line two` ) and will not work with special characters inside of quotes ( example
                         const Billdetailslog = valueDVb0aZQS;
                         const prepaiddetailsJson = await (async () => {
                           if (prepaidFlag === 'Y') {
-                            return await CISAPPApi.prepaidApiPOST(Constants, {
-                              mtrno: meterNo,
-                            });
+                            return (
+                              await CISAPPApi.prepaidApiPOSTStatusAndText(
+                                Constants,
+                                { mtrno: meterNo }
+                              )
+                            )?.json;
                           }
                         })();
                         console.log(prepaiddetailsJson);
@@ -823,73 +931,12 @@ line two` ) and will not work with special characters inside of quotes ( example
                   autoDismissKeyboard={true}
                   rightIconName={'Feather/chevron-down'}
                   placeholder={' '}
+                  iconColor={theme.colors['Medium']}
+                  placeholderTextColor={theme.colors['Medium']}
                   defaultValue={Constants['name']}
                 />
               </View>
             </View>
-            {/* advanced payment */}
-            <>
-              {!(prepaidFlag === 'N') ? null : (
-                <View
-                  style={StyleSheet.applyWidth(
-                    StyleSheet.compose(GlobalStyles.ViewStyles(theme)['card'], {
-                      alignItems: 'center',
-                      backgroundColor: 'rgb(255, 255, 255)',
-                      borderColor: 'rgb(199, 198, 198)',
-                      borderWidth: 1,
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      marginBottom: 30,
-                      paddingBottom: 10,
-                      paddingTop: 10,
-                    }),
-                    dimensions.width
-                  )}
-                >
-                  {/* Name */}
-                  <Text
-                    style={StyleSheet.applyWidth(
-                      {
-                        color: theme.colors.strong,
-                        fontFamily: 'Roboto_400Regular',
-                        fontSize: 14,
-                        opacity: 1,
-                      },
-                      dimensions.width
-                    )}
-                  >
-                    {'Account balance  ₹250 '}
-                    {props.route?.params?.Name ?? ''}
-                  </Text>
-                  {/* Advance Payment */}
-                  <Button
-                    onPress={() => {
-                      try {
-                        navigation.navigate('AdvancePayemntScreen', {
-                          Name: consumerName,
-                          serviceConNo: consumerScNo,
-                        });
-                      } catch (err) {
-                        console.error(err);
-                      }
-                    }}
-                    style={StyleSheet.applyWidth(
-                      {
-                        backgroundColor: theme.colors['Primary'],
-                        borderRadius: 8,
-                        fontFamily: 'Roboto_400Regular',
-                        height: 36,
-                        marginTop: 5,
-                        textAlign: 'center',
-                        width: '45%',
-                      },
-                      dimensions.width
-                    )}
-                    title={'Advance Payment'}
-                  />
-                </View>
-              )}
-            </>
             {/* postpaid */}
             <>
               {!(prepaidFlag === 'N') ? null : (
@@ -898,9 +945,15 @@ line two` ) and will not work with special characters inside of quotes ( example
                     StyleSheet.compose(GlobalStyles.ViewStyles(theme)['card'], {
                       backgroundColor: 'rgb(255, 255, 255)',
                       borderColor: 'rgb(199, 198, 198)',
+                      borderRadius: 8,
                       borderWidth: 1,
                       flexDirection: 'row',
                       justifyContent: 'space-between',
+                      marginBottom: 15,
+                      marginTop: 30,
+                      paddingBottom: 10,
+                      paddingLeft: 20,
+                      paddingTop: 10,
                     }),
                     dimensions.width
                   )}
@@ -930,7 +983,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                       style={StyleSheet.applyWidth(
                         {
                           color: theme.colors.strong,
-                          fontFamily: 'Roboto_400Regular',
+                          fontFamily: 'Roboto_700Bold',
                           fontSize: 14,
                           opacity: 1,
                         },
@@ -981,8 +1034,9 @@ line two` ) and will not work with special characters inside of quotes ( example
                     style={StyleSheet.applyWidth(
                       {
                         backgroundColor: theme.colors['GetFit Orange'],
-                        borderRadius: 8,
+                        borderRadius: 14,
                         fontFamily: 'Roboto_400Regular',
+                        fontSize: 16,
                         height: 36,
                         marginTop: 5,
                         textAlign: 'center',
@@ -1008,6 +1062,8 @@ line two` ) and will not work with special characters inside of quotes ( example
                           RebateGiven: viewbilldetails?.RebateGiven,
                           netcurrbill: viewbilldetails?.netcurrbill,
                           BillIssueDate: viewbilldetails?.BillIssueDate,
+                          Billid: viewbilldetails?.BillDetailsId,
+                          accno: viewbilldetails?.AccNo,
                         });
                       } catch (err) {
                         console.error(err);
@@ -1016,8 +1072,9 @@ line two` ) and will not work with special characters inside of quotes ( example
                     style={StyleSheet.applyWidth(
                       {
                         backgroundColor: theme.colors['GetFit Orange'],
-                        borderRadius: 8,
+                        borderRadius: 14,
                         fontFamily: 'Roboto_400Regular',
+                        fontSize: 16,
                         height: 36,
                         marginTop: 5,
                         textAlign: 'center',
@@ -1039,11 +1096,14 @@ line two` ) and will not work with special characters inside of quotes ( example
                       alignItems: 'center',
                       backgroundColor: 'rgb(255, 255, 255)',
                       borderColor: 'rgb(199, 198, 198)',
+                      borderRadius: 8,
                       borderWidth: 1,
                       flexDirection: 'row',
                       justifyContent: 'space-between',
-                      marginBottom: 30,
+                      marginBottom: 15,
+                      marginTop: 30,
                       paddingBottom: 10,
+                      paddingLeft: 20,
                       paddingTop: 10,
                     }),
                     dimensions.width
@@ -1070,7 +1130,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                       try {
                         navigation.navigate('RechargeScreen', {
                           Name: consumerName,
-                          ServiceConNo: consumerScNo,
+                          serviceConNo: consumerScNo,
                         });
                       } catch (err) {
                         console.error(err);
@@ -1079,8 +1139,9 @@ line two` ) and will not work with special characters inside of quotes ( example
                     style={StyleSheet.applyWidth(
                       {
                         backgroundColor: theme.colors.primary,
-                        borderRadius: 8,
+                        borderRadius: 14,
                         fontFamily: 'Roboto_400Regular',
+                        fontSize: 16,
                         height: 36,
                         textAlign: 'center',
                         width: '45%',
@@ -1092,165 +1153,12 @@ line two` ) and will not work with special characters inside of quotes ( example
                 </View>
               )}
             </>
-            <View
-              style={StyleSheet.applyWidth(
-                {
-                  flexDirection: 'row',
-                  justifyContent: 'flex-end',
-                  marginTop: 30,
-                  paddingRight: 8,
-                },
-                dimensions.width
-              )}
-            >
-              <Icon name={'Ionicons/refresh'} size={20} />
-              <Text
-                style={StyleSheet.applyWidth(
-                  StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
-                    fontFamily: 'Roboto_400Regular',
-                    fontSize: 13,
-                  }),
-                  dimensions.width
-                )}
-              >
-                {'Last updated on: 12-06-2023 | 12:00 PM'}
-              </Text>
-            </View>
-            {/* card */}
-            <View
-              style={StyleSheet.applyWidth(
-                StyleSheet.compose(GlobalStyles.ViewStyles(theme)['card'], {
-                  backgroundColor: 'rgb(255, 255, 255)',
-                  borderColor: 'rgb(199, 198, 198)',
-                  borderWidth: 1,
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  marginBottom: 30,
-                  paddingBottom: 10,
-                  paddingTop: 10,
-                }),
-                dimensions.width
-              )}
-            >
-              <View
-                style={StyleSheet.applyWidth(
-                  { alignSelf: 'auto' },
-                  dimensions.width
-                )}
-              >
-                {/* Current Load */}
-                <Text
-                  style={StyleSheet.applyWidth(
-                    {
-                      color: theme.colors.strong,
-                      fontFamily: 'Roboto_400Regular',
-                      fontSize: 12,
-                      opacity: 1,
-                    },
-                    dimensions.width
-                  )}
-                >
-                  {"Today's Usage"}
-                </Text>
-                {/* KW */}
-                <Text
-                  style={StyleSheet.applyWidth(
-                    {
-                      alignSelf: 'center',
-                      color: theme.colors.strong,
-                      fontFamily: 'Roboto_400Regular',
-                      fontSize: 14,
-                      lineHeight: 23,
-                      opacity: 1,
-                    },
-                    dimensions.width
-                  )}
-                >
-                  {'₹250'}
-                </Text>
-              </View>
-
-              <View
-                style={StyleSheet.applyWidth(
-                  { alignSelf: 'auto' },
-                  dimensions.width
-                )}
-              >
-                {/* Current Load */}
-                <Text
-                  style={StyleSheet.applyWidth(
-                    {
-                      color: theme.colors.strong,
-                      fontFamily: 'Roboto_400Regular',
-                      fontSize: 12,
-                      opacity: 1,
-                    },
-                    dimensions.width
-                  )}
-                >
-                  {'Current Load'}
-                </Text>
-                {/* KW */}
-                <Text
-                  style={StyleSheet.applyWidth(
-                    {
-                      alignSelf: 'center',
-                      color: theme.colors.strong,
-                      fontFamily: 'Roboto_400Regular',
-                      fontSize: 14,
-                      lineHeight: 23,
-                      opacity: 1,
-                    },
-                    dimensions.width
-                  )}
-                >
-                  {'120 kW'}
-                </Text>
-              </View>
-
-              <View
-                style={StyleSheet.applyWidth(
-                  { alignSelf: 'auto' },
-                  dimensions.width
-                )}
-              >
-                {/* Current Reading */}
-                <Text
-                  style={StyleSheet.applyWidth(
-                    {
-                      color: theme.colors.strong,
-                      fontFamily: 'Roboto_400Regular',
-                      fontSize: 12,
-                      opacity: 1,
-                    },
-                    dimensions.width
-                  )}
-                >
-                  {'Current Reading'}
-                </Text>
-                {/* Value */}
-                <Text
-                  style={StyleSheet.applyWidth(
-                    {
-                      alignSelf: 'center',
-                      color: theme.colors.strong,
-                      fontFamily: 'Roboto_400Regular',
-                      fontSize: 14,
-                      lineHeight: 23,
-                      opacity: 1,
-                    },
-                    dimensions.width
-                  )}
-                >
-                  {'12345.9'}
-                </Text>
-              </View>
-            </View>
           </View>
           {/* Promotions */}
           <View
             style={StyleSheet.applyWidth(
               StyleSheet.compose(GlobalStyles.ViewStyles(theme)['Promotions'], {
+                marginTop: 10,
                 paddingTop: 10,
               }),
               dimensions.width
@@ -1259,16 +1167,12 @@ line two` ) and will not work with special characters inside of quotes ( example
             <CISAPPApi.FetchBANNERSPOST>
               {({ loading, error, data, refetchBANNERS }) => {
                 const fetchData = data;
-                if (!fetchData || loading) {
+                if (loading) {
                   return <ActivityIndicator />;
                 }
 
                 if (error) {
-                  return (
-                    <Text style={{ textAlign: 'center' }}>
-                      There was a problem fetching this data
-                    </Text>
-                  );
+                  return <ActivityIndicator />;
                 }
 
                 return (
@@ -1290,7 +1194,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                                   style={StyleSheet.applyWidth(
                                     StyleSheet.compose(
                                       GlobalStyles.ImageStyles(theme)['banner'],
-                                      { height: 120 }
+                                      { height: 200 }
                                     ),
                                     dimensions.width
                                   )}
@@ -1317,7 +1221,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                           alignSelf: 'auto',
                           backgroundColor: 'rgb(255, 255, 255)',
                           borderColor: 'rgb(222, 221, 221)',
-                          height: 120,
+                          height: 200,
                           position: 'relative',
                         }
                       ),

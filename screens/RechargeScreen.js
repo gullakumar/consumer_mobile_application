@@ -2,11 +2,13 @@ import React from 'react';
 import * as GlobalStyles from '../GlobalStyles.js';
 import * as CISAPPApi from '../apis/CISAPPApi.js';
 import * as GlobalVariables from '../config/GlobalVariableContext';
+import * as CustomCode from '../custom-files/CustomCode';
 import Breakpoints from '../utils/Breakpoints';
 import * as StyleSheet from '../utils/StyleSheet';
 import {
   Button,
   Icon,
+  NumberInput,
   RadioButton,
   RadioButtonGroup,
   RadioButtonRow,
@@ -32,6 +34,19 @@ const RechargeScreen = props => {
   const Constants = GlobalVariables.useValues();
   const Variables = Constants;
 
+  const advanceAmountFun = (buttonValue, amountInput, updatedAmountValue) => {
+    console.log('Amount' + amountInput);
+    let updatedValue = 0;
+    if (updatedAmountValue == 0) {
+      updatedValue = amountInput + buttonValue + updatedAmountValue;
+    } else {
+      updatedValue = buttonValue + updatedAmountValue;
+    }
+    console.log('updatedValue' + updatedValue);
+
+    return updatedValue;
+  };
+
   const amountDisplayFun = amount => {
     console.log('amount' + amount);
     if (amount != null) {
@@ -42,8 +57,12 @@ const RechargeScreen = props => {
   const { theme } = props;
   const { navigation } = props;
 
+  const [addAmount1, setAddAmount1] = React.useState(100);
+  const [addAmount2, setAddAmount2] = React.useState(250);
+  const [addAmountt3, setAddAmountt3] = React.useState(450);
   const [amount1, setAmount1] = React.useState(100);
   const [numberInputValue, setNumberInputValue] = React.useState('');
+  const [numberInputValue2, setNumberInputValue2] = React.useState('');
   const [radioButtonGroup2Value, setRadioButtonGroup2Value] =
     React.useState('');
   const [radioButtonGroupValue, setRadioButtonGroupValue] = React.useState('');
@@ -51,6 +70,7 @@ const RechargeScreen = props => {
     React.useState('');
   const [rechargeAmount, setRechargeAmount] = React.useState('');
   const [textInputValue, setTextInputValue] = React.useState('');
+  const [updatedAmount, setUpdatedAmount] = React.useState('');
 
   return (
     <ScreenContainer scrollable={false} hasSafeArea={true}>
@@ -109,7 +129,7 @@ const RechargeScreen = props => {
 
       <ScrollView
         contentContainerStyle={StyleSheet.applyWidth(
-          { marginTop: 40, paddingBottom: 20, paddingTop: 20 },
+          { marginTop: 40, paddingBottom: 20 },
           dimensions.width
         )}
         showsVerticalScrollIndicator={true}
@@ -135,12 +155,6 @@ const RechargeScreen = props => {
             <View
               style={StyleSheet.applyWidth(
                 StyleSheet.compose(GlobalStyles.ViewStyles(theme)['category'], {
-                  borderBottomWidth: 1,
-                  borderColor: theme.colors['Divider'],
-                  borderLeftWidth: 1,
-                  borderRadius: 16,
-                  borderRightWidth: 1,
-                  borderTopWidth: 1,
                   marginTop: 20,
                 }),
                 dimensions.width
@@ -155,8 +169,8 @@ const RechargeScreen = props => {
               >
                 <Icon
                   size={24}
-                  color={theme.colors['Custom Color_20']}
                   name={'MaterialIcons/house'}
+                  color={theme.colors['Medium']}
                 />
                 <View
                   style={StyleSheet.applyWidth(
@@ -178,8 +192,8 @@ const RechargeScreen = props => {
                     )}
                     placeholder={'Service Connection No'}
                     editable={true}
-                    placeholderTextColor={theme.colors['Custom Color_20']}
-                    defaultValue={props.route?.params?.ServiceConNo ?? ''}
+                    placeholderTextColor={theme.colors['Medium']}
+                    defaultValue={props.route?.params?.serviceConNo ?? ''}
                   />
                 </View>
               </View>
@@ -206,8 +220,8 @@ const RechargeScreen = props => {
               >
                 <Icon
                   size={24}
-                  color={theme.colors['Custom Color_20']}
                   name={'FontAwesome/rupee'}
+                  color={theme.colors['Medium']}
                 />
                 <View
                   style={StyleSheet.applyWidth(
@@ -215,28 +229,26 @@ const RechargeScreen = props => {
                     dimensions.width
                   )}
                 >
-                  <TextInput
-                    onChangeText={newTextInputValue => {
+                  <NumberInput
+                    onChangeText={newNumberInputValue => {
                       try {
-                        setRechargeAmount(newTextInputValue);
+                        setUpdatedAmount(newNumberInputValue);
                       } catch (err) {
                         console.error(err);
                       }
                     }}
                     style={StyleSheet.applyWidth(
-                      {
-                        borderRadius: 8,
-                        fontFamily: 'Roboto_400Regular',
-                        paddingBottom: 8,
-                        paddingLeft: 8,
-                        paddingRight: 8,
-                        paddingTop: 8,
-                      },
+                      StyleSheet.compose(
+                        GlobalStyles.NumberInputStyles(theme)['Number Input'],
+                        { fontFamily: 'Roboto_400Regular' }
+                      ),
                       dimensions.width
                     )}
-                    placeholder={'Enter amount'}
+                    value={updatedAmount}
+                    changeTextDelay={500}
                     editable={true}
-                    placeholderTextColor={theme.colors['Custom Color_20']}
+                    placeholder={'Enter amount'}
+                    placeholderTextColor={theme.colors['Medium']}
                   />
                 </View>
               </View>
@@ -255,71 +267,34 @@ const RechargeScreen = props => {
                     dimensions.width
                   )}
                 >
-                  <Touchable
+                  <Button
                     onPress={() => {
-                      const handler = async () => {
-                        try {
-                          const fgfgf = await CISAPPApi.bANNERSPOST(Constants);
-                          console.log(fgfgf);
-                        } catch (err) {
-                          console.error(err);
-                        }
-                      };
-                      handler();
+                      try {
+                        setAddAmount1(100);
+                        const amountResult = advanceAmountFun(
+                          addAmount1,
+                          updatedAmount,
+                          updatedAmount
+                        );
+                        console.log(amountResult);
+                        setUpdatedAmount(amountResult);
+                      } catch (err) {
+                        console.error(err);
+                      }
                     }}
-                  >
-                    <TextInput
-                      onChangeText={newTextInputValue => {
-                        try {
-                          setTextInputValue(newTextInputValue);
-                        } catch (err) {
-                          console.error(err);
-                        }
-                      }}
-                      style={StyleSheet.applyWidth(
+                    style={StyleSheet.applyWidth(
+                      StyleSheet.compose(
+                        GlobalStyles.ButtonStyles(theme)['Submit 2'],
                         {
-                          borderRadius: 8,
-                          borderWidth: 1,
-                          fontFamily: 'Roboto_400Regular',
                           paddingBottom: 8,
                           paddingLeft: 8,
                           paddingRight: 8,
                           paddingTop: 8,
-                          textAlign: 'center',
-                        },
-                        dimensions.width
-                      )}
-                      editable={false}
-                      placeholder={'₹100.00'}
-                      placeholderTextColor={theme.colors['Custom Color_20']}
-                    />
-                  </Touchable>
-                </View>
-
-                <View
-                  style={StyleSheet.applyWidth(
-                    { flex: 1, paddingRight: 10 },
-                    dimensions.width
-                  )}
-                >
-                  <TextInput
-                    style={StyleSheet.applyWidth(
-                      {
-                        borderRadius: 8,
-                        borderWidth: 1,
-                        color: 'rgb(0,0,0)',
-                        fontFamily: 'Roboto_400Regular',
-                        paddingBottom: 8,
-                        paddingLeft: 8,
-                        paddingRight: 8,
-                        paddingTop: 8,
-                        textAlign: 'center',
-                      },
+                        }
+                      ),
                       dimensions.width
                     )}
-                    editable={false}
-                    placeholder={'₹250'}
-                    placeholderTextColor={theme.colors['Custom Color_20']}
+                    title={'+₹100'}
                   />
                 </View>
 
@@ -329,23 +304,71 @@ const RechargeScreen = props => {
                     dimensions.width
                   )}
                 >
-                  <TextInput
+                  <Button
+                    onPress={() => {
+                      try {
+                        setAddAmount2(250);
+                        const amountResult = advanceAmountFun(
+                          addAmount2,
+                          updatedAmount,
+                          updatedAmount
+                        );
+                        console.log(amountResult);
+                        setUpdatedAmount(amountResult);
+                      } catch (err) {
+                        console.error(err);
+                      }
+                    }}
                     style={StyleSheet.applyWidth(
-                      {
-                        borderRadius: 8,
-                        borderWidth: 1,
-                        fontFamily: 'Roboto_400Regular',
-                        paddingBottom: 8,
-                        paddingLeft: 8,
-                        paddingRight: 8,
-                        paddingTop: 8,
-                        textAlign: 'center',
-                      },
+                      StyleSheet.compose(
+                        GlobalStyles.ButtonStyles(theme)['Submit 2'],
+                        {
+                          paddingBottom: 8,
+                          paddingLeft: 8,
+                          paddingRight: 8,
+                          paddingTop: 8,
+                        }
+                      ),
                       dimensions.width
                     )}
-                    editable={false}
-                    placeholder={'₹450'}
-                    placeholderTextColor={theme.colors['Custom Color_20']}
+                    title={'+₹250'}
+                  />
+                </View>
+
+                <View
+                  style={StyleSheet.applyWidth(
+                    { flex: 1, paddingRight: 10 },
+                    dimensions.width
+                  )}
+                >
+                  <Button
+                    onPress={() => {
+                      try {
+                        setAddAmountt3(450);
+                        const amountResult = advanceAmountFun(
+                          addAmountt3,
+                          updatedAmount,
+                          updatedAmount
+                        );
+                        console.log(amountResult);
+                        setUpdatedAmount(amountResult);
+                      } catch (err) {
+                        console.error(err);
+                      }
+                    }}
+                    style={StyleSheet.applyWidth(
+                      StyleSheet.compose(
+                        GlobalStyles.ButtonStyles(theme)['Submit 2'],
+                        {
+                          paddingBottom: 8,
+                          paddingLeft: 8,
+                          paddingRight: 8,
+                          paddingTop: 8,
+                        }
+                      ),
+                      dimensions.width
+                    )}
+                    title={'+₹450'}
                   />
                 </View>
               </View>
@@ -399,16 +422,12 @@ const RechargeScreen = props => {
                   <CISAPPApi.FetchPaymentGatewayPOST>
                     {({ loading, error, data, refetchPaymentGateway }) => {
                       const paymentMethodsData = data;
-                      if (!paymentMethodsData || loading) {
+                      if (loading) {
                         return <ActivityIndicator />;
                       }
 
                       if (error) {
-                        return (
-                          <Text style={{ textAlign: 'center' }}>
-                            There was a problem fetching this data
-                          </Text>
-                        );
+                        return <ActivityIndicator />;
                       }
 
                       return (
@@ -464,7 +483,7 @@ const RechargeScreen = props => {
                           data={
                             paymentMethodsData && paymentMethodsData[0].data
                           }
-                          listKey={'8sJAFabI'}
+                          listKey={'c6XwsOIF'}
                           keyExtractor={flashListData =>
                             flashListData?.id ||
                             flashListData?.uuid ||
@@ -496,7 +515,7 @@ const RechargeScreen = props => {
             try {
               navigation.navigate('RechargeConfirmationScreen', {
                 Name: props.route?.params?.Name ?? '',
-                serviceConnectionNo: props.route?.params?.ServiceConNo ?? '',
+                serviceConnectionNo: props.route?.params?.serviceConNo ?? '',
               });
             } catch (err) {
               console.error(err);
@@ -505,8 +524,9 @@ const RechargeScreen = props => {
           style={StyleSheet.applyWidth(
             {
               backgroundColor: theme.colors['GetFit Orange'],
+              borderRadius: 14,
               fontFamily: 'Roboto_400Regular',
-              fontSize: 14,
+              fontSize: 16,
               marginLeft: 20,
               marginRight: 20,
               marginTop: 35,

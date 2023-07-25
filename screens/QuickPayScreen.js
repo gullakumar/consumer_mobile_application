@@ -3,6 +3,7 @@ import * as GlobalStyles from '../GlobalStyles.js';
 import * as CISAPPApi from '../apis/CISAPPApi.js';
 import * as GlobalVariables from '../config/GlobalVariableContext';
 import Images from '../config/Images';
+import * as CustomCode from '../custom-files/CustomCode';
 import Breakpoints from '../utils/Breakpoints';
 import * as StyleSheet from '../utils/StyleSheet';
 import {
@@ -112,8 +113,8 @@ const QuickPayScreen = props => {
           )}
         >
           <Icon
+            color={theme.colors['Medium']}
             size={24}
-            color={theme.colors['Custom Color_20']}
             name={'MaterialIcons/house'}
           />
           <View
@@ -143,8 +144,8 @@ const QuickPayScreen = props => {
               )}
               value={textInputValue}
               placeholder={'Enter service connection number'}
+              placeholderTextColor={theme.colors['Medium']}
               editable={true}
-              placeholderTextColor={theme.colors['Custom Color_20']}
             />
           </View>
         </View>
@@ -153,10 +154,11 @@ const QuickPayScreen = props => {
           onPress={() => {
             const handler = async () => {
               try {
-                const Viewbilldetailsjson = await CISAPPApi.viewBillDetailsPOST(
-                  Constants,
-                  { action: buildString(textInputValue) }
-                );
+                const Viewbilldetailsjson = (
+                  await CISAPPApi.viewBillDetailsPOSTStatusAndText(Constants, {
+                    action: buildString(textInputValue),
+                  })
+                )?.json;
                 buildString(textInputValue);
 
                 const valueaueixQRY =
@@ -173,8 +175,9 @@ const QuickPayScreen = props => {
           }}
           style={StyleSheet.applyWidth(
             {
+              borderRadius: 14,
               fontFamily: 'Roboto_400Regular',
-              fontSize: 14,
+              fontSize: 16,
               marginTop: 30,
               width: '100%',
             },
@@ -193,9 +196,13 @@ const QuickPayScreen = props => {
                 StyleSheet.compose(GlobalStyles.ViewStyles(theme)['card'], {
                   backgroundColor: theme.colors['Background'],
                   borderColor: 'rgb(199, 198, 198)',
+                  borderRadius: 8,
                   borderWidth: 1,
                   marginLeft: 20,
                   marginRight: 20,
+                  paddingBottom: 10,
+                  paddingLeft: 20,
+                  paddingTop: 10,
                 }),
                 dimensions.width
               )}
@@ -239,12 +246,16 @@ const QuickPayScreen = props => {
                 StyleSheet.compose(GlobalStyles.ViewStyles(theme)['card'], {
                   backgroundColor: 'rgb(255, 255, 255)',
                   borderColor: 'rgb(199, 198, 198)',
+                  borderRadius: 8,
                   borderWidth: 1,
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                   marginLeft: 20,
                   marginRight: 20,
                   marginTop: 25,
+                  paddingBottom: 10,
+                  paddingLeft: 20,
+                  paddingTop: 10,
                 }),
                 dimensions.width
               )}
@@ -316,6 +327,8 @@ const QuickPayScreen = props => {
                       RebateGiven: viewbilldetails?.RebateGiven,
                       netcurrbill: viewbilldetails?.netcurrbill,
                       BillIssueDate: viewbilldetails?.BillIssueDate,
+                      Billid: viewbilldetails?.BillDetailsId,
+                      accno: viewbilldetails?.AccNo,
                     });
                   } catch (err) {
                     console.error(err);
@@ -324,8 +337,9 @@ const QuickPayScreen = props => {
                 style={StyleSheet.applyWidth(
                   {
                     backgroundColor: theme.colors['GetFit Orange'],
-                    borderRadius: 8,
+                    borderRadius: 14,
                     fontFamily: 'Roboto_400Regular',
+                    fontSize: 16,
                     height: 36,
                     marginTop: 20,
                     textAlign: 'center',

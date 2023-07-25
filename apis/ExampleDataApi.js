@@ -7,40 +7,32 @@ import {
 } from 'react-query';
 import useFetch from 'react-fetch-hook';
 import { useIsFocused } from '@react-navigation/native';
+import { handleResponse, isOkStatus } from '../utils/handleRestApiResponse';
 import usePrevious from '../utils/usePrevious';
 import * as GlobalVariables from '../config/GlobalVariableContext';
 
-export const exampleData10GETStatusAndText = Constants =>
+export const exampleData10GETStatusAndText = (
+  Constants,
+  _args,
+  handlers = {}
+) =>
   fetch(`https://example-data.draftbit.com/activists?_limit=10`, {
     headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
-  }).then(async res => ({
-    status: res.status,
-    statusText: res.statusText,
-    text: await res.text(),
-  }));
+  }).then(res => handleResponse(res, handlers));
 
-export const exampleData10GET = Constants =>
-  exampleData10GETStatusAndText(Constants).then(
-    ({ status, statusText, text }) => {
-      try {
-        return JSON.parse(text);
-      } catch (e) {
-        console.error(
-          [
-            'Failed to parse response text as JSON.',
-            `Error: ${e.message}`,
-            `Text: ${JSON.stringify(text)}`,
-          ].join('\n\n')
-        );
-      }
-    }
+export const exampleData10GET = (Constants, _args, handlers = {}) =>
+  exampleData10GETStatusAndText(Constants, {}, handlers).then(res =>
+    !isOkStatus(res.status) ? Promise.reject(res) : res.json
   );
 
-export const useExampleData10GET = (args, { refetchInterval } = {}) => {
+export const useExampleData10GET = (
+  args,
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
   return useQuery(
     ['Example Data', args],
-    () => exampleData10GET(Constants, args),
+    () => exampleData10GET(Constants, args, handlers),
     {
       refetchInterval,
     }
@@ -50,15 +42,21 @@ export const useExampleData10GET = (args, { refetchInterval } = {}) => {
 export const FetchExampleData10GET = ({
   children,
   onData = () => {},
+  handlers = {},
   refetchInterval,
 }) => {
   const Constants = GlobalVariables.useValues();
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const { loading, data, error, refetch } = useExampleData10GET(
+  const {
+    isLoading: loading,
+    data,
+    error,
+    refetch,
+  } = useExampleData10GET(
     {},
-    { refetchInterval }
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -73,60 +71,56 @@ export const FetchExampleData10GET = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    if (data) {
-      onData(data);
-    }
-  }, [data]);
 
   return children({ loading, data, error, refetchExampleData10: refetch });
 };
 
-export const grabDataPointsGETStatusAndText = Constants =>
+export const grabDataPointsGETStatusAndText = (
+  Constants,
+  _args,
+  handlers = {}
+) =>
   fetch(`https://example-data.draftbit.com/users?_limit=10`, {
     headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
-  }).then(async res => ({
-    status: res.status,
-    statusText: res.statusText,
-    text: await res.text(),
-  }));
+  }).then(res => handleResponse(res, handlers));
 
-export const grabDataPointsGET = Constants =>
-  grabDataPointsGETStatusAndText(Constants).then(
-    ({ status, statusText, text }) => {
-      try {
-        return JSON.parse(text);
-      } catch (e) {
-        console.error(
-          [
-            'Failed to parse response text as JSON.',
-            `Error: ${e.message}`,
-            `Text: ${JSON.stringify(text)}`,
-          ].join('\n\n')
-        );
-      }
-    }
+export const grabDataPointsGET = (Constants, _args, handlers = {}) =>
+  grabDataPointsGETStatusAndText(Constants, {}, handlers).then(res =>
+    !isOkStatus(res.status) ? Promise.reject(res) : res.json
   );
 
-export const useGrabDataPointsGET = (args, { refetchInterval } = {}) => {
+export const useGrabDataPointsGET = (
+  args,
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  return useQuery(['users', args], () => grabDataPointsGET(Constants, args), {
-    refetchInterval,
-  });
+  return useQuery(
+    ['users', args],
+    () => grabDataPointsGET(Constants, args, handlers),
+    {
+      refetchInterval,
+    }
+  );
 };
 
 export const FetchGrabDataPointsGET = ({
   children,
   onData = () => {},
+  handlers = {},
   refetchInterval,
 }) => {
   const Constants = GlobalVariables.useValues();
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const { loading, data, error, refetch } = useGrabDataPointsGET(
+  const {
+    isLoading: loading,
+    data,
+    error,
+    refetch,
+  } = useGrabDataPointsGET(
     {},
-    { refetchInterval }
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -141,44 +135,23 @@ export const FetchGrabDataPointsGET = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    if (data) {
-      onData(data);
-    }
-  }, [data]);
 
   return children({ loading, data, error, refetchGrabDataPoints: refetch });
 };
 
-export const usersGETStatusAndText = (Constants, { limit }) =>
+export const usersGETStatusAndText = (Constants, { limit }, handlers = {}) =>
   fetch(`https://example-data.draftbit.com/users?_limit=${limit ?? ''}`, {
     headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
-  }).then(async res => ({
-    status: res.status,
-    statusText: res.statusText,
-    text: await res.text(),
-  }));
+  }).then(res => handleResponse(res, handlers));
 
-export const usersGET = (Constants, { limit }) =>
-  usersGETStatusAndText(Constants, { limit }).then(
-    ({ status, statusText, text }) => {
-      try {
-        return JSON.parse(text);
-      } catch (e) {
-        console.error(
-          [
-            'Failed to parse response text as JSON.',
-            `Error: ${e.message}`,
-            `Text: ${JSON.stringify(text)}`,
-          ].join('\n\n')
-        );
-      }
-    }
+export const usersGET = (Constants, { limit }, handlers = {}) =>
+  usersGETStatusAndText(Constants, { limit }, handlers).then(res =>
+    !isOkStatus(res.status) ? Promise.reject(res) : res.json
   );
 
-export const useUsersGET = (args, { refetchInterval } = {}) => {
+export const useUsersGET = (args, { refetchInterval, handlers = {} } = {}) => {
   const Constants = GlobalVariables.useValues();
-  return useQuery(['Users', args], () => usersGET(Constants, args), {
+  return useQuery(['Users', args], () => usersGET(Constants, args, handlers), {
     refetchInterval,
   });
 };
@@ -186,6 +159,7 @@ export const useUsersGET = (args, { refetchInterval } = {}) => {
 export const FetchUsersGET = ({
   children,
   onData = () => {},
+  handlers = {},
   refetchInterval,
   limit,
 }) => {
@@ -193,9 +167,14 @@ export const FetchUsersGET = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const { loading, data, error, refetch } = useUsersGET(
+  const {
+    isLoading: loading,
+    data,
+    error,
+    refetch,
+  } = useUsersGET(
     { limit },
-    { refetchInterval }
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -210,11 +189,6 @@ export const FetchUsersGET = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    if (data) {
-      onData(data);
-    }
-  }, [data]);
 
   return children({ loading, data, error, refetchUsers: refetch });
 };

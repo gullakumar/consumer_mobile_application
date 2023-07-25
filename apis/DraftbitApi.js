@@ -7,38 +7,23 @@ import {
 } from 'react-query';
 import useFetch from 'react-fetch-hook';
 import { useIsFocused } from '@react-navigation/native';
+import { handleResponse, isOkStatus } from '../utils/handleRestApiResponse';
 import usePrevious from '../utils/usePrevious';
 import * as GlobalVariables from '../config/GlobalVariableContext';
 
-export const postsGETStatusAndText = (Constants, { limit }) =>
+export const postsGETStatusAndText = (Constants, { limit }, handlers = {}) =>
   fetch(`https://example-data.draftbit.com/posts?_limit=${limit ?? ''}`, {
     headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
-  }).then(async res => ({
-    status: res.status,
-    statusText: res.statusText,
-    text: await res.text(),
-  }));
+  }).then(res => handleResponse(res, handlers));
 
-export const postsGET = (Constants, { limit }) =>
-  postsGETStatusAndText(Constants, { limit }).then(
-    ({ status, statusText, text }) => {
-      try {
-        return JSON.parse(text);
-      } catch (e) {
-        console.error(
-          [
-            'Failed to parse response text as JSON.',
-            `Error: ${e.message}`,
-            `Text: ${JSON.stringify(text)}`,
-          ].join('\n\n')
-        );
-      }
-    }
+export const postsGET = (Constants, { limit }, handlers = {}) =>
+  postsGETStatusAndText(Constants, { limit }, handlers).then(res =>
+    !isOkStatus(res.status) ? Promise.reject(res) : res.json
   );
 
-export const usePostsGET = (args, { refetchInterval } = {}) => {
+export const usePostsGET = (args, { refetchInterval, handlers = {} } = {}) => {
   const Constants = GlobalVariables.useValues();
-  return useQuery(['Posts', args], () => postsGET(Constants, args), {
+  return useQuery(['Posts', args], () => postsGET(Constants, args, handlers), {
     refetchInterval,
   });
 };
@@ -46,6 +31,7 @@ export const usePostsGET = (args, { refetchInterval } = {}) => {
 export const FetchPostsGET = ({
   children,
   onData = () => {},
+  handlers = {},
   refetchInterval,
   limit,
 }) => {
@@ -53,9 +39,14 @@ export const FetchPostsGET = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const { loading, data, error, refetch } = usePostsGET(
+  const {
+    isLoading: loading,
+    data,
+    error,
+    refetch,
+  } = usePostsGET(
     { limit },
-    { refetchInterval }
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -70,11 +61,6 @@ export const FetchPostsGET = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    if (data) {
-      onData(data);
-    }
-  }, [data]);
 
   return children({ loading, data, error, refetchPosts: refetch });
 };

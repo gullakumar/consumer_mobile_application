@@ -18,13 +18,7 @@ export const RadioButtonGroupStyles = theme =>
 
 export const ViewStyles = theme =>
   StyleSheet.create({
-    Announcements: {
-      alignItems: 'stretch',
-      paddingBottom: 10,
-      paddingLeft: 16,
-      paddingRight: 16,
-      paddingTop: 10,
-    },
+    Announcements: { alignItems: 'stretch', paddingLeft: 16, paddingRight: 16 },
     Dashboard: { flex: 1, paddingLeft: 20, paddingRight: 20 },
     Details: {
       flexDirection: 'row',
@@ -43,6 +37,13 @@ export const ViewStyles = theme =>
       alignItems: 'center',
       flexDirection: 'row',
       height: 48,
+      marginTop: 12,
+      paddingLeft: 16,
+      paddingRight: 16,
+    },
+    'Header 3': {
+      alignItems: 'center',
+      flexDirection: 'row',
       marginTop: 12,
       paddingLeft: 16,
       paddingRight: 16,
@@ -82,13 +83,7 @@ export const ViewStyles = theme =>
       paddingLeft: 30,
       paddingRight: 30,
     },
-    card: {
-      borderRadius: 12,
-      paddingBottom: 20,
-      paddingLeft: 20,
-      paddingRight: 20,
-      paddingTop: 20,
-    },
+    card: { paddingRight: 20 },
     'card 2': {
       backgroundColor: theme.colors['Background'],
       borderRadius: 12,
@@ -129,6 +124,41 @@ export const ViewStyles = theme =>
       alignItems: 'center',
       flexDirection: 'row',
       height: 48,
+      paddingLeft: 16,
+      paddingRight: 16,
+    },
+    headerp: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      marginTop: 12,
+      paddingLeft: 16,
+      paddingRight: 16,
+    },
+    'headerp 2': {
+      alignItems: 'center',
+      flexDirection: 'row',
+      marginTop: 12,
+      paddingLeft: 16,
+      paddingRight: 16,
+    },
+    'headerp 3': {
+      alignItems: 'center',
+      flexDirection: 'row',
+      marginTop: 12,
+      paddingLeft: 16,
+      paddingRight: 16,
+    },
+    'headerp 4': {
+      alignItems: 'center',
+      flexDirection: 'row',
+      marginTop: 12,
+      paddingLeft: 16,
+      paddingRight: 16,
+    },
+    'headerp 5': {
+      alignItems: 'center',
+      flexDirection: 'row',
+      marginTop: 12,
       paddingLeft: 16,
       paddingRight: 16,
     },
@@ -189,8 +219,6 @@ export const ViewStyles = theme =>
     },
     profile: {
       alignItems: 'center',
-      borderBottomWidth: 1,
-      borderColor: theme.colors['Light'],
       flexDirection: 'row',
       justifyContent: 'space-between',
       paddingBottom: 14,
@@ -242,7 +270,7 @@ export const ViewStyles = theme =>
       paddingLeft: 20,
       paddingRight: 20,
     },
-    'sort op': { flex: 1, marginTop: 40 },
+    'sort op': { flex: 1 },
     'tab view': {
       paddingLeft: 16,
       paddingRight: 16,
@@ -264,13 +292,6 @@ export const ViewStyles = theme =>
     'tabs 2': { alignItems: 'center', flexDirection: 'row', marginTop: 35 },
     uname: {
       alignItems: 'center',
-      backgroundColor: theme.colors['BG Gray'],
-      borderBottomWidth: 1,
-      borderColor: theme.colors['Divider'],
-      borderLeftWidth: 1,
-      borderRadius: 16,
-      borderRightWidth: 1,
-      borderTopWidth: 1,
       flexDirection: 'row',
       height: 50,
       justifyContent: 'space-between',
@@ -306,7 +327,6 @@ export const ViewStyles = theme =>
       alignSelf: 'stretch',
       flexWrap: 'nowrap',
       justifyContent: 'space-around',
-      paddingBottom: 20,
     },
   });
 
@@ -320,13 +340,7 @@ export const ButtonStyles = theme =>
       paddingRight: 30,
       textAlign: 'center',
     },
-    'Submit 2': {
-      fontFamily: 'Roboto_400Regular',
-      marginTop: 30,
-      paddingLeft: 30,
-      paddingRight: 30,
-      textAlign: 'center',
-    },
+    'Submit 2': { fontFamily: 'Roboto_400Regular', textAlign: 'center' },
   });
 
 export const FetchStyles = theme =>

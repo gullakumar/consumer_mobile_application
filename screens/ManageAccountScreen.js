@@ -2,21 +2,11 @@ import React from 'react';
 import * as GlobalStyles from '../GlobalStyles.js';
 import * as CISAPPApi from '../apis/CISAPPApi.js';
 import * as GlobalVariables from '../config/GlobalVariableContext';
-import Images from '../config/Images';
 import Breakpoints from '../utils/Breakpoints';
 import * as StyleSheet from '../utils/StyleSheet';
-import {
-  Checkbox,
-  Circle,
-  CircleImage,
-  Icon,
-  ScreenContainer,
-  Surface,
-  Touchable,
-  withTheme,
-} from '@draftbit/ui';
+import { Icon, ScreenContainer, Touchable, withTheme } from '@draftbit/ui';
 import { useIsFocused } from '@react-navigation/native';
-import { FlatList, Image, Text, View, useWindowDimensions } from 'react-native';
+import { FlatList, Text, View, useWindowDimensions } from 'react-native';
 
 const ManageAccountScreen = props => {
   const dimensions = useWindowDimensions();
@@ -33,15 +23,20 @@ const ManageAccountScreen = props => {
         if (!isFocused) {
           return;
         }
-        const madetails = await CISAPPApi.manageAccountsPOST(Constants, {
-          accountNumber: Constants['name'],
-        });
+        const madetails = (
+          await CISAPPApi.manageAccountsPOSTStatusAndText(Constants, {
+            accountNumber: Constants['name'],
+          })
+        )?.json;
         console.log(madetails);
 
         const valueFmxxqfZE = madetails && madetails[0].data[0].data;
         setManagead(valueFmxxqfZE);
         const result = valueFmxxqfZE;
         console.log(result);
+        const serviceConNo = (madetails && madetails[0].data[0].data)
+          ?.new_added_account;
+        console.log(serviceConNo);
       } catch (err) {
         console.error(err);
       }
@@ -49,571 +44,89 @@ const ManageAccountScreen = props => {
     handler();
   }, [isFocused]);
 
+  const [hiddenHindi, setHiddenHindi] = React.useState(true);
   const [managead, setManagead] = React.useState({});
+  const [serviceConNo, setServiceConNo] = React.useState('');
   const [showNav, setShowNav] = React.useState(false);
+  const [visibleHindi, setVisibleHindi] = React.useState(false);
 
   return (
     <ScreenContainer
       style={StyleSheet.applyWidth(
-        { flexDirection: 'column' },
+        { flex: 1, flexDirection: 'column', justifyContent: 'flex-start' },
         dimensions.width
       )}
       hasTopSafeArea={false}
     >
-      {/* Drawer */}
-      <>
-        {!showNav ? null : (
-          <Surface
+      {/* headerp */}
+      <View
+        style={StyleSheet.applyWidth(
+          StyleSheet.compose(GlobalStyles.ViewStyles(theme)['headerp 2'], {
+            alignContent: 'flex-end',
+            height: 50,
+            marginTop: 45,
+          }),
+          dimensions.width
+        )}
+      >
+        {/* Back btn */}
+        <Touchable
+          onPress={() => {
+            try {
+              navigation.goBack();
+            } catch (err) {
+              console.error(err);
+            }
+          }}
+        >
+          <View
             style={StyleSheet.applyWidth(
               {
-                backgroundColor: '"rgba(0, 0, 0, 0)"',
-                flex: 2,
-                flexDirection: 'row',
-                height: '100%',
-                position: 'absolute',
-                top: 0,
-                width: '100%',
-                zIndex: 5,
+                alignItems: 'center',
+                height: 44,
+                justifyContent: 'center',
+                width: 44,
               },
               dimensions.width
             )}
           >
-            {/* View 2 */}
-            <View
-              style={StyleSheet.applyWidth(
-                {
-                  backgroundColor: theme.colors['Surface'],
-                  paddingTop: 40,
-                  width: '80%',
-                },
-                dimensions.width
-              )}
-            >
-              <View
-                style={StyleSheet.applyWidth(
-                  { flex: 1, paddingBottom: 16, paddingTop: 16 },
-                  dimensions.width
-                )}
-              >
-                {/* Home */}
-                <Touchable
-                  onPress={() => {
-                    try {
-                      setShowNav(false);
-                      navigation.navigate('DashboardScreen');
-                    } catch (err) {
-                      console.error(err);
-                    }
-                  }}
-                >
-                  <View
-                    style={StyleSheet.applyWidth(
-                      {
-                        alignItems: 'center',
-                        flexDirection: 'row',
-                        paddingBottom: 12,
-                        paddingLeft: 24,
-                        paddingRight: 24,
-                        paddingTop: 12,
-                      },
-                      dimensions.width
-                    )}
-                  >
-                    <Icon
-                      name={'Feather/home'}
-                      size={24}
-                      color={theme.colors['Community_Light_Black']}
-                    />
-                    <Text
-                      style={StyleSheet.applyWidth(
-                        {
-                          color: theme.colors.strong,
-                          fontFamily: 'Roboto_400Regular',
-                          fontSize: 16,
-                          marginLeft: 8,
-                        },
-                        dimensions.width
-                      )}
-                    >
-                      {'Home'}
-                    </Text>
-                  </View>
-                </Touchable>
-                {/* Manage Account */}
-                <Touchable
-                  onPress={() => {
-                    try {
-                      setShowNav(false);
-                      navigation.navigate('ManageAccountScreen');
-                    } catch (err) {
-                      console.error(err);
-                    }
-                  }}
-                >
-                  <View
-                    style={StyleSheet.applyWidth(
-                      {
-                        alignItems: 'center',
-                        flexDirection: 'row',
-                        paddingBottom: 12,
-                        paddingLeft: 24,
-                        paddingRight: 24,
-                        paddingTop: 12,
-                      },
-                      dimensions.width
-                    )}
-                  >
-                    <Icon
-                      size={24}
-                      name={
-                        'MaterialCommunityIcons/account-arrow-right-outline'
-                      }
-                      color={theme.colors['Community_Dark_UI']}
-                    />
-                    <Text
-                      style={StyleSheet.applyWidth(
-                        {
-                          color: theme.colors.strong,
-                          fontFamily: 'Roboto_400Regular',
-                          fontSize: 16,
-                          marginLeft: 8,
-                        },
-                        dimensions.width
-                      )}
-                    >
-                      {'Manage Account'}
-                    </Text>
-                  </View>
-                </Touchable>
-                {/* On Demand Reading */}
-                <Touchable
-                  onPress={() => {
-                    try {
-                      setShowNav(false);
-                      navigation.navigate('UsageScreen');
-                    } catch (err) {
-                      console.error(err);
-                    }
-                  }}
-                >
-                  <View
-                    style={StyleSheet.applyWidth(
-                      {
-                        alignItems: 'center',
-                        flexDirection: 'row',
-                        paddingBottom: 12,
-                        paddingLeft: 24,
-                        paddingRight: 24,
-                        paddingTop: 12,
-                      },
-                      dimensions.width
-                    )}
-                  >
-                    <Icon size={24} name={'Ionicons/speedometer-outline'} />
-                    <Text
-                      style={StyleSheet.applyWidth(
-                        {
-                          color: theme.colors.strong,
-                          fontFamily: 'Roboto_400Regular',
-                          fontSize: 16,
-                          marginLeft: 8,
-                        },
-                        dimensions.width
-                      )}
-                    >
-                      {'On-Demand Reading'}
-                    </Text>
-                  </View>
-                </Touchable>
-                {/* Notifications */}
-                <Touchable
-                  onPress={() => {
-                    try {
-                      setShowNav(false);
-                      navigation.navigate('NotificationsScreen');
-                    } catch (err) {
-                      console.error(err);
-                    }
-                  }}
-                >
-                  <View
-                    style={StyleSheet.applyWidth(
-                      {
-                        alignItems: 'center',
-                        flexDirection: 'row',
-                        paddingBottom: 12,
-                        paddingLeft: 24,
-                        paddingRight: 24,
-                        paddingTop: 12,
-                      },
-                      dimensions.width
-                    )}
-                  >
-                    <Icon
-                      size={24}
-                      name={'Ionicons/ios-notifications-circle-outline'}
-                    />
-                    <Text
-                      style={StyleSheet.applyWidth(
-                        {
-                          color: theme.colors.strong,
-                          fontFamily: 'Roboto_400Regular',
-                          fontSize: 16,
-                          marginLeft: 8,
-                        },
-                        dimensions.width
-                      )}
-                    >
-                      {'Notifications'}
-                    </Text>
-                  </View>
-                </Touchable>
-                {/* Load and Quality */}
-                <Touchable
-                  onPress={() => {
-                    try {
-                      navigation.navigate('LoadQualityScreen');
-                    } catch (err) {
-                      console.error(err);
-                    }
-                  }}
-                >
-                  <View
-                    style={StyleSheet.applyWidth(
-                      {
-                        alignItems: 'center',
-                        flexDirection: 'row',
-                        paddingBottom: 12,
-                        paddingLeft: 24,
-                        paddingRight: 24,
-                        paddingTop: 12,
-                      },
-                      dimensions.width
-                    )}
-                  >
-                    <Icon size={24} name={'Feather/loader'} />
-                    <Text
-                      style={StyleSheet.applyWidth(
-                        {
-                          color: theme.colors.strong,
-                          fontFamily: 'Roboto_400Regular',
-                          fontSize: 16,
-                          marginLeft: 8,
-                        },
-                        dimensions.width
-                      )}
-                    >
-                      {'Load & Quality'}
-                    </Text>
-                  </View>
-                </Touchable>
-                {/* Downloads */}
-                <Touchable
-                  onPress={() => {
-                    try {
-                      navigation.navigate('DownloadsScreen');
-                    } catch (err) {
-                      console.error(err);
-                    }
-                  }}
-                >
-                  <View
-                    style={StyleSheet.applyWidth(
-                      {
-                        alignItems: 'center',
-                        flexDirection: 'row',
-                        paddingBottom: 12,
-                        paddingLeft: 24,
-                        paddingRight: 24,
-                        paddingTop: 12,
-                      },
-                      dimensions.width
-                    )}
-                  >
-                    <Icon size={24} name={'Feather/download'} />
-                    <Text
-                      style={StyleSheet.applyWidth(
-                        {
-                          color: theme.colors.strong,
-                          fontFamily: 'Roboto_400Regular',
-                          fontSize: 16,
-                          marginLeft: 8,
-                        },
-                        dimensions.width
-                      )}
-                    >
-                      {'Downloads'}
-                    </Text>
-                  </View>
-                </Touchable>
-                {/* FAQ */}
-                <Touchable
-                  onPress={() => {
-                    try {
-                      navigation.navigate('HelpCenterScreen');
-                    } catch (err) {
-                      console.error(err);
-                    }
-                  }}
-                >
-                  <View
-                    style={StyleSheet.applyWidth(
-                      {
-                        alignItems: 'center',
-                        flexDirection: 'row',
-                        paddingBottom: 12,
-                        paddingLeft: 24,
-                        paddingRight: 24,
-                        paddingTop: 12,
-                      },
-                      dimensions.width
-                    )}
-                  >
-                    <Icon size={24} name={'Feather/help-circle'} />
-                    <Text
-                      style={StyleSheet.applyWidth(
-                        {
-                          color: theme.colors.strong,
-                          fontFamily: 'Roboto_400Regular',
-                          fontSize: 16,
-                          marginLeft: 8,
-                        },
-                        dimensions.width
-                      )}
-                    >
-                      {'FAQ'}
-                    </Text>
-                  </View>
-                </Touchable>
-                {/* Feedback */}
-                <Touchable
-                  onPress={() => {
-                    try {
-                      navigation.navigate('FeedbackScreen');
-                    } catch (err) {
-                      console.error(err);
-                    }
-                  }}
-                >
-                  <View
-                    style={StyleSheet.applyWidth(
-                      {
-                        alignItems: 'center',
-                        flexDirection: 'row',
-                        paddingBottom: 12,
-                        paddingLeft: 24,
-                        paddingRight: 24,
-                        paddingTop: 12,
-                      },
-                      dimensions.width
-                    )}
-                  >
-                    <Icon size={24} name={'MaterialIcons/feedback'} />
-                    <Text
-                      style={StyleSheet.applyWidth(
-                        {
-                          color: theme.colors.strong,
-                          fontFamily: 'Roboto_400Regular',
-                          fontSize: 16,
-                          marginLeft: 8,
-                        },
-                        dimensions.width
-                      )}
-                    >
-                      {'Feedback'}
-                    </Text>
-                  </View>
-                </Touchable>
-                {/* Help */}
-                <Touchable
-                  onPress={() => {
-                    try {
-                      navigation.navigate('HelpCenterScreen');
-                    } catch (err) {
-                      console.error(err);
-                    }
-                  }}
-                >
-                  <View
-                    style={StyleSheet.applyWidth(
-                      {
-                        alignItems: 'center',
-                        flexDirection: 'row',
-                        paddingBottom: 12,
-                        paddingLeft: 24,
-                        paddingRight: 24,
-                        paddingTop: 12,
-                      },
-                      dimensions.width
-                    )}
-                  >
-                    <Icon size={24} name={'Ionicons/md-help-buoy-outline'} />
-                    <Text
-                      style={StyleSheet.applyWidth(
-                        {
-                          color: theme.colors.strong,
-                          fontFamily: 'Roboto_400Regular',
-                          fontSize: 16,
-                          marginLeft: 8,
-                        },
-                        dimensions.width
-                      )}
-                    >
-                      {'Help'}
-                    </Text>
-                  </View>
-                </Touchable>
-              </View>
-
-              <View
-                style={StyleSheet.applyWidth(
-                  {
-                    backgroundColor: theme.colors['Background'],
-                    marginTop: -20,
-                    paddingBottom: 24,
-                    paddingLeft: 24,
-                    paddingRight: 24,
-                  },
-                  dimensions.width
-                )}
-              ></View>
-            </View>
-
-            <View
-              style={StyleSheet.applyWidth(
-                { backgroundColor: '"rgba(0, 0, 0, 0)"', flex: 1 },
-                dimensions.width
-              )}
-            >
-              <Touchable
-                onPress={() => {
-                  try {
-                    setShowNav(!showNav);
-                  } catch (err) {
-                    console.error(err);
-                  }
-                }}
-                style={StyleSheet.applyWidth(
-                  { height: '100%', width: '100%' },
-                  dimensions.width
-                )}
-              />
-            </View>
-          </Surface>
-        )}
-      </>
-      {/* Content */}
-      <View
-        style={StyleSheet.applyWidth(
-          { alignItems: 'stretch', flex: 1, justifyContent: 'space-between' },
-          dimensions.width
-        )}
-      >
-        {/* Header */}
-        <View
+            <Icon size={24} name={'AntDesign/arrowleft'} />
+          </View>
+        </Touchable>
+        {/* View bill and make payment */}
+        <Text
           style={StyleSheet.applyWidth(
             {
-              alignItems: 'center',
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              marginTop: 30,
-              paddingBottom: 20,
-              paddingLeft: 20,
-              paddingRight: 20,
-              paddingTop: 20,
+              color: theme.colors.strong,
+              fontFamily: 'Roboto_700Bold',
+              fontSize: 18,
+              marginLeft: 10,
             },
             dimensions.width
           )}
         >
-          <Checkbox
-            onPress={newCheckboxValue => {
-              try {
-                setShowNav(newCheckboxValue);
-              } catch (err) {
-                console.error(err);
-              }
-            }}
-            status={showNav}
-            checkedIcon={'Feather/x'}
-            uncheckedIcon={'Feather/menu'}
-            size={32}
-            color={theme.colors['Custom Color_22']}
-            uncheckedColor={theme.colors['Custom Color_22']}
-          />
-          <View
-            style={StyleSheet.applyWidth(
-              { alignItems: 'center', flex: 1, flexDirection: 'row' },
-              dimensions.width
-            )}
-          >
-            <Text
-              style={StyleSheet.applyWidth(
-                {
-                  flex: 1,
-                  fontFamily: 'Roboto_700Bold',
-                  fontSize: 18,
-                  marginLeft: 6,
-                  textAlign: 'center',
-                },
-                dimensions.width
-              )}
-            >
-              {'Manage Account'}
-            </Text>
-
-            <Touchable>
-              {/* EN */}
-              <Text
-                style={StyleSheet.applyWidth(
-                  StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
-                    color: theme.colors['Community_Light_Black'],
-                    paddingRight: 2,
-                  }),
-                  dimensions.width
-                )}
-              >
-                {'EN'}
-              </Text>
-            </Touchable>
-
-            <Touchable
-              onPress={() => {
-                try {
-                  navigation.navigate('NotificationsScreen');
-                } catch (err) {
-                  console.error(err);
-                }
-              }}
-            >
-              <Icon
-                size={24}
-                name={'Ionicons/md-notifications-circle-outline'}
-                color={theme.colors['Community_Light_Black']}
-              />
-            </Touchable>
-
-            <Touchable
-              onPress={() => {
-                try {
-                  navigation.navigate('ProfileOptionsScreen');
-                } catch (err) {
-                  console.error(err);
-                }
-              }}
-            >
-              <Icon
-                size={24}
-                name={'Ionicons/person-circle-outline'}
-                color={theme.colors['Community_Light_Black']}
-              />
-            </Touchable>
-          </View>
-        </View>
-
+          {'Manage Account'}
+        </Text>
+      </View>
+      {/* Content */}
+      <View
+        style={StyleSheet.applyWidth(
+          {
+            alignItems: 'stretch',
+            flex: 1,
+            justifyContent: 'space-between',
+            paddingBottom: 20,
+            paddingTop: 20,
+          },
+          dimensions.width
+        )}
+      >
         <View
           style={StyleSheet.applyWidth(
             {
               alignSelf: 'flex-end',
+              flexDirection: 'row',
+              marginBottom: 20,
               marginTop: 20,
               paddingLeft: 20,
               paddingRight: 20,
@@ -621,6 +134,47 @@ const ManageAccountScreen = props => {
             dimensions.width
           )}
         >
+          {/* update */}
+          <Touchable
+            onPress={() => {
+              try {
+                navigation.navigate('UpdatePhoneandEmailScreen');
+              } catch (err) {
+                console.error(err);
+              }
+            }}
+            style={StyleSheet.applyWidth({ marginRight: 20 }, dimensions.width)}
+          >
+            <View
+              style={StyleSheet.applyWidth(
+                {
+                  alignItems: 'center',
+                  backgroundColor: theme.colors['Primary'],
+                  borderRadius: 100,
+                  flexDirection: 'row',
+                  paddingLeft: 10,
+                },
+                dimensions.width
+              )}
+            >
+              <Text
+                style={StyleSheet.applyWidth(
+                  {
+                    color: theme.colors['Custom #ffffff'],
+                    fontFamily: 'Inter_500Medium',
+                    paddingBottom: 8,
+                    paddingLeft: 10,
+                    paddingRight: 15,
+                    paddingTop: 8,
+                  },
+                  dimensions.width
+                )}
+              >
+                {'Account Summary'}
+              </Text>
+            </View>
+          </Touchable>
+
           <Touchable
             onPress={() => {
               try {
@@ -633,14 +187,22 @@ const ManageAccountScreen = props => {
             <Icon
               name={'Ionicons/md-add-circle-outline'}
               size={30}
-              color={theme.colors['Primary']}
+              color={theme.colors['App Green']}
             />
           </Touchable>
         </View>
 
         <View
           style={StyleSheet.applyWidth(
-            { justifyContent: 'flex-start', paddingLeft: 20, paddingRight: 20 },
+            {
+              borderBottomWidth: 1,
+              borderColor: theme.colors['Custom Color_21'],
+              flexDirection: 'row',
+              justifyContent: 'flex-start',
+              marginLeft: 20,
+              marginRight: 20,
+              paddingBottom: 4,
+            },
             dimensions.width
           )}
         >
@@ -650,12 +212,13 @@ const ManageAccountScreen = props => {
               {
                 color: theme.colors.strong,
                 fontFamily: 'Roboto_400Regular',
-                fontSize: 14,
+                fontSize: 15,
               },
               dimensions.width
             )}
           >
-            {'Primary Service Connection'}
+            {'Primary Service Connection: '}
+            {Constants['name']}
           </Text>
         </View>
         <FlatList
@@ -673,7 +236,7 @@ const ManageAccountScreen = props => {
                         {
                           alignItems: 'stretch',
                           flexDirection: 'column',
-                          paddingBottom: 3,
+                          paddingBottom: 4,
                         }
                       ),
                       dimensions.width
@@ -701,16 +264,50 @@ const ManageAccountScreen = props => {
                           dimensions.width
                         )}
                       >
+                        {'Name: '}
                         {listData?.customer_name}
                       </Text>
+
+                      <Touchable
+                        onPress={() => {
+                          try {
+                            const value2jNQTSMa = listData?.new_added_account;
+                            setServiceConNo(value2jNQTSMa);
+                            const serviceconnectionNo = value2jNQTSMa;
+                            navigation.navigate(
+                              'DeleteServiceConnectionScreen',
+                              { serviceConnectionNo: serviceconnectionNo }
+                            );
+                          } catch (err) {
+                            console.error(err);
+                          }
+                        }}
+                        style={StyleSheet.applyWidth(
+                          { marginLeft: 8 },
+                          dimensions.width
+                        )}
+                      >
+                        <Icon
+                          style={StyleSheet.applyWidth(
+                            { marginTop: 2 },
+                            dimensions.width
+                          )}
+                          name={'Feather/minus-circle'}
+                          color={theme.colors['Error']}
+                          size={27}
+                        />
+                      </Touchable>
                     </View>
                   </View>
 
                   <View
                     style={StyleSheet.applyWidth(
                       {
+                        borderBottomWidth: 1,
+                        borderColor: theme.colors['Custom #dbdbdb'],
                         flexDirection: 'row',
                         justifyContent: 'flex-start',
+                        paddingBottom: 4,
                         paddingTop: 4,
                       },
                       dimensions.width
@@ -725,6 +322,7 @@ const ManageAccountScreen = props => {
                         dimensions.width
                       )}
                     >
+                      {'Scno: '}
                       {listData?.new_added_account}
                     </Text>
                   </View>

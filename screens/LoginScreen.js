@@ -3,6 +3,7 @@ import * as GlobalStyles from '../GlobalStyles.js';
 import * as CISAPPApi from '../apis/CISAPPApi.js';
 import * as GlobalVariables from '../config/GlobalVariableContext';
 import Images from '../config/Images';
+import * as CustomCode from '../custom-files/CustomCode';
 import Breakpoints from '../utils/Breakpoints';
 import * as StyleSheet from '../utils/StyleSheet';
 import {
@@ -66,6 +67,7 @@ const LoginScreen = props => {
   const { theme } = props;
   const { navigation } = props;
 
+  const [ERROR_MESSAGE, setERROR_MESSAGE] = React.useState('');
   const [accountno, setAccountno] = React.useState('');
   const [checkboxRowValue, setCheckboxRowValue] = React.useState('');
   const [checkboxValue, setCheckboxValue] = React.useState(false);
@@ -143,7 +145,7 @@ const LoginScreen = props => {
           dimensions.width
         )}
         showsVerticalScrollIndicator={true}
-        keyboardShouldPersistTaps={'never'}
+        keyboardShouldPersistTaps={'always'}
       >
         <View
           style={StyleSheet.applyWidth(
@@ -163,23 +165,25 @@ const LoginScreen = props => {
           {/* Logo */}
           <Image
             style={StyleSheet.applyWidth(
-              { height: 40, marginBottom: 24, marginTop: 20, width: 150 },
+              { height: 128, marginTop: 18, width: 128 },
               dimensions.width
             )}
             resizeMode={'cover'}
-            source={Images.Uitilitycislogo}
+            source={Images.JBNL}
           />
           {/* error message */}
           <Text
             style={StyleSheet.applyWidth(
               StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+                color: theme.colors['Error'],
+                fontFamily: 'Roboto_400Regular',
                 marginBottom: 5,
                 marginTop: 5,
               }),
               dimensions.width
             )}
           >
-            {processErrorMessage(Constants['ERROR_MESSAGE'])}
+            {processErrorMessage(ERROR_MESSAGE)}
           </Text>
           {/* User Name */}
           <View
@@ -196,8 +200,9 @@ const LoginScreen = props => {
                 flexDirection: 'row',
                 height: 50,
                 justifyContent: 'space-between',
-                marginBottom: 24,
+                marginBottom: 15,
                 marginTop: 20,
+                opacity: 1,
                 paddingLeft: 20,
                 paddingRight: 20,
                 width: '100%',
@@ -206,8 +211,8 @@ const LoginScreen = props => {
             )}
           >
             <Icon
+              color={theme.colors['Medium']}
               size={24}
-              color={theme.colors['Custom Color_20']}
               name={'Ionicons/person'}
             />
             <View
@@ -238,7 +243,7 @@ const LoginScreen = props => {
                 value={serviceconnectionnumber}
                 placeholder={'User name'}
                 editable={true}
-                placeholderTextColor={theme.colors['Custom Color_20']}
+                placeholderTextColor={theme.colors['Medium']}
               />
             </View>
           </View>
@@ -259,8 +264,8 @@ const LoginScreen = props => {
                     flexDirection: 'row',
                     height: 50,
                     justifyContent: 'space-between',
-                    marginBottom: 24,
-                    marginTop: 20,
+                    marginBottom: 20,
+                    marginTop: 15,
                     paddingLeft: 20,
                     paddingRight: 20,
                     width: '100%',
@@ -270,8 +275,8 @@ const LoginScreen = props => {
               >
                 <Icon
                   size={24}
-                  color={theme.colors['Custom Color_20']}
                   name={'FontAwesome/lock'}
+                  color={theme.colors['Medium']}
                 />
                 <View
                   style={StyleSheet.applyWidth(
@@ -301,8 +306,8 @@ const LoginScreen = props => {
                     value={password}
                     placeholder={'Password'}
                     editable={true}
-                    placeholderTextColor={theme.colors['Custom Color_20']}
                     secureTextEntry={true}
+                    placeholderTextColor={theme.colors['Medium']}
                   />
                 </View>
                 <Checkbox
@@ -339,8 +344,8 @@ const LoginScreen = props => {
                     flexDirection: 'row',
                     height: 50,
                     justifyContent: 'space-between',
-                    marginBottom: 24,
-                    marginTop: 20,
+                    marginBottom: 20,
+                    marginTop: 15,
                     paddingLeft: 20,
                     paddingRight: 20,
                     width: '100%',
@@ -407,16 +412,15 @@ const LoginScreen = props => {
             onPress={() => {
               const handler = async () => {
                 try {
-                  const logindata = await CISAPPApi.loginPOST(Constants, {
-                    accountno: serviceconnectionnumber,
-                    pwd: password,
-                  });
+                  const logindata = (
+                    await CISAPPApi.loginPOSTStatusAndText(Constants, {
+                      accountno: serviceconnectionnumber,
+                      pwd: password,
+                    })
+                  )?.json;
                   console.log(logindata);
                   const messagejson = logindata?.[0].data?.error?.message;
-                  setGlobalVariableValue({
-                    key: 'ERROR_MESSAGE',
-                    value: messagejson,
-                  });
+                  setERROR_MESSAGE(messagejson);
                   const accountIdJson = JSON.parse(
                     (logindata && logindata[0])?.data[0]?.data
                   )?.ACCOUNT_ID;
@@ -426,6 +430,12 @@ const LoginScreen = props => {
                   const mobileNumberJson = JSON.parse(
                     (logindata && logindata[0])?.data[0]?.data
                   )?.MOBILE_NUMBER;
+                  const userIdJson = JSON.parse(
+                    (logindata && logindata[0])?.data[0]?.data
+                  )?.ID;
+                  const consumerNoJson = JSON.parse(
+                    (logindata && logindata[0])?.data[0]?.data
+                  )?.CONSUMER_NUMBER;
                   setGlobalVariableValue({
                     key: 'name',
                     value: accountIdJson,
@@ -437,6 +447,14 @@ const LoginScreen = props => {
                   setGlobalVariableValue({
                     key: 'mobileNumber',
                     value: mobileNumberJson,
+                  });
+                  setGlobalVariableValue({
+                    key: 'userId',
+                    value: userIdJson,
+                  });
+                  setGlobalVariableValue({
+                    key: 'consumerNo',
+                    value: consumerNoJson,
                   });
                   if (messagejson?.length) {
                     return;
@@ -450,9 +468,10 @@ const LoginScreen = props => {
             }}
             style={StyleSheet.applyWidth(
               {
+                borderRadius: 14,
                 fontFamily: 'Roboto_400Regular',
-                fontSize: 14,
-                marginBottom: 24,
+                fontSize: 16,
+                marginBottom: 15,
                 marginTop: 20,
                 width: '100%',
               },
@@ -460,19 +479,15 @@ const LoginScreen = props => {
             )}
             title={'Login'}
           />
-          {/* Forgot Password */}
+          {/* Login with OTP */}
           <Touchable
             onPress={() => {
               try {
-                navigation.navigate('ForgotpasswordScreen');
+                navigation.navigate('LoginOTPScreen');
               } catch (err) {
                 console.error(err);
               }
             }}
-            style={StyleSheet.applyWidth(
-              { marginBottom: 10, marginTop: 10, width: '100%' },
-              dimensions.width
-            )}
           >
             <View
               style={StyleSheet.applyWidth(
@@ -491,7 +506,44 @@ const LoginScreen = props => {
                   {
                     color: theme.colors['Custom Color'],
                     fontFamily: 'Roboto_500Medium',
-                    fontSize: 14,
+                    fontSize: 15,
+                    marginLeft: 10,
+                  },
+                  dimensions.width
+                )}
+              >
+                {'Login with OTP'}
+              </Text>
+            </View>
+          </Touchable>
+          {/* Forgot Password */}
+          <Touchable
+            onPress={() => {
+              try {
+                navigation.navigate('ForgotpasswordScreen');
+              } catch (err) {
+                console.error(err);
+              }
+            }}
+          >
+            <View
+              style={StyleSheet.applyWidth(
+                {
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  paddingBottom: 10,
+                  paddingTop: 10,
+                },
+                dimensions.width
+              )}
+            >
+              <Text
+                style={StyleSheet.applyWidth(
+                  {
+                    color: theme.colors['Custom Color'],
+                    fontFamily: 'Roboto_500Medium',
+                    fontSize: 15,
                     marginLeft: 10,
                   },
                   dimensions.width
@@ -510,10 +562,6 @@ const LoginScreen = props => {
                 console.error(err);
               }
             }}
-            style={StyleSheet.applyWidth(
-              { marginBottom: 10, marginTop: 10, width: '100%' },
-              dimensions.width
-            )}
           >
             <View
               style={StyleSheet.applyWidth(
@@ -530,8 +578,9 @@ const LoginScreen = props => {
               <Text
                 style={StyleSheet.applyWidth(
                   {
-                    color: theme.colors['Custom Color_20'],
+                    color: theme.colors['Medium'],
                     fontFamily: 'Roboto_400Regular',
+                    fontSize: 15,
                   },
                   dimensions.width
                 )}
@@ -544,6 +593,7 @@ const LoginScreen = props => {
                   {
                     color: theme.colors['Custom Color'],
                     fontFamily: 'Roboto_500Medium',
+                    fontSize: 15,
                     marginLeft: 7,
                     textDecorationLine: 'underline',
                   },
@@ -566,8 +616,9 @@ const LoginScreen = props => {
             style={StyleSheet.applyWidth(
               {
                 backgroundColor: theme.colors['GetFit Orange'],
+                borderRadius: 14,
                 fontFamily: 'Roboto_400Regular',
-                fontSize: 14,
+                fontSize: 16,
                 marginTop: 34,
                 width: '100%',
               },

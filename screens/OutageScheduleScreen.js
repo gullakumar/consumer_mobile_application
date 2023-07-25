@@ -419,16 +419,12 @@ const OutageScheduleScreen = props => {
                       <DraftbitApi.FetchPostsGET limit={2}>
                         {({ loading, error, data, refetchPosts }) => {
                           const fetchData = data;
-                          if (!fetchData || loading) {
+                          if (loading) {
                             return <ActivityIndicator />;
                           }
 
                           if (error) {
-                            return (
-                              <Text style={{ textAlign: 'center' }}>
-                                There was a problem fetching this data
-                              </Text>
-                            );
+                            return <ActivityIndicator />;
                           }
 
                           return (

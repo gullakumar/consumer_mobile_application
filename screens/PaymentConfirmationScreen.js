@@ -142,9 +142,11 @@ const PaymentConfirmationScreen = props => {
               {
                 backgroundColor: theme.colors['White'],
                 borderColor: 'rgb(215, 213, 213)',
+                borderRadius: 14,
                 borderWidth: 1,
                 color: 'rgb(0,0,0)',
                 fontFamily: 'Roboto_400Regular',
+                fontSize: 16,
                 textAlign: 'center',
               },
               dimensions.width
@@ -168,7 +170,9 @@ const PaymentConfirmationScreen = props => {
             style={StyleSheet.applyWidth(
               {
                 backgroundColor: theme.colors.primary,
+                borderRadius: 14,
                 fontFamily: 'Roboto_400Regular',
+                fontSize: 16,
                 marginTop: 30,
                 textAlign: 'center',
               },

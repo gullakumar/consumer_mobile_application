@@ -13,17 +13,22 @@ const AppVariables = {
   ERROR_MESSAGE: '',
   Viewbilldetailsjson: '',
   accountno: '',
+  consumerNo: '',
   data: ['Bin 1', 'Bin 2'],
   email: '',
+  emailValue: '',
   manageaccount_picker: '',
   mobileNumber: '',
   name: '',
   password1: '',
+  payemntfinalurl: '',
   picker_option1: '',
   picker_option2: '',
   serviceConNo: ['11111474812', 'KUM188'],
+  serviceconnectionNoMan: '',
   sub_category: '',
   sub_category2: '',
+  userId: '',
 };
 const GlobalVariableContext = React.createContext();
 const GlobalVariableUpdater = React.createContext();

@@ -2,6 +2,7 @@ import React from 'react';
 import * as GlobalStyles from '../GlobalStyles.js';
 import * as CISAPPApi from '../apis/CISAPPApi.js';
 import * as GlobalVariables from '../config/GlobalVariableContext';
+import * as CustomCode from '../custom-files/CustomCode';
 import Breakpoints from '../utils/Breakpoints';
 import * as StyleSheet from '../utils/StyleSheet';
 import openImagePickerUtil from '../utils/openImagePicker';
@@ -21,7 +22,6 @@ const FeedbackScreen = props => {
   const dimensions = useWindowDimensions();
   const Constants = GlobalVariables.useValues();
   const Variables = Constants;
-  const setGlobalVariableValue = GlobalVariables.useSetValue();
 
   const processErrorMessage = msg => {
     const scheme = {
@@ -69,6 +69,7 @@ const FeedbackScreen = props => {
   const [Name, setName] = React.useState('');
   const [Response, setResponse] = React.useState('');
   const [Suggestion, setSuggestion] = React.useState('');
+  const [feedbackMsg, setFeedbackMsg] = React.useState('');
   const [searchBarValue, setSearchBarValue] = React.useState('');
   const [selectedTab, setSelectedTab] = React.useState('tab1');
   const [starRatingValue, setStarRatingValue] = React.useState(0);
@@ -148,14 +149,17 @@ const FeedbackScreen = props => {
           dimensions.width
         )}
       >
-        {/* error message */}
+        {/* Feedback message */}
         <Text
           style={StyleSheet.applyWidth(
-            GlobalStyles.TextStyles(theme)['Text'],
+            StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+              color: theme.colors['Custom Color_9'],
+              fontFamily: 'Roboto_400Regular',
+            }),
             dimensions.width
           )}
         >
-          {processErrorMessage(Constants['ERROR_MESSAGE'])}
+          {feedbackMsg}
         </Text>
         {/* s1 */}
         <View
@@ -168,8 +172,8 @@ const FeedbackScreen = props => {
           )}
         >
           <Icon
+            color={theme.colors['Medium']}
             size={24}
-            color={theme.colors['Custom Color_20']}
             name={'MaterialIcons/house'}
           />
           <View
@@ -199,8 +203,8 @@ const FeedbackScreen = props => {
               )}
               value={Name}
               placeholder={'Enter service connection number'}
+              placeholderTextColor={theme.colors['Medium']}
               editable={true}
-              placeholderTextColor={theme.colors['Custom Color_20']}
             />
           </View>
         </View>
@@ -216,8 +220,8 @@ const FeedbackScreen = props => {
         >
           <Icon
             size={24}
-            color={theme.colors['Custom Color_20']}
             name={'Entypo/email'}
+            color={theme.colors['Medium']}
           />
           <View
             style={StyleSheet.applyWidth(
@@ -246,8 +250,8 @@ const FeedbackScreen = props => {
               )}
               value={Email}
               placeholder={'Enter your email'}
+              placeholderTextColor={theme.colors['Medium']}
               editable={true}
-              placeholderTextColor={theme.colors['Custom Color_20']}
             />
           </View>
         </View>
@@ -262,8 +266,8 @@ const FeedbackScreen = props => {
           )}
         >
           <Icon
+            color={theme.colors['Medium']}
             size={24}
-            color={theme.colors['Custom Color_20']}
             name={'MaterialIcons/feedback'}
           />
           <View
@@ -293,8 +297,8 @@ const FeedbackScreen = props => {
               )}
               value={Suggestion}
               placeholder={'Subject'}
+              placeholderTextColor={theme.colors['Medium']}
               editable={true}
-              placeholderTextColor={theme.colors['Custom Color_20']}
             />
           </View>
         </View>
@@ -339,7 +343,7 @@ const FeedbackScreen = props => {
             placeholder={'Please leave your feedback here...'}
             multiline={true}
             numberOfLines={4}
-            placeholderTextColor={theme.colors.textPlaceholder}
+            placeholderTextColor={theme.colors['Medium']}
           />
         </View>
         {/* Button Solid */}
@@ -347,21 +351,19 @@ const FeedbackScreen = props => {
           onPress={() => {
             const handler = async () => {
               try {
-                const feedbackvalues = await CISAPPApi.feedbackPOST(Constants, {
-                  email: Email,
-                  name: Name,
-                  response: Response,
-                  suggestion: Suggestion,
-                });
+                const feedbackvalues = (
+                  await CISAPPApi.feedbackPOSTStatusAndText(Constants, {
+                    email: Email,
+                    name: Name,
+                    response: Response,
+                    suggestion: Suggestion,
+                  })
+                )?.json;
                 console.log(feedbackvalues);
-                const messagejson = feedbackvalues?.[0].data?.error?.message;
-                setGlobalVariableValue({
-                  key: 'ERROR_MESSAGE',
-                  value: messagejson,
-                });
-                if (messagejson?.length) {
-                  return;
-                }
+                const messageResult =
+                  feedbackvalues && feedbackvalues[0].data[0].msg;
+                console.log(messageResult);
+                setFeedbackMsg(messageResult);
                 navigation.navigate('WelcomeScreen');
               } catch (err) {
                 console.error(err);
@@ -371,7 +373,9 @@ const FeedbackScreen = props => {
           }}
           style={StyleSheet.applyWidth(
             {
+              borderRadius: 14,
               fontFamily: 'Roboto_400Regular',
+              fontSize: 16,
               marginTop: 30,
               paddingLeft: 30,
               paddingRight: 30,
