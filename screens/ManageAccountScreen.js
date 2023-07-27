@@ -24,7 +24,7 @@ const ManageAccountScreen = props => {
           return;
         }
         const madetails = (
-          await CISAPPApi.manageAccountsPOSTStatusAndText(Constants, {
+          await CISAPPApi.manageAccountsPOST(Constants, {
             accountNumber: Constants['name'],
           })
         )?.json;

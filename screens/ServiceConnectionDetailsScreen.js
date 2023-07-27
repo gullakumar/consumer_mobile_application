@@ -260,17 +260,14 @@ const ServiceConnectionDetailsScreen = props => {
               const handler = async () => {
                 try {
                   const adsercondetresult = (
-                    await CISAPPApi.addServiceConnectionAccountPOSTStatusAndText(
-                      Constants,
-                      {
-                        existAcct: (() => {
-                          const e = Constants['name'];
-                          console.log(e);
-                          return e;
-                        })(),
-                        newAcct: newAcct,
-                      }
-                    )
+                    await CISAPPApi.addServiceConnectionAccountPOST(Constants, {
+                      existAcct: (() => {
+                        const e = Constants['name'];
+                        console.log(e);
+                        return e;
+                      })(),
+                      newAcct: newAcct,
+                    })
                   )?.json;
                   console.log(adsercondetresult);
                   const messagejson =

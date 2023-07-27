@@ -696,7 +696,7 @@ const RegisterScreen = props => {
                     return;
                   }
                   const registredvalues = (
-                    await CISAPPApi.registeredPOSTStatusAndText(Constants, {
+                    await CISAPPApi.registeredPOST(Constants, {
                       accno: serviceconnectionnumber,
                       email: email,
                       mobilenumber: Mobileno,

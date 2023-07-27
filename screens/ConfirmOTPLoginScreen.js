@@ -388,7 +388,7 @@ const ConfirmOTPLoginScreen = props => {
                 const otpResult = createOTP();
                 console.log(otpResult);
                 const confirmotp = (
-                  await CISAPPApi.loginConfirmOTPPOSTStatusAndText(Constants, {
+                  await CISAPPApi.loginConfirmOTPPOST(Constants, {
                     accno: (() => {
                       const e = Constants['name'];
                       console.log(e);

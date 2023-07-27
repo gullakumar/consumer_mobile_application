@@ -214,7 +214,7 @@ const DeleteServiceConnectionScreen = props => {
               const handler = async () => {
                 try {
                   const adsercondetresult = (
-                    await CISAPPApi.deleteAccountPOSTStatusAndText(Constants, {
+                    await CISAPPApi.deleteAccountPOST(Constants, {
                       accountNumber: (() => {
                         const e =
                           props.route?.params?.serviceConnectionNo ?? '';

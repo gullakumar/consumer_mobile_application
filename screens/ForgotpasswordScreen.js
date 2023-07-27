@@ -239,7 +239,7 @@ const ForgotpasswordScreen = props => {
             const handler = async () => {
               try {
                 const otpvalue = (
-                  await CISAPPApi.forgotpasswordPOSTStatusAndText(Constants, {
+                  await CISAPPApi.forgotpasswordPOST(Constants, {
                     accno: serviceconnectionnumber,
                   })
                 )?.json;

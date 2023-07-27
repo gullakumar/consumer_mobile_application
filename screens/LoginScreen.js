@@ -413,7 +413,7 @@ const LoginScreen = props => {
               const handler = async () => {
                 try {
                   const logindata = (
-                    await CISAPPApi.loginPOSTStatusAndText(Constants, {
+                    await CISAPPApi.loginPOST(Constants, {
                       accountno: serviceconnectionnumber,
                       pwd: password,
                     })

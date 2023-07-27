@@ -23,7 +23,7 @@ export const handleResponse = async (res, handlers = {}) => {
     json,
   };
 
-  if (json && handlers.onData && isOkStatus(status)) {
+  if (handlers.onData) {
     handlers.onData(json);
   }
   if (status === 403 && handlers.on403) {

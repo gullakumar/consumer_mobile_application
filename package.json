@@ -17,8 +17,8 @@
     "preset": "jest-expo"
   },
   "dependencies": {
-    "@draftbit/maps": "47.6.3",
-    "@draftbit/ui": "47.6.3",
+    "@draftbit/maps": "47.7.4",
+    "@draftbit/ui": "47.7.4",
     "@expo/dev-server": "0.1.120",
     "@expo/vector-icons": "^13.0.0",
     "@expo/webpack-config": "^0.17.2",

@@ -615,8 +615,6 @@ const MakePaymentScreen = props => {
           <View
             style={StyleSheet.applyWidth(
               StyleSheet.compose(GlobalStyles.ViewStyles(theme)['accordion'], {
-                marginLeft: 20,
-                marginRight: 20,
                 paddingBottom: 3,
                 paddingLeft: 8,
                 paddingRight: 8,
@@ -633,6 +631,8 @@ const MakePaymentScreen = props => {
                   fontFamily: 'Roboto_500Medium',
                   fontSize: 16,
                   paddingBottom: 8,
+                  paddingLeft: 20,
+                  paddingRight: 20,
                   paddingTop: 8,
                 },
                 dimensions.width
@@ -648,6 +648,8 @@ const MakePaymentScreen = props => {
                     flexDirection: 'column',
                     justifyContent: 'flex-start',
                     opacity: 1,
+                    paddingLeft: 20,
+                    paddingRight: 20,
                     width: '100%',
                   },
                   dimensions.width
@@ -815,6 +817,8 @@ const MakePaymentScreen = props => {
                     justifyContent: 'space-between',
                     marginBottom: 12,
                     marginTop: 20,
+                    paddingLeft: 20,
+                    paddingRight: 20,
                   },
                   dimensions.width
                 )}
@@ -951,7 +955,7 @@ const MakePaymentScreen = props => {
             const handler = async () => {
               try {
                 const consumerDetailsJson = (
-                  await CISAPPApi.consumerDetailsPOSTStatusAndText(Constants, {
+                  await CISAPPApi.consumerDetailsPOST(Constants, {
                     action: buildConsumerString(
                       props.route?.params?.Scno ?? ''
                     ),
@@ -975,7 +979,7 @@ const MakePaymentScreen = props => {
                 )?.data?.consumerId;
                 setConsumerId(consumerIdData);
                 const paymentJson = (
-                  await CISAPPApi.payemntServicePOSTStatusAndText(Constants, {
+                  await CISAPPApi.payemntServicePOST(Constants, {
                     accno: (() => {
                       const e = props.route?.params?.accno ?? '';
                       console.log(e);
@@ -1050,10 +1054,7 @@ const MakePaymentScreen = props => {
                 });
                 console.log(url);
                 await WebBrowser.openBrowserAsync(`${url}`);
-                navigation.navigate('PaymentConfirmationScreen', {
-                  name: props.route?.params?.Name ?? '',
-                  Scno: props.route?.params?.Scno ?? '',
-                });
+                navigation.navigate('DashboardScreen');
               } catch (err) {
                 console.error(err);
               }

@@ -666,31 +666,28 @@ const UpdatePhonenumberScreen = props => {
               const handler = async () => {
                 try {
                   const adsercondetresult = (
-                    await CISAPPApi.updateProfileMobileNumberPOSTStatusAndText(
-                      Constants,
-                      {
-                        accno: (() => {
-                          const e = Constants['name'];
-                          console.log(e);
-                          return e;
-                        })(),
-                        newMobile: (() => {
-                          const e = newAcct;
-                          console.log(e);
-                          return e;
-                        })(),
-                        oldMobile: (() => {
-                          const e = Constants['mobileNumber'];
-                          console.log(e);
-                          return e;
-                        })(),
-                        userId: (() => {
-                          const e = Constants['userId'];
-                          console.log(e);
-                          return e;
-                        })(),
-                      }
-                    )
+                    await CISAPPApi.updateProfileMobileNumberPOST(Constants, {
+                      accno: (() => {
+                        const e = Constants['name'];
+                        console.log(e);
+                        return e;
+                      })(),
+                      newMobile: (() => {
+                        const e = newAcct;
+                        console.log(e);
+                        return e;
+                      })(),
+                      oldMobile: (() => {
+                        const e = Constants['mobileNumber'];
+                        console.log(e);
+                        return e;
+                      })(),
+                      userId: (() => {
+                        const e = Constants['userId'];
+                        console.log(e);
+                        return e;
+                      })(),
+                    })
                   )?.json;
                   console.log(adsercondetresult);
                   const messagejson =

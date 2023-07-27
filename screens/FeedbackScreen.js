@@ -352,7 +352,7 @@ const FeedbackScreen = props => {
             const handler = async () => {
               try {
                 const feedbackvalues = (
-                  await CISAPPApi.feedbackPOSTStatusAndText(Constants, {
+                  await CISAPPApi.feedbackPOST(Constants, {
                     email: Email,
                     name: Name,
                     response: Response,

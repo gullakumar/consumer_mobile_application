@@ -6,12 +6,12 @@ export function LineChartComponent({ prepaidBillingHistory }) {
   let newData = [];
   let newBillDates = [];
   if (prepaidBillingHistory.length) {
-    newData = prepaidBillingHistory.map(item => item.fixedSubsidy);
+    newData = prepaidBillingHistory.map(item => item.closingBalance);
     newBillDates = prepaidBillingHistory.map(item => item.billmonth);
   }
   console.log('from custom code', prepaidBillingHistory);
   const data = {
-    lables: prepaidBillingHistory.BillIssueDate,
+    //lables: prepaidBillingHistory.BillIssueDate,
     labels: newBillDates,
     //labels: ["Sat", "Sun", "Mon", "Tue", "Wed", "Fri"],
     datasets: [

@@ -393,7 +393,7 @@ const ConfirmOTPPhonenumberupdateScreen = props => {
                 const otpResult = createOTP();
                 console.log(otpResult);
                 const confirmotp = (
-                  await CISAPPApi.oTPMobileUpdatePOSTStatusAndText(Constants, {
+                  await CISAPPApi.oTPMobileUpdatePOST(Constants, {
                     accno: (() => {
                       const e = Constants['name'];
                       console.log(e);

@@ -172,10 +172,9 @@ const CheckTicketStatusforGuestScreen = props => {
                 const handler = async () => {
                   try {
                     const consumerDetailsJson = (
-                      await CISAPPApi.consumerDetailsPOSTStatusAndText(
-                        Constants,
-                        { action: buildConsumerString(consId) }
-                      )
+                      await CISAPPApi.consumerDetailsPOST(Constants, {
+                        action: buildConsumerString(consId),
+                      })
                     )?.json;
                     buildConsumerString(consId);
                     const consumerId = (
@@ -183,10 +182,9 @@ const CheckTicketStatusforGuestScreen = props => {
                     )?.data?.consumerId;
                     setConsumerId(consumerId);
                     const gettickerdata = (
-                      await CISAPPApi.getticketdeatilsPOSTStatusAndText(
-                        Constants,
-                        { consId: consumerId }
-                      )
+                      await CISAPPApi.getticketdeatilsPOST(Constants, {
+                        consId: consumerId,
+                      })
                     )?.json;
                     console.log(gettickerdata);
                     setTableData(

@@ -22,7 +22,6 @@ import {
   withTheme,
 } from '@draftbit/ui';
 import { useIsFocused } from '@react-navigation/native';
-import { FlashList } from '@shopify/flash-list';
 import * as WebBrowser from 'expo-web-browser';
 import { FlatList, Image, Text, View, useWindowDimensions } from 'react-native';
 
@@ -102,7 +101,7 @@ line two` ) and will not work with special characters inside of quotes ( example
         }
         setServiceConNumber(Constants['name']);
         const consumerDetailsJson = (
-          await CISAPPApi.consumerDetailsPOSTStatusAndText(Constants, {
+          await CISAPPApi.consumerDetailsPOST(Constants, {
             action: buildConsumerString(Constants['name']),
           })
         )?.json;
@@ -119,7 +118,7 @@ line two` ) and will not work with special characters inside of quotes ( example
         const Billdetailsjson = await (async () => {
           if (prepaidFlag === 'N') {
             return (
-              await CISAPPApi.viewBillDetailsPOSTStatusAndText(Constants, {
+              await CISAPPApi.viewBillDetailsPOST(Constants, {
                 action: buildString(Constants['name']),
               })
             )?.json;
@@ -133,7 +132,7 @@ line two` ) and will not work with special characters inside of quotes ( example
         setViewBillDetails(valuexIxNMeaF);
         const Billdetailslog = valuexIxNMeaF;
         const BillingHistoryJson = (
-          await CISAPPApi.billingHistoryPOSTStatusAndText(Constants, {
+          await CISAPPApi.billingHistoryPOST(Constants, {
             action: buildBillingString(Constants['name']),
           })
         )?.json;
@@ -147,9 +146,7 @@ line two` ) and will not work with special characters inside of quotes ( example
         const prepaidJson = await (async () => {
           if (prepaidFlag === 'Y') {
             return (
-              await CISAPPApi.prepaidApiPOSTStatusAndText(Constants, {
-                mtrno: meterNo,
-              })
+              await CISAPPApi.prepaidApiPOST(Constants, { mtrno: meterNo })
             )?.json;
           }
         })();
@@ -158,21 +155,22 @@ line two` ) and will not work with special characters inside of quotes ( example
           ?.avail_balance;
         console.log(availableBalance);
         setAvailableBalance(availableBalance);
-        const prepaidBillingHistoryJson = (
-          await CISAPPApi.billingHistoryPrepaidPOSTStatusAndText(Constants, {
-            action: prepaidBillingString(meterNo),
-          })
-        )?.json;
+        const prepaidBillingHistoryJson = await (async () => {
+          if (prepaidFlag === 'Y') {
+            return (
+              await CISAPPApi.billingHistoryPrepaidPOST(Constants, {
+                action: prepaidBillingString(meterNo),
+              })
+            )?.json;
+          }
+        })();
         prepaidBillingString(meterNo);
-        const prepaidBillingHistoryresult =
+        const prepaidBillingHistoryResult =
           prepaidBillingHistoryJson && prepaidBillingHistoryJson[0].data.data;
-
-        const valueOnL0TEPo = prepaidBillingHistoryresult;
-        setPrepaidBillingHistory(valueOnL0TEPo);
-        const prepaidHistoryresult = valueOnL0TEPo;
-        console.log(prepaidBillingHistoryresult);
+        setPrepaidBillingHistory(prepaidBillingHistoryResult);
+        console.log(prepaidBillingHistoryResult);
         const ManageAccountDetails = (
-          await CISAPPApi.manageAccountsPOSTStatusAndText(Constants, {
+          await CISAPPApi.manageAccountsPOST(Constants, {
             accountNumber: Constants['name'],
           })
         )?.json;
@@ -888,10 +886,9 @@ line two` ) and will not work with special characters inside of quotes ( example
                     try {
                       setServiceConNumber(newPickerValue);
                       const consumerDetailsJson = (
-                        await CISAPPApi.consumerDetailsPOSTStatusAndText(
-                          Constants,
-                          { action: buildConsumerString(newPickerValue) }
-                        )
+                        await CISAPPApi.consumerDetailsPOST(Constants, {
+                          action: buildConsumerString(newPickerValue),
+                        })
                       )?.json;
                       console.log(consumerDetailsJson);
                       buildConsumerString(newPickerValue);
@@ -908,10 +905,9 @@ line two` ) and will not work with special characters inside of quotes ( example
                       const Billdetailsjson = await (async () => {
                         if (prepaidFlag === 'N') {
                           return (
-                            await CISAPPApi.viewBillDetailsPOSTStatusAndText(
-                              Constants,
-                              { action: buildString(newPickerValue) }
-                            )
+                            await CISAPPApi.viewBillDetailsPOST(Constants, {
+                              action: buildString(newPickerValue),
+                            })
                           )?.json;
                         }
                       })();
@@ -924,10 +920,9 @@ line two` ) and will not work with special characters inside of quotes ( example
                       setViewBillDetails(value4uw27AOB);
                       const Billdetailslog = value4uw27AOB;
                       const BillingHistoryJson = (
-                        await CISAPPApi.billingHistoryPOSTStatusAndText(
-                          Constants,
-                          { action: buildBillingString(newPickerValue) }
-                        )
+                        await CISAPPApi.billingHistoryPOST(Constants, {
+                          action: buildBillingString(newPickerValue),
+                        })
                       )?.json;
                       buildBillingString(newPickerValue);
                       console.log(BillingHistoryJson);
@@ -940,10 +935,9 @@ line two` ) and will not work with special characters inside of quotes ( example
                       const prepaidJson = await (async () => {
                         if (prepaidFlag === 'Y') {
                           return (
-                            await CISAPPApi.prepaidApiPOSTStatusAndText(
-                              Constants,
-                              { mtrno: meterNo }
-                            )
+                            await CISAPPApi.prepaidApiPOST(Constants, {
+                              mtrno: meterNo,
+                            })
                           )?.json;
                         }
                       })();
@@ -952,12 +946,16 @@ line two` ) and will not work with special characters inside of quotes ( example
                         ?.data[0]?.avail_balance;
                       console.log(availableBalance);
                       setAvailableBalance(availableBalance);
-                      const prepaidBillingHistoryJson = (
-                        await CISAPPApi.billingHistoryPrepaidPOSTStatusAndText(
-                          Constants,
-                          { action: prepaidBillingString(meterNo) }
-                        )
-                      )?.json;
+                      const prepaidBillingHistoryJson = await (async () => {
+                        if (prepaidFlag === 'Y') {
+                          return (
+                            await CISAPPApi.billingHistoryPrepaidPOST(
+                              Constants,
+                              { action: prepaidBillingString(meterNo) }
+                            )
+                          )?.json;
+                        }
+                      })();
                       prepaidBillingString(meterNo);
                       console.log(prepaidBillingHistoryJson);
                       const prepaidBillingHistoryResult =
@@ -1186,6 +1184,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                 </View>
               )}
             </>
+            {/* Prepaid View */}
             <>
               {!(prepaidFlag === 'Y') ? null : (
                 <View>
@@ -1442,11 +1441,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                         style={StyleSheet.applyWidth(
                           StyleSheet.compose(
                             GlobalStyles.ViewStyles(theme)['Dashboard'],
-                            {
-                              alignItems: 'center',
-                              flex: 0,
-                              flexDirection: 'row',
-                            }
+                            { paddingRight: 30 }
                           ),
                           dimensions.width
                         )}
@@ -1458,6 +1453,8 @@ line two` ) and will not work with special characters inside of quotes ( example
                                 {
                                   alignItems: 'center',
                                   flex: 1,
+                                  justifyContent: 'center',
+                                  paddingRight: 30,
                                   width: '100%',
                                 },
                                 dimensions.width
@@ -1466,7 +1463,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                               <>
                                 {!(prepaidFlag === 'Y') ? null : (
                                   <Utils.CustomCodeErrorBoundary>
-                                    <BillingHistory.LineChartComponent1
+                                    <CustomCode.LineChartComponent1
                                       prepaidBillingHistory={
                                         prepaidBillingHistory
                                       }
@@ -1500,7 +1497,12 @@ line two` ) and will not work with special characters inside of quotes ( example
                         {/* Bill Issue Date */}
                         <View
                           style={StyleSheet.applyWidth(
-                            { borderRightWidth: 1, flex: 1, marginRight: 1 },
+                            {
+                              borderLeftWidth: 1,
+                              borderRightWidth: 1,
+                              flex: 1,
+                              marginRight: 1,
+                            },
                             dimensions.width
                           )}
                         >
@@ -1629,7 +1631,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                                 {/* Bill Issue Date */}
                                 <View
                                   style={StyleSheet.applyWidth(
-                                    { flex: 1, marginRight: 1 },
+                                    { borderRightWidth: 1, flex: 1 },
                                     dimensions.width
                                   )}
                                 >
@@ -1654,22 +1656,16 @@ line two` ) and will not work with special characters inside of quotes ( example
                                         dimensions.width
                                       )}
                                     >
-                                      {(() => {
-                                        const e = listData?.blissueDt;
-                                        console.log(e);
-                                        return e;
-                                      })()}
+                                      {convertDateTimeToDate(
+                                        listData?.blissueDt
+                                      )}
                                     </Text>
                                   </View>
                                 </View>
                                 {/* Amount */}
                                 <View
                                   style={StyleSheet.applyWidth(
-                                    {
-                                      borderRightWidth: 1,
-                                      flex: 1,
-                                      marginRight: 1,
-                                    },
+                                    { borderRightWidth: 1, flex: 1 },
                                     dimensions.width
                                   )}
                                 >
@@ -1731,7 +1727,19 @@ line two` ) and will not work with special characters inside of quotes ( example
                                         const handler = async () => {
                                           try {
                                             await WebBrowser.openBrowserAsync(
-                                              'http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.plugin.DynamicServiceReportGenerator/service?name=&month=&year=&scno='
+                                              `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.plugin.DynamicServiceReportGenerator/service?name=JBVNL_PREPAID_BILL&month=${(() => {
+                                                const e = listData?.billmonth;
+                                                console.log(e);
+                                                return e;
+                                              })()}&year=${(() => {
+                                                const e = listData?.billyear;
+                                                console.log(e);
+                                                return e;
+                                              })()}&accountno=${(() => {
+                                                const e = listData?.accountNo;
+                                                console.log(e);
+                                                return e;
+                                              })()}`
                                             );
                                           } catch (err) {
                                             console.error(err);
@@ -1766,7 +1774,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                 </View>
               )}
             </>
-            {/* View 2 */}
+            {/* Postpaid View */}
             <>
               {!(prepaidFlag === 'N') ? null : (
                 <View>
@@ -2329,11 +2337,22 @@ line two` ) and will not work with special characters inside of quotes ( example
         {/* Home */}
         <Touchable
           onPress={() => {
-            try {
-              navigation.navigate('DashboardScreen');
-            } catch (err) {
-              console.error(err);
-            }
+            const handler = async () => {
+              try {
+                navigation.navigate('DashboardScreen', {
+                  name: Constants['name'],
+                });
+                setServiceConNumber(Constants['name']);
+                const ManageAccountDetails = (
+                  await CISAPPApi.manageAccountsPOST(Constants, {
+                    accountNumber: Constants['name'],
+                  })
+                )?.json;
+              } catch (err) {
+                console.error(err);
+              }
+            };
+            handler();
           }}
           activeOpacity={0.8}
           disabledOpacity={0.8}
@@ -2370,11 +2389,20 @@ line two` ) and will not work with special characters inside of quotes ( example
         {/* Usage */}
         <Touchable
           onPress={() => {
-            try {
-              navigation.navigate('UsageScreen');
-            } catch (err) {
-              console.error(err);
-            }
+            const handler = async () => {
+              try {
+                navigation.navigate('UsageScreen', { name: Constants['name'] });
+                setServiceConNumber(Constants['name']);
+                const ManageAccountDetails = (
+                  await CISAPPApi.manageAccountsPOST(Constants, {
+                    accountNumber: Constants['name'],
+                  })
+                )?.json;
+              } catch (err) {
+                console.error(err);
+              }
+            };
+            handler();
           }}
           activeOpacity={0.8}
           disabledOpacity={0.8}
@@ -2411,11 +2439,22 @@ line two` ) and will not work with special characters inside of quotes ( example
         {/* Billing */}
         <Touchable
           onPress={() => {
-            try {
-              navigation.navigate('BillingScreen');
-            } catch (err) {
-              console.error(err);
-            }
+            const handler = async () => {
+              try {
+                navigation.navigate('BillingScreen', {
+                  name: Constants['name'],
+                });
+                setServiceConNumber(Constants['name']);
+                const ManageAccountDetails = (
+                  await CISAPPApi.manageAccountsPOST(Constants, {
+                    accountNumber: Constants['name'],
+                  })
+                )?.json;
+              } catch (err) {
+                console.error(err);
+              }
+            };
+            handler();
           }}
           activeOpacity={0.8}
           disabledOpacity={0.8}
@@ -2452,11 +2491,22 @@ line two` ) and will not work with special characters inside of quotes ( example
         {/* Payments */}
         <Touchable
           onPress={() => {
-            try {
-              navigation.navigate('PaymentsScreen');
-            } catch (err) {
-              console.error(err);
-            }
+            const handler = async () => {
+              try {
+                navigation.navigate('PaymentsScreen', {
+                  name: Constants['name'],
+                });
+                setServiceConNumber(Constants['name']);
+                const ManageAccountDetails = (
+                  await CISAPPApi.manageAccountsPOST(Constants, {
+                    accountNumber: Constants['name'],
+                  })
+                )?.json;
+              } catch (err) {
+                console.error(err);
+              }
+            };
+            handler();
           }}
           activeOpacity={0.8}
           disabledOpacity={0.8}

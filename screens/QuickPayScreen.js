@@ -155,7 +155,7 @@ const QuickPayScreen = props => {
             const handler = async () => {
               try {
                 const Viewbilldetailsjson = (
-                  await CISAPPApi.viewBillDetailsPOSTStatusAndText(Constants, {
+                  await CISAPPApi.viewBillDetailsPOST(Constants, {
                     action: buildString(textInputValue),
                   })
                 )?.json;

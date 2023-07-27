@@ -11,7 +11,7 @@ import { handleResponse, isOkStatus } from '../utils/handleRestApiResponse';
 import usePrevious from '../utils/usePrevious';
 import * as GlobalVariables from '../config/GlobalVariableContext';
 
-export const serviceRequestSubCategoryPOSTStatusAndText = (
+export const serviceRequestSubCategoryPOST = (
   Constants,
   { action },
   handlers = {}
@@ -27,17 +27,6 @@ export const serviceRequestSubCategoryPOSTStatusAndText = (
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const serviceRequestSubCategoryPOST = (
-  Constants,
-  { action },
-  handlers = {}
-) =>
-  serviceRequestSubCategoryPOSTStatusAndText(
-    Constants,
-    { action },
-    handlers
-  ).then(res => (!isOkStatus(res.status) ? Promise.reject(res) : res.json));
 
 export const useServiceRequestSubCategoryPOST = ({ action }) => {
   const Constants = GlobalVariables.useValues();
@@ -113,11 +102,7 @@ export const FetchServiceRequestSubCategoryPOST = ({
   });
 };
 
-export const aNNOUNCEMENTSPOSTStatusAndText = (
-  Constants,
-  _args,
-  handlers = {}
-) =>
+export const aNNOUNCEMENTSPOST = (Constants, _args, handlers = {}) =>
   fetch(
     `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
@@ -134,11 +119,6 @@ export const aNNOUNCEMENTSPOSTStatusAndText = (
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const aNNOUNCEMENTSPOST = (Constants, _args, handlers = {}) =>
-  aNNOUNCEMENTSPOSTStatusAndText(Constants, {}, handlers).then(res =>
-    !isOkStatus(res.status) ? Promise.reject(res) : res.json
-  );
 
 export const useANNOUNCEMENTSPOST = () => {
   const Constants = GlobalVariables.useValues();
@@ -218,7 +198,7 @@ export const FetchANNOUNCEMENTSPOST = ({
   return children({ loading, data, error, refetchANNOUNCEMENTS: refetch });
 };
 
-export const aftersentOTPforgorpasswordPOSTStatusAndText = (
+export const aftersentOTPforgorpasswordPOST = (
   Constants,
   { accno, newPassword, otp, transid },
   handlers = {}
@@ -246,17 +226,6 @@ export const aftersentOTPforgorpasswordPOSTStatusAndText = (
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const aftersentOTPforgorpasswordPOST = (
-  Constants,
-  { accno, newPassword, otp, transid },
-  handlers = {}
-) =>
-  aftersentOTPforgorpasswordPOSTStatusAndText(
-    Constants,
-    { accno, newPassword, otp, transid },
-    handlers
-  ).then(res => (!isOkStatus(res.status) ? Promise.reject(res) : res.json));
 
 export const useAftersentOTPforgorpasswordPOST = ({
   accno,
@@ -364,7 +333,7 @@ export const FetchAftersentOTPforgorpasswordPOST = ({
   });
 };
 
-export const bANNERSPOSTStatusAndText = (Constants, _args, handlers = {}) =>
+export const bANNERSPOST = (Constants, _args, handlers = {}) =>
   fetch(
     `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
@@ -381,11 +350,6 @@ export const bANNERSPOSTStatusAndText = (Constants, _args, handlers = {}) =>
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const bANNERSPOST = (Constants, _args, handlers = {}) =>
-  bANNERSPOSTStatusAndText(Constants, {}, handlers).then(res =>
-    !isOkStatus(res.status) ? Promise.reject(res) : res.json
-  );
 
 export const useBANNERSPOST = () => {
   const Constants = GlobalVariables.useValues();
@@ -465,7 +429,7 @@ export const FetchBANNERSPOST = ({
   return children({ loading, data, error, refetchBANNERS: refetch });
 };
 
-export const billingHistoryPrepaidPOSTStatusAndText = (
+export const billingHistoryPrepaidPOST = (
   Constants,
   { action },
   handlers = {}
@@ -487,15 +451,6 @@ export const billingHistoryPrepaidPOSTStatusAndText = (
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const billingHistoryPrepaidPOST = (
-  Constants,
-  { action },
-  handlers = {}
-) =>
-  billingHistoryPrepaidPOSTStatusAndText(Constants, { action }, handlers).then(
-    res => (!isOkStatus(res.status) ? Promise.reject(res) : res.json)
-  );
 
 export const useBillingHistoryPrepaidPOST = ({ action }) => {
   const Constants = GlobalVariables.useValues();
@@ -583,11 +538,7 @@ export const FetchBillingHistoryPrepaidPOST = ({
   });
 };
 
-export const billingHistoryPOSTStatusAndText = (
-  Constants,
-  { action },
-  handlers = {}
-) =>
+export const billingHistoryPOST = (Constants, { action }, handlers = {}) =>
   fetch(
     `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
@@ -599,11 +550,6 @@ export const billingHistoryPOSTStatusAndText = (
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const billingHistoryPOST = (Constants, { action }, handlers = {}) =>
-  billingHistoryPOSTStatusAndText(Constants, { action }, handlers).then(res =>
-    !isOkStatus(res.status) ? Promise.reject(res) : res.json
-  );
 
 export const useBillingHistoryPOST = ({ action }) => {
   const Constants = GlobalVariables.useValues();
@@ -674,11 +620,7 @@ export const FetchBillingHistoryPOST = ({
   return children({ loading, data, error, refetchBillingHistory: refetch });
 };
 
-export const complaintCategoryPOSTStatusAndText = (
-  Constants,
-  _args,
-  handlers = {}
-) =>
+export const complaintCategoryPOST = (Constants, _args, handlers = {}) =>
   fetch(
     `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
     {
@@ -694,11 +636,6 @@ export const complaintCategoryPOSTStatusAndText = (
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const complaintCategoryPOST = (Constants, _args, handlers = {}) =>
-  complaintCategoryPOSTStatusAndText(Constants, {}, handlers).then(res =>
-    !isOkStatus(res.status) ? Promise.reject(res) : res.json
-  );
 
 export const useComplaintCategoryPOST = () => {
   const Constants = GlobalVariables.useValues();
@@ -776,7 +713,7 @@ export const FetchComplaintCategoryPOST = ({
   return children({ loading, data, error, refetchComplaintCategory: refetch });
 };
 
-export const complaintSubCategoryPOSTStatusAndText = (
+export const complaintSubCategoryPOST = (
   Constants,
   { action },
   handlers = {}
@@ -792,15 +729,6 @@ export const complaintSubCategoryPOSTStatusAndText = (
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const complaintSubCategoryPOST = (
-  Constants,
-  { action },
-  handlers = {}
-) =>
-  complaintSubCategoryPOSTStatusAndText(Constants, { action }, handlers).then(
-    res => (!isOkStatus(res.status) ? Promise.reject(res) : res.json)
-  );
 
 export const useComplaintSubCategoryPOST = ({ action }) => {
   const Constants = GlobalVariables.useValues();
@@ -876,7 +804,7 @@ export const FetchComplaintSubCategoryPOST = ({
   });
 };
 
-export const complaintSavePOSTStatusAndText = (
+export const complaintSavePOST = (
   Constants,
   { consumerNo, requestDetails1, requestnatureId1 },
   handlers = {}
@@ -901,17 +829,6 @@ export const complaintSavePOSTStatusAndText = (
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const complaintSavePOST = (
-  Constants,
-  { consumerNo, requestDetails1, requestnatureId1 },
-  handlers = {}
-) =>
-  complaintSavePOSTStatusAndText(
-    Constants,
-    { consumerNo, requestDetails1, requestnatureId1 },
-    handlers
-  ).then(res => (!isOkStatus(res.status) ? Promise.reject(res) : res.json));
 
 export const useComplaintSavePOST = ({
   consumerNo,
@@ -1006,7 +923,7 @@ export const FetchComplaintSavePOST = ({
   return children({ loading, data, error, refetchComplaintSave: refetch });
 };
 
-export const deleteAccountPOSTStatusAndText = (
+export const deleteAccountPOST = (
   Constants,
   { accountNumber, consumerNumber },
   handlers = {}
@@ -1031,17 +948,6 @@ export const deleteAccountPOSTStatusAndText = (
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const deleteAccountPOST = (
-  Constants,
-  { accountNumber, consumerNumber },
-  handlers = {}
-) =>
-  deleteAccountPOSTStatusAndText(
-    Constants,
-    { accountNumber, consumerNumber },
-    handlers
-  ).then(res => (!isOkStatus(res.status) ? Promise.reject(res) : res.json));
 
 export const useDeleteAccountPOST = ({ accountNumber, consumerNumber }) => {
   const Constants = GlobalVariables.useValues();
@@ -1131,7 +1037,7 @@ export const FetchDeleteAccountPOST = ({
   return children({ loading, data, error, refetchDeleteAccount: refetch });
 };
 
-export const downloadPOSTStatusAndText = (Constants, _args, handlers = {}) =>
+export const downloadPOST = (Constants, _args, handlers = {}) =>
   fetch(
     `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
@@ -1148,11 +1054,6 @@ export const downloadPOSTStatusAndText = (Constants, _args, handlers = {}) =>
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const downloadPOST = (Constants, _args, handlers = {}) =>
-  downloadPOSTStatusAndText(Constants, {}, handlers).then(res =>
-    !isOkStatus(res.status) ? Promise.reject(res) : res.json
-  );
 
 export const useDownloadPOST = () => {
   const Constants = GlobalVariables.useValues();
@@ -1232,7 +1133,7 @@ export const FetchDownloadPOST = ({
   return children({ loading, data, error, refetchDownload: refetch });
 };
 
-export const faqsPOSTStatusAndText = (Constants, _args, handlers = {}) =>
+export const faqsPOST = (Constants, _args, handlers = {}) =>
   fetch(
     `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
@@ -1249,11 +1150,6 @@ export const faqsPOSTStatusAndText = (Constants, _args, handlers = {}) =>
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const faqsPOST = (Constants, _args, handlers = {}) =>
-  faqsPOSTStatusAndText(Constants, {}, handlers).then(res =>
-    !isOkStatus(res.status) ? Promise.reject(res) : res.json
-  );
 
 export const useFaqsPOST = () => {
   const Constants = GlobalVariables.useValues();
@@ -1333,7 +1229,7 @@ export const FetchFaqsPOST = ({
   return children({ loading, data, error, refetchFaqs: refetch });
 };
 
-export const feedbackPOSTStatusAndText = (
+export const feedbackPOST = (
   Constants,
   { email, name, response, suggestion },
   handlers = {}
@@ -1360,17 +1256,6 @@ export const feedbackPOSTStatusAndText = (
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const feedbackPOST = (
-  Constants,
-  { email, name, response, suggestion },
-  handlers = {}
-) =>
-  feedbackPOSTStatusAndText(
-    Constants,
-    { email, name, response, suggestion },
-    handlers
-  ).then(res => (!isOkStatus(res.status) ? Promise.reject(res) : res.json));
 
 export const useFeedbackPOST = ({ email, name, response, suggestion }) => {
   const Constants = GlobalVariables.useValues();
@@ -1466,11 +1351,7 @@ export const FetchFeedbackPOST = ({
   return children({ loading, data, error, refetchFeedback: refetch });
 };
 
-export const forgotpasswordPOSTStatusAndText = (
-  Constants,
-  { accno },
-  handlers = {}
-) =>
+export const forgotpasswordPOST = (Constants, { accno }, handlers = {}) =>
   fetch(
     `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
@@ -1487,11 +1368,6 @@ export const forgotpasswordPOSTStatusAndText = (
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const forgotpasswordPOST = (Constants, { accno }, handlers = {}) =>
-  forgotpasswordPOSTStatusAndText(Constants, { accno }, handlers).then(res =>
-    !isOkStatus(res.status) ? Promise.reject(res) : res.json
-  );
 
 export const useForgotpasswordPOST = ({ accno }) => {
   const Constants = GlobalVariables.useValues();
@@ -1572,7 +1448,7 @@ export const FetchForgotpasswordPOST = ({
   return children({ loading, data, error, refetchForgotpassword: refetch });
 };
 
-export const guestRaiseTicketSendOTPPOSTStatusAndText = (
+export const guestRaiseTicketSendOTPPOST = (
   Constants,
   { accno },
   handlers = {}
@@ -1593,15 +1469,6 @@ export const guestRaiseTicketSendOTPPOSTStatusAndText = (
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const guestRaiseTicketSendOTPPOST = (
-  Constants,
-  { accno },
-  handlers = {}
-) =>
-  guestRaiseTicketSendOTPPOSTStatusAndText(Constants, { accno }, handlers).then(
-    res => (!isOkStatus(res.status) ? Promise.reject(res) : res.json)
-  );
 
 export const useGuestRaiseTicketSendOTPPOST = ({ accno }) => {
   const Constants = GlobalVariables.useValues();
@@ -1687,7 +1554,7 @@ export const FetchGuestRaiseTicketSendOTPPOST = ({
   });
 };
 
-export const guestRaiseTicketAfterSendOTPPOSTStatusAndText = (
+export const guestRaiseTicketAfterSendOTPPOST = (
   Constants,
   { otp, transid },
   handlers = {}
@@ -1708,17 +1575,6 @@ export const guestRaiseTicketAfterSendOTPPOSTStatusAndText = (
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const guestRaiseTicketAfterSendOTPPOST = (
-  Constants,
-  { otp, transid },
-  handlers = {}
-) =>
-  guestRaiseTicketAfterSendOTPPOSTStatusAndText(
-    Constants,
-    { otp, transid },
-    handlers
-  ).then(res => (!isOkStatus(res.status) ? Promise.reject(res) : res.json));
 
 export const useGuestRaiseTicketAfterSendOTPPOST = ({ otp, transid }) => {
   const Constants = GlobalVariables.useValues();
@@ -1805,11 +1661,7 @@ export const FetchGuestRaiseTicketAfterSendOTPPOST = ({
   });
 };
 
-export const languagePOSTStatusAndText = (
-  Constants,
-  { action },
-  handlers = {}
-) =>
+export const languagePOST = (Constants, { action }, handlers = {}) =>
   fetch(
     `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
@@ -1826,11 +1678,6 @@ export const languagePOSTStatusAndText = (
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const languagePOST = (Constants, { action }, handlers = {}) =>
-  languagePOSTStatusAndText(Constants, { action }, handlers).then(res =>
-    !isOkStatus(res.status) ? Promise.reject(res) : res.json
-  );
 
 export const useLanguagePOST = ({ action }) => {
   const Constants = GlobalVariables.useValues();
@@ -1911,11 +1758,7 @@ export const FetchLanguagePOST = ({
   return children({ loading, data, error, refetchLanguage: refetch });
 };
 
-export const loadPatternPOSTStatusAndText = (
-  Constants,
-  { mtrno },
-  handlers = {}
-) =>
+export const loadPatternPOST = (Constants, { mtrno }, handlers = {}) =>
   fetch(
     `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
@@ -1942,11 +1785,6 @@ export const loadPatternPOSTStatusAndText = (
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const loadPatternPOST = (Constants, { mtrno }, handlers = {}) =>
-  loadPatternPOSTStatusAndText(Constants, { mtrno }, handlers).then(res =>
-    !isOkStatus(res.status) ? Promise.reject(res) : res.json
-  );
 
 export const useLoadPatternPOST = ({ mtrno }) => {
   const Constants = GlobalVariables.useValues();
@@ -2047,11 +1885,7 @@ export const FetchLoadPatternPOST = ({
   return children({ loading, data, error, refetchLoadPattern: refetch });
 };
 
-export const loginPOSTStatusAndText = (
-  Constants,
-  { accountno, pwd },
-  handlers = {}
-) =>
+export const loginPOST = (Constants, { accountno, pwd }, handlers = {}) =>
   fetch(
     `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
@@ -2068,11 +1902,6 @@ export const loginPOSTStatusAndText = (
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const loginPOST = (Constants, { accountno, pwd }, handlers = {}) =>
-  loginPOSTStatusAndText(Constants, { accountno, pwd }, handlers).then(res =>
-    !isOkStatus(res.status) ? Promise.reject(res) : res.json
-  );
 
 export const useLoginPOST = ({ accountno, pwd }) => {
   const Constants = GlobalVariables.useValues();
@@ -2154,11 +1983,7 @@ export const FetchLoginPOST = ({
   return children({ loading, data, error, refetchLogin: refetch });
 };
 
-export const loginWithOTPPOSTStatusAndText = (
-  Constants,
-  { accno },
-  handlers = {}
-) =>
+export const loginWithOTPPOST = (Constants, { accno }, handlers = {}) =>
   fetch(
     `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
@@ -2175,11 +2000,6 @@ export const loginWithOTPPOSTStatusAndText = (
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const loginWithOTPPOST = (Constants, { accno }, handlers = {}) =>
-  loginWithOTPPOSTStatusAndText(Constants, { accno }, handlers).then(res =>
-    !isOkStatus(res.status) ? Promise.reject(res) : res.json
-  );
 
 export const useLoginWithOTPPOST = ({ accno }) => {
   const Constants = GlobalVariables.useValues();
@@ -2260,7 +2080,7 @@ export const FetchLoginWithOTPPOST = ({
   return children({ loading, data, error, refetchLoginWithOTP: refetch });
 };
 
-export const manageAccountsPOSTStatusAndText = (
+export const manageAccountsPOST = (
   Constants,
   { accountNumber },
   handlers = {}
@@ -2281,15 +2101,6 @@ export const manageAccountsPOSTStatusAndText = (
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const manageAccountsPOST = (
-  Constants,
-  { accountNumber },
-  handlers = {}
-) =>
-  manageAccountsPOSTStatusAndText(Constants, { accountNumber }, handlers).then(
-    res => (!isOkStatus(res.status) ? Promise.reject(res) : res.json)
-  );
 
 export const useManageAccountsPOST = ({ accountNumber }) => {
   const Constants = GlobalVariables.useValues();
@@ -2370,11 +2181,7 @@ export const FetchManageAccountsPOST = ({
   return children({ loading, data, error, refetchManageAccounts: refetch });
 };
 
-export const notificationsPOSTStatusAndText = (
-  Constants,
-  _args,
-  handlers = {}
-) =>
+export const notificationsPOST = (Constants, _args, handlers = {}) =>
   fetch(
     `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
@@ -2391,11 +2198,6 @@ export const notificationsPOSTStatusAndText = (
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const notificationsPOST = (Constants, _args, handlers = {}) =>
-  notificationsPOSTStatusAndText(Constants, {}, handlers).then(res =>
-    !isOkStatus(res.status) ? Promise.reject(res) : res.json
-  );
 
 export const useNotificationsPOST = () => {
   const Constants = GlobalVariables.useValues();
@@ -2475,7 +2277,7 @@ export const FetchNotificationsPOST = ({
   return children({ loading, data, error, refetchNotifications: refetch });
 };
 
-export const oTPEmailUpdatePOSTStatusAndText = (
+export const oTPEmailUpdatePOST = (
   Constants,
   { accno, newEmail, oldEmail, otp, txid, userId },
   handlers = {}
@@ -2505,17 +2307,6 @@ export const oTPEmailUpdatePOSTStatusAndText = (
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const oTPEmailUpdatePOST = (
-  Constants,
-  { accno, newEmail, oldEmail, otp, txid, userId },
-  handlers = {}
-) =>
-  oTPEmailUpdatePOSTStatusAndText(
-    Constants,
-    { accno, newEmail, oldEmail, otp, txid, userId },
-    handlers
-  ).then(res => (!isOkStatus(res.status) ? Promise.reject(res) : res.json));
 
 export const useOTPEmailUpdatePOST = ({
   accno,
@@ -2626,7 +2417,7 @@ export const FetchOTPEmailUpdatePOST = ({
   return children({ loading, data, error, refetchOTPEmailUpdate: refetch });
 };
 
-export const oTPMobileUpdatePOSTStatusAndText = (
+export const oTPMobileUpdatePOST = (
   Constants,
   { accno, newMobile, oldMobile, otp, txid, userId },
   handlers = {}
@@ -2656,17 +2447,6 @@ export const oTPMobileUpdatePOSTStatusAndText = (
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const oTPMobileUpdatePOST = (
-  Constants,
-  { accno, newMobile, oldMobile, otp, txid, userId },
-  handlers = {}
-) =>
-  oTPMobileUpdatePOSTStatusAndText(
-    Constants,
-    { accno, newMobile, oldMobile, otp, txid, userId },
-    handlers
-  ).then(res => (!isOkStatus(res.status) ? Promise.reject(res) : res.json));
 
 export const useOTPMobileUpdatePOST = ({
   accno,
@@ -2777,7 +2557,7 @@ export const FetchOTPMobileUpdatePOST = ({
   return children({ loading, data, error, refetchOTPMobileUpdate: refetch });
 };
 
-export const payemntServicePOSTStatusAndText = (
+export const payemntServicePOST = (
   Constants,
   {
     accno,
@@ -2828,45 +2608,6 @@ export const payemntServicePOSTStatusAndText = (
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const payemntServicePOST = (
-  Constants,
-  {
-    accno,
-    amount,
-    billid,
-    consid,
-    email,
-    from,
-    gateway,
-    mobile,
-    name,
-    officeName,
-    officeid,
-    scno,
-    ucode,
-  },
-  handlers = {}
-) =>
-  payemntServicePOSTStatusAndText(
-    Constants,
-    {
-      accno,
-      amount,
-      billid,
-      consid,
-      email,
-      from,
-      gateway,
-      mobile,
-      name,
-      officeName,
-      officeid,
-      scno,
-      ucode,
-    },
-    handlers
-  ).then(res => (!isOkStatus(res.status) ? Promise.reject(res) : res.json));
 
 export const usePayemntServicePOST = ({
   accno,
@@ -3005,11 +2746,7 @@ export const FetchPayemntServicePOST = ({
   return children({ loading, data, error, refetchPayemntService: refetch });
 };
 
-export const powerQualityCurrentPOSTStatusAndText = (
-  Constants,
-  { mtrno },
-  handlers = {}
-) =>
+export const powerQualityCurrentPOST = (Constants, { mtrno }, handlers = {}) =>
   fetch(
     `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
     {
@@ -3032,11 +2769,6 @@ export const powerQualityCurrentPOSTStatusAndText = (
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const powerQualityCurrentPOST = (Constants, { mtrno }, handlers = {}) =>
-  powerQualityCurrentPOSTStatusAndText(Constants, { mtrno }, handlers).then(
-    res => (!isOkStatus(res.status) ? Promise.reject(res) : res.json)
-  );
 
 export const usePowerQualityCurrentPOST = ({ mtrno }) => {
   const Constants = GlobalVariables.useValues();
@@ -3134,7 +2866,7 @@ export const FetchPowerQualityCurrentPOST = ({
   });
 };
 
-export const powerQualityPowerFactorPOSTStatusAndText = (
+export const powerQualityPowerFactorPOST = (
   Constants,
   { mtrno },
   handlers = {}
@@ -3161,15 +2893,6 @@ export const powerQualityPowerFactorPOSTStatusAndText = (
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const powerQualityPowerFactorPOST = (
-  Constants,
-  { mtrno },
-  handlers = {}
-) =>
-  powerQualityPowerFactorPOSTStatusAndText(Constants, { mtrno }, handlers).then(
-    res => (!isOkStatus(res.status) ? Promise.reject(res) : res.json)
-  );
 
 export const usePowerQualityPowerFactorPOST = ({ mtrno }) => {
   const Constants = GlobalVariables.useValues();
@@ -3267,11 +2990,7 @@ export const FetchPowerQualityPowerFactorPOST = ({
   });
 };
 
-export const powerQualityVoltagePOSTStatusAndText = (
-  Constants,
-  { mtrno },
-  handlers = {}
-) =>
+export const powerQualityVoltagePOST = (Constants, { mtrno }, handlers = {}) =>
   fetch(
     `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
@@ -3294,11 +3013,6 @@ export const powerQualityVoltagePOSTStatusAndText = (
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const powerQualityVoltagePOST = (Constants, { mtrno }, handlers = {}) =>
-  powerQualityVoltagePOSTStatusAndText(Constants, { mtrno }, handlers).then(
-    res => (!isOkStatus(res.status) ? Promise.reject(res) : res.json)
-  );
 
 export const usePowerQualityVoltagePOST = ({ mtrno }) => {
   const Constants = GlobalVariables.useValues();
@@ -3396,7 +3110,7 @@ export const FetchPowerQualityVoltagePOST = ({
   });
 };
 
-export const rechargeHistoryPrepaidPOSTStatusAndText = (
+export const rechargeHistoryPrepaidPOST = (
   Constants,
   { action },
   handlers = {}
@@ -3418,15 +3132,6 @@ export const rechargeHistoryPrepaidPOSTStatusAndText = (
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const rechargeHistoryPrepaidPOST = (
-  Constants,
-  { action },
-  handlers = {}
-) =>
-  rechargeHistoryPrepaidPOSTStatusAndText(Constants, { action }, handlers).then(
-    res => (!isOkStatus(res.status) ? Promise.reject(res) : res.json)
-  );
 
 export const useRechargeHistoryPrepaidPOST = ({ action }) => {
   const Constants = GlobalVariables.useValues();
@@ -3514,7 +3219,7 @@ export const FetchRechargeHistoryPrepaidPOST = ({
   });
 };
 
-export const registeredPOSTStatusAndText = (
+export const registeredPOST = (
   Constants,
   { accno, email, mobilenumber, password },
   handlers = {}
@@ -3549,17 +3254,6 @@ export const registeredPOSTStatusAndText = (
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const registeredPOST = (
-  Constants,
-  { accno, email, mobilenumber, password },
-  handlers = {}
-) =>
-  registeredPOSTStatusAndText(
-    Constants,
-    { accno, email, mobilenumber, password },
-    handlers
-  ).then(res => (!isOkStatus(res.status) ? Promise.reject(res) : res.json));
 
 export const useRegisteredPOST = ({ accno, email, mobilenumber, password }) => {
   const Constants = GlobalVariables.useValues();
@@ -3671,7 +3365,7 @@ export const FetchRegisteredPOST = ({
   return children({ loading, data, error, refetchRegistered: refetch });
 };
 
-export const serviceRequestSavePOSTStatusAndText = (
+export const serviceRequestSavePOST = (
   Constants,
   { requestDetails, requestnatureId, scNo },
   handlers = {}
@@ -3701,17 +3395,6 @@ export const serviceRequestSavePOSTStatusAndText = (
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const serviceRequestSavePOST = (
-  Constants,
-  { requestDetails, requestnatureId, scNo },
-  handlers = {}
-) =>
-  serviceRequestSavePOSTStatusAndText(
-    Constants,
-    { requestDetails, requestnatureId, scNo },
-    handlers
-  ).then(res => (!isOkStatus(res.status) ? Promise.reject(res) : res.json));
 
 export const useServiceRequestSavePOST = ({
   requestDetails,
@@ -3816,11 +3499,7 @@ export const FetchServiceRequestSavePOST = ({
   return children({ loading, data, error, refetchServiceRequestSave: refetch });
 };
 
-export const serviceRequestCategoryPOSTStatusAndText = (
-  Constants,
-  _args,
-  handlers = {}
-) =>
+export const serviceRequestCategoryPOST = (Constants, _args, handlers = {}) =>
   fetch(
     `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
     {
@@ -3836,11 +3515,6 @@ export const serviceRequestCategoryPOSTStatusAndText = (
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const serviceRequestCategoryPOST = (Constants, _args, handlers = {}) =>
-  serviceRequestCategoryPOSTStatusAndText(Constants, {}, handlers).then(res =>
-    !isOkStatus(res.status) ? Promise.reject(res) : res.json
-  );
 
 export const useServiceRequestCategoryPOST = () => {
   const Constants = GlobalVariables.useValues();
@@ -3923,7 +3597,7 @@ export const FetchServiceRequestCategoryPOST = ({
   });
 };
 
-export const updateEmailPOSTStatusAndText = (
+export const updateEmailPOST = (
   Constants,
   { accno, newEmail, oldEmail, userId },
   handlers = {}
@@ -3952,17 +3626,6 @@ export const updateEmailPOSTStatusAndText = (
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const updateEmailPOST = (
-  Constants,
-  { accno, newEmail, oldEmail, userId },
-  handlers = {}
-) =>
-  updateEmailPOSTStatusAndText(
-    Constants,
-    { accno, newEmail, oldEmail, userId },
-    handlers
-  ).then(res => (!isOkStatus(res.status) ? Promise.reject(res) : res.json));
 
 export const useUpdateEmailPOST = ({ accno, newEmail, oldEmail, userId }) => {
   const Constants = GlobalVariables.useValues();
@@ -4062,7 +3725,7 @@ export const FetchUpdateEmailPOST = ({
   return children({ loading, data, error, refetchUpdateEmail: refetch });
 };
 
-export const updateProfileMobileNumberPOSTStatusAndText = (
+export const updateProfileMobileNumberPOST = (
   Constants,
   { accno, newMobile, oldMobile, userId },
   handlers = {}
@@ -4091,17 +3754,6 @@ export const updateProfileMobileNumberPOSTStatusAndText = (
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const updateProfileMobileNumberPOST = (
-  Constants,
-  { accno, newMobile, oldMobile, userId },
-  handlers = {}
-) =>
-  updateProfileMobileNumberPOSTStatusAndText(
-    Constants,
-    { accno, newMobile, oldMobile, userId },
-    handlers
-  ).then(res => (!isOkStatus(res.status) ? Promise.reject(res) : res.json));
 
 export const useUpdateProfileMobileNumberPOST = ({
   accno,
@@ -4211,11 +3863,7 @@ export const FetchUpdateProfileMobileNumberPOST = ({
   });
 };
 
-export const viewBillDetailsPOSTStatusAndText = (
-  Constants,
-  { action },
-  handlers = {}
-) =>
+export const viewBillDetailsPOST = (Constants, { action }, handlers = {}) =>
   fetch(
     `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
@@ -4227,11 +3875,6 @@ export const viewBillDetailsPOSTStatusAndText = (
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const viewBillDetailsPOST = (Constants, { action }, handlers = {}) =>
-  viewBillDetailsPOSTStatusAndText(Constants, { action }, handlers).then(res =>
-    !isOkStatus(res.status) ? Promise.reject(res) : res.json
-  );
 
 export const useViewBillDetailsPOST = ({ action }) => {
   const Constants = GlobalVariables.useValues();
@@ -4302,7 +3945,7 @@ export const FetchViewBillDetailsPOST = ({
   return children({ loading, data, error, refetchViewBillDetails: refetch });
 };
 
-export const addAccountConfirmOTPForNewScnoAddingPOSTStatusAndText = (
+export const addAccountConfirmOTPForNewScnoAddingPOST = (
   Constants,
   { existAcct, newAcct, otp, txid },
   handlers = {}
@@ -4330,17 +3973,6 @@ export const addAccountConfirmOTPForNewScnoAddingPOSTStatusAndText = (
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const addAccountConfirmOTPForNewScnoAddingPOST = (
-  Constants,
-  { existAcct, newAcct, otp, txid },
-  handlers = {}
-) =>
-  addAccountConfirmOTPForNewScnoAddingPOSTStatusAndText(
-    Constants,
-    { existAcct, newAcct, otp, txid },
-    handlers
-  ).then(res => (!isOkStatus(res.status) ? Promise.reject(res) : res.json));
 
 export const useAddAccountConfirmOTPForNewScnoAddingPOST = ({
   existAcct,
@@ -4448,7 +4080,7 @@ export const FetchAddAccountConfirmOTPForNewScnoAddingPOST = ({
   });
 };
 
-export const addServiceConnectionAccountPOSTStatusAndText = (
+export const addServiceConnectionAccountPOST = (
   Constants,
   { existAcct, newAcct },
   handlers = {}
@@ -4475,17 +4107,6 @@ export const addServiceConnectionAccountPOSTStatusAndText = (
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const addServiceConnectionAccountPOST = (
-  Constants,
-  { existAcct, newAcct },
-  handlers = {}
-) =>
-  addServiceConnectionAccountPOSTStatusAndText(
-    Constants,
-    { existAcct, newAcct },
-    handlers
-  ).then(res => (!isOkStatus(res.status) ? Promise.reject(res) : res.json));
 
 export const useAddServiceConnectionAccountPOST = ({ existAcct, newAcct }) => {
   const Constants = GlobalVariables.useValues();
@@ -4584,7 +4205,7 @@ export const FetchAddServiceConnectionAccountPOST = ({
   });
 };
 
-export const confirmOTPscreenPOSTStatusAndText = (
+export const confirmOTPscreenPOST = (
   Constants,
   { otp, transid },
   handlers = {}
@@ -4612,15 +4233,6 @@ export const confirmOTPscreenPOSTStatusAndText = (
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const confirmOTPscreenPOST = (
-  Constants,
-  { otp, transid },
-  handlers = {}
-) =>
-  confirmOTPscreenPOSTStatusAndText(Constants, { otp, transid }, handlers).then(
-    res => (!isOkStatus(res.status) ? Promise.reject(res) : res.json)
-  );
 
 export const useConfirmOTPscreenPOST = ({ otp, transid }) => {
   const Constants = GlobalVariables.useValues();
@@ -4716,11 +4328,7 @@ export const FetchConfirmOTPscreenPOST = ({
   return children({ loading, data, error, refetchConfirmOTPscreen: refetch });
 };
 
-export const consumerDetailsPOSTStatusAndText = (
-  Constants,
-  { action },
-  handlers = {}
-) =>
+export const consumerDetailsPOST = (Constants, { action }, handlers = {}) =>
   fetch(
     `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
@@ -4732,11 +4340,6 @@ export const consumerDetailsPOSTStatusAndText = (
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const consumerDetailsPOST = (Constants, { action }, handlers = {}) =>
-  consumerDetailsPOSTStatusAndText(Constants, { action }, handlers).then(res =>
-    !isOkStatus(res.status) ? Promise.reject(res) : res.json
-  );
 
 export const useConsumerDetailsPOST = ({ action }) => {
   const Constants = GlobalVariables.useValues();
@@ -4807,11 +4410,7 @@ export const FetchConsumerDetailsPOST = ({
   return children({ loading, data, error, refetchConsumerDetails: refetch });
 };
 
-export const getticketdeatilsPOSTStatusAndText = (
-  Constants,
-  { consId },
-  handlers = {}
-) =>
+export const getticketdeatilsPOST = (Constants, { consId }, handlers = {}) =>
   fetch(
     `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
@@ -4828,11 +4427,6 @@ export const getticketdeatilsPOSTStatusAndText = (
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const getticketdeatilsPOST = (Constants, { consId }, handlers = {}) =>
-  getticketdeatilsPOSTStatusAndText(Constants, { consId }, handlers).then(res =>
-    !isOkStatus(res.status) ? Promise.reject(res) : res.json
-  );
 
 export const useGetticketdeatilsPOST = ({ consId }) => {
   const Constants = GlobalVariables.useValues();
@@ -4913,7 +4507,7 @@ export const FetchGetticketdeatilsPOST = ({
   return children({ loading, data, error, refetchGetticketdeatils: refetch });
 };
 
-export const loginConfirmOTPPOSTStatusAndText = (
+export const loginConfirmOTPPOST = (
   Constants,
   { accno, otp, transid },
   handlers = {}
@@ -4939,17 +4533,6 @@ export const loginConfirmOTPPOSTStatusAndText = (
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const loginConfirmOTPPOST = (
-  Constants,
-  { accno, otp, transid },
-  handlers = {}
-) =>
-  loginConfirmOTPPOSTStatusAndText(
-    Constants,
-    { accno, otp, transid },
-    handlers
-  ).then(res => (!isOkStatus(res.status) ? Promise.reject(res) : res.json));
 
 export const useLoginConfirmOTPPOST = ({ accno, otp, transid }) => {
   const Constants = GlobalVariables.useValues();
@@ -5042,11 +4625,7 @@ export const FetchLoginConfirmOTPPOST = ({
   return children({ loading, data, error, refetchLoginConfirmOTP: refetch });
 };
 
-export const paymentGatewayPOSTStatusAndText = (
-  Constants,
-  _args,
-  handlers = {}
-) =>
+export const paymentGatewayPOST = (Constants, _args, handlers = {}) =>
   fetch(
     `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
@@ -5063,11 +4642,6 @@ export const paymentGatewayPOSTStatusAndText = (
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const paymentGatewayPOST = (Constants, _args, handlers = {}) =>
-  paymentGatewayPOSTStatusAndText(Constants, {}, handlers).then(res =>
-    !isOkStatus(res.status) ? Promise.reject(res) : res.json
-  );
 
 export const usePaymentGatewayPOST = () => {
   const Constants = GlobalVariables.useValues();
@@ -5147,11 +4721,7 @@ export const FetchPaymentGatewayPOST = ({
   return children({ loading, data, error, refetchPaymentGateway: refetch });
 };
 
-export const paymentHistoryPOSTStatusAndText = (
-  Constants,
-  { action },
-  handlers = {}
-) =>
+export const paymentHistoryPOST = (Constants, { action }, handlers = {}) =>
   fetch(
     `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
@@ -5163,11 +4733,6 @@ export const paymentHistoryPOSTStatusAndText = (
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const paymentHistoryPOST = (Constants, { action }, handlers = {}) =>
-  paymentHistoryPOSTStatusAndText(Constants, { action }, handlers).then(res =>
-    !isOkStatus(res.status) ? Promise.reject(res) : res.json
-  );
 
 export const usePaymentHistoryPOST = ({ action }) => {
   const Constants = GlobalVariables.useValues();
@@ -5238,11 +4803,7 @@ export const FetchPaymentHistoryPOST = ({
   return children({ loading, data, error, refetchPaymentHistory: refetch });
 };
 
-export const prepaidApiPOSTStatusAndText = (
-  Constants,
-  { mtrno },
-  handlers = {}
-) =>
+export const prepaidApiPOST = (Constants, { mtrno }, handlers = {}) =>
   fetch(
     `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
     {
@@ -5260,11 +4821,6 @@ export const prepaidApiPOSTStatusAndText = (
       method: 'POST',
     }
   ).then(res => handleResponse(res, handlers));
-
-export const prepaidApiPOST = (Constants, { mtrno }, handlers = {}) =>
-  prepaidApiPOSTStatusAndText(Constants, { mtrno }, handlers).then(res =>
-    !isOkStatus(res.status) ? Promise.reject(res) : res.json
-  );
 
 export const usePrepaidApiPOST = ({ mtrno }) => {
   const Constants = GlobalVariables.useValues();

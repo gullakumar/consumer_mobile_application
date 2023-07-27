@@ -269,7 +269,7 @@ const UpdateEmailScreen = props => {
               const handler = async () => {
                 try {
                   const adsercondetresult = (
-                    await CISAPPApi.updateEmailPOSTStatusAndText(Constants, {
+                    await CISAPPApi.updateEmailPOST(Constants, {
                       accno: (() => {
                         const e = Constants['name'];
                         console.log(e);

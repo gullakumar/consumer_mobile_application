@@ -76,17 +76,14 @@ line two` ) and will not work with special characters inside of quotes ( example
         if (!isFocused) {
           return;
         }
-        const cat = (
-          await CISAPPApi.serviceRequestCategoryPOSTStatusAndText(Constants)
-        )?.json;
+        const cat = (await CISAPPApi.serviceRequestCategoryPOST(Constants))
+          ?.json;
         console.log(cat);
         setGlobalVariableValue({
           key: 'picker_option1',
           value: category(cat && cat[0].data.RequestTypeMJson),
         });
-        const comcat = (
-          await CISAPPApi.complaintCategoryPOSTStatusAndText(Constants)
-        )?.json;
+        const comcat = (await CISAPPApi.complaintCategoryPOST(Constants))?.json;
         console.log(comcat);
         setGlobalVariableValue({
           key: 'picker_option2',
@@ -451,7 +448,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                       try {
                         setPickerValue(newPickerValue);
                         const subCategoryJson = (
-                          await CISAPPApi.serviceRequestSubCategoryPOSTStatusAndText(
+                          await CISAPPApi.serviceRequestSubCategoryPOST(
                             Constants,
                             { action: buildSubCategory(newPickerValue) }
                           )
@@ -565,14 +562,11 @@ line two` ) and will not work with special characters inside of quotes ( example
                   const handler = async () => {
                     try {
                       const servicerequestsave = (
-                        await CISAPPApi.serviceRequestSavePOSTStatusAndText(
-                          Constants,
-                          {
-                            requestDetails: requestDetails,
-                            requestnatureId: savid,
-                            scNo: scNo,
-                          }
-                        )
+                        await CISAPPApi.serviceRequestSavePOST(Constants, {
+                          requestDetails: requestDetails,
+                          requestnatureId: savid,
+                          scNo: scNo,
+                        })
                       )?.json;
                       console.log(servicerequestsave);
                       const raiseTicketMsg =
@@ -671,10 +665,9 @@ line two` ) and will not work with special characters inside of quotes ( example
                       try {
                         setPickerValue3(newPickerValue);
                         const comsubcat = (
-                          await CISAPPApi.complaintSubCategoryPOSTStatusAndText(
-                            Constants,
-                            { action: buildSubCategory(newPickerValue) }
-                          )
+                          await CISAPPApi.complaintSubCategoryPOST(Constants, {
+                            action: buildSubCategory(newPickerValue),
+                          })
                         )?.json;
                         console.log(comsubcat);
                         buildSubCategory(newPickerValue);
@@ -785,14 +778,11 @@ line two` ) and will not work with special characters inside of quotes ( example
                   const handler = async () => {
                     try {
                       const complaintsave = (
-                        await CISAPPApi.complaintSavePOSTStatusAndText(
-                          Constants,
-                          {
-                            consumerNo: consumerNo,
-                            requestDetails1: requestDetails1,
-                            requestnatureId1: comid,
-                          }
-                        )
+                        await CISAPPApi.complaintSavePOST(Constants, {
+                          consumerNo: consumerNo,
+                          requestDetails1: requestDetails1,
+                          requestnatureId1: comid,
+                        })
                       )?.json;
                       console.log(complaintsave);
                       const complaintMsg =

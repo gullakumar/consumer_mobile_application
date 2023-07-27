@@ -393,7 +393,7 @@ const ConfirmOTPEmailUpdateScreen = props => {
                 const otpResult = createOTP();
                 console.log(otpResult);
                 const confirmotp = (
-                  await CISAPPApi.oTPEmailUpdatePOSTStatusAndText(Constants, {
+                  await CISAPPApi.oTPEmailUpdatePOST(Constants, {
                     accno: (() => {
                       const e = Constants['name'];
                       console.log(e);

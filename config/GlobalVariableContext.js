@@ -26,6 +26,7 @@ const AppVariables = {
   picker_option2: '',
   serviceConNo: ['11111474812', 'KUM188'],
   serviceconnectionNoMan: '',
+  serviceno: 'KUM188',
   sub_category: '',
   sub_category2: '',
   userId: '',

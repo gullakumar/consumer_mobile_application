@@ -615,8 +615,6 @@ const MakePaymentGuestScreen = props => {
           <View
             style={StyleSheet.applyWidth(
               StyleSheet.compose(GlobalStyles.ViewStyles(theme)['accordion'], {
-                marginLeft: 20,
-                marginRight: 20,
                 paddingBottom: 3,
                 paddingLeft: 8,
                 paddingRight: 8,
@@ -633,7 +631,10 @@ const MakePaymentGuestScreen = props => {
                   fontFamily: 'Roboto_500Medium',
                   fontSize: 16,
                   paddingBottom: 8,
+                  paddingLeft: 20,
+                  paddingRight: 20,
                   paddingTop: 8,
+                  width: '100%',
                 },
                 dimensions.width
               )}
@@ -648,6 +649,8 @@ const MakePaymentGuestScreen = props => {
                     flexDirection: 'column',
                     justifyContent: 'flex-start',
                     opacity: 1,
+                    paddingLeft: 20,
+                    paddingRight: 20,
                     width: '100%',
                   },
                   dimensions.width
@@ -730,10 +733,7 @@ const MakePaymentGuestScreen = props => {
                     placeholderTextColor={theme.colors['Medium']}
                   />
                   <View
-                    style={StyleSheet.applyWidth(
-                      { flex: 1, paddingLeft: 10, paddingRight: 10 },
-                      dimensions.width
-                    )}
+                    style={StyleSheet.applyWidth({ flex: 1 }, dimensions.width)}
                   >
                     <NumberInput
                       onChangeText={newNumberInputValue => {
@@ -815,6 +815,8 @@ const MakePaymentGuestScreen = props => {
                     justifyContent: 'space-between',
                     marginBottom: 12,
                     marginTop: 20,
+                    paddingLeft: 20,
+                    paddingRight: 20,
                   },
                   dimensions.width
                 )}
@@ -951,7 +953,7 @@ const MakePaymentGuestScreen = props => {
             const handler = async () => {
               try {
                 const consumerDetailsJson = (
-                  await CISAPPApi.consumerDetailsPOSTStatusAndText(Constants, {
+                  await CISAPPApi.consumerDetailsPOST(Constants, {
                     action: buildConsumerString(
                       props.route?.params?.Scno ?? ''
                     ),
@@ -975,7 +977,7 @@ const MakePaymentGuestScreen = props => {
                 )?.data?.consumerId;
                 setConsumerId(consumerIdData);
                 const paymentJson = (
-                  await CISAPPApi.payemntServicePOSTStatusAndText(Constants, {
+                  await CISAPPApi.payemntServicePOST(Constants, {
                     accno: (() => {
                       const e = props.route?.params?.accno ?? '';
                       console.log(e);
@@ -1050,10 +1052,7 @@ const MakePaymentGuestScreen = props => {
                 });
                 console.log(url);
                 await WebBrowser.openBrowserAsync(`${url}`);
-                navigation.navigate('PaymentConfirmationGuestScreen', {
-                  name: props.route?.params?.Name ?? '',
-                  Scno: props.route?.params?.Scno ?? '',
-                });
+                navigation.navigate('WelcomeScreen');
               } catch (err) {
                 console.error(err);
               }

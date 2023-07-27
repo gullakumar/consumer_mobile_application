@@ -11,7 +11,6 @@ import LinkingConfiguration from './LinkingConfiguration.js';
 import AddTicketProcessGuestScreen from './screens/AddTicketProcessGuestScreen';
 import AdvancePayemntConfirmationScreen from './screens/AdvancePayemntConfirmationScreen';
 import AdvancePayemntScreen from './screens/AdvancePayemntScreen';
-import BillingCopyScreen from './screens/BillingCopyScreen';
 import BillingScreen from './screens/BillingScreen';
 import CheckTicketStatusScreen from './screens/CheckTicketStatusScreen';
 import CheckTicketStatusforGuestScreen from './screens/CheckTicketStatusforGuestScreen';
@@ -478,13 +477,6 @@ export default function RootAppNavigator() {
           component={RechargeScreen}
           options={{
             title: 'Recharge',
-          }}
-        />
-        <Stack.Screen
-          name="BillingCopyScreen"
-          component={BillingCopyScreen}
-          options={{
-            title: 'Billing Copy',
           }}
         />
       </Stack.Navigator>

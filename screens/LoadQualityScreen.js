@@ -64,7 +64,7 @@ line two` ) and will not work with special characters inside of quotes ( example
         }
         setServiceConNumber(Constants['name']);
         const consumerDetailsJson = (
-          await CISAPPApi.consumerDetailsPOSTStatusAndText(Constants, {
+          await CISAPPApi.consumerDetailsPOST(Constants, {
             action: buildConsumerString(Constants['name']),
           })
         )?.json;
@@ -74,9 +74,7 @@ line two` ) and will not work with special characters inside of quotes ( example
         setMeterNumber(meterNo && meterNo[0].data);
         console.log(meterNo);
         const loadpatternJson = (
-          await CISAPPApi.loadPatternPOSTStatusAndText(Constants, {
-            mtrno: 3821550,
-          })
+          await CISAPPApi.loadPatternPOST(Constants, { mtrno: 3821550 })
         )?.json;
         console.log(loadpatternJson);
 
@@ -84,14 +82,14 @@ line two` ) and will not work with special characters inside of quotes ( example
         setLoadpatterndeatils(valuevqg27cj9);
         const loadpattern = valuevqg27cj9;
         const voltageJson = (
-          await CISAPPApi.powerQualityVoltagePOSTStatusAndText(Constants, {
+          await CISAPPApi.powerQualityVoltagePOST(Constants, {
             mtrno: 'GP1120814',
           })
         )?.json;
         console.log(voltageJson);
         setVoltageScreen(voltageJson && voltageJson[0].data);
         const currentJson = (
-          await CISAPPApi.powerQualityCurrentPOSTStatusAndText(Constants, {
+          await CISAPPApi.powerQualityCurrentPOST(Constants, {
             mtrno: 'GP1120814',
           })
         )?.json;
@@ -101,7 +99,7 @@ line two` ) and will not work with special characters inside of quotes ( example
         setCurrentScreen(valueOMzPNd1B);
         const current = valueOMzPNd1B;
         const powerfactorJson = (
-          await CISAPPApi.powerQualityPowerFactorPOSTStatusAndText(Constants, {
+          await CISAPPApi.powerQualityPowerFactorPOST(Constants, {
             mtrno: 'GP1120814',
           })
         )?.json;

@@ -388,7 +388,7 @@ const ConfirmOTPForgotpasswordScreen = props => {
                 const otpResult = createOTP();
                 console.log(otpResult);
                 const confirmotp = (
-                  await CISAPPApi.confirmOTPscreenPOSTStatusAndText(Constants, {
+                  await CISAPPApi.confirmOTPscreenPOST(Constants, {
                     otp: otpResult,
                     transid: Constants['OTP_ACK_NUMBER'],
                   })

@@ -393,7 +393,7 @@ const ConfirmOTPAddNewServiceConnectionScreen = props => {
                 const otpResult = createOTP();
                 console.log(otpResult);
                 const confirmotp = (
-                  await CISAPPApi.addAccountConfirmOTPForNewScnoAddingPOSTStatusAndText(
+                  await CISAPPApi.addAccountConfirmOTPForNewScnoAddingPOST(
                     Constants,
                     {
                       existAcct: Constants['name'],

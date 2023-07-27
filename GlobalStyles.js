@@ -19,7 +19,7 @@ export const RadioButtonGroupStyles = theme =>
 export const ViewStyles = theme =>
   StyleSheet.create({
     Announcements: { alignItems: 'stretch', paddingLeft: 16, paddingRight: 16 },
-    Dashboard: { flex: 1, paddingLeft: 20, paddingRight: 20 },
+    Dashboard: { flex: 1 },
     Details: {
       flexDirection: 'row',
       justifyContent: 'space-between',
@@ -295,9 +295,6 @@ export const ViewStyles = theme =>
       flexDirection: 'row',
       height: 50,
       justifyContent: 'space-between',
-      paddingLeft: 20,
-      paddingRight: 20,
-      width: '100%',
     },
     'user name': {
       alignItems: 'center',

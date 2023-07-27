@@ -11,21 +11,12 @@ import { handleResponse, isOkStatus } from '../utils/handleRestApiResponse';
 import usePrevious from '../utils/usePrevious';
 import * as GlobalVariables from '../config/GlobalVariableContext';
 
-export const newbillendpointPOSTStatusAndText = (
-  Constants,
-  _args,
-  handlers = {}
-) =>
+export const newbillendpointPOST = (Constants, _args, handlers = {}) =>
   fetch(`http://fgeam.fluentgrid.com:8888/consumerapi/getAccountDetails`, {
     body: JSON.stringify({ accno: '1234343' }),
     headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
     method: 'POST',
   }).then(res => handleResponse(res, handlers));
-
-export const newbillendpointPOST = (Constants, _args, handlers = {}) =>
-  newbillendpointPOSTStatusAndText(Constants, {}, handlers).then(res =>
-    !isOkStatus(res.status) ? Promise.reject(res) : res.json
-  );
 
 export const useNewbillendpointPOST = () => {
   const Constants = GlobalVariables.useValues();

@@ -11,28 +11,20 @@ import { handleResponse, isOkStatus } from '../utils/handleRestApiResponse';
 import usePrevious from '../utils/usePrevious';
 import * as GlobalVariables from '../config/GlobalVariableContext';
 
-export const $SampleRecordsGETStatusAndText = (
-  Constants,
-  _args,
-  handlers = {}
-) =>
+export const $SampleRecordsGET = (Constants, _args, handlers = {}) =>
   fetch(`https://example-data.draftbit.com/podcasts?_limit=4`, {
     headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
   }).then(res => handleResponse(res, handlers));
 
-export const $SampleRecordsGET = (Constants, _args, handlers = {}) =>
-  $SampleRecordsGETStatusAndText(Constants, {}, handlers).then(res =>
-    !isOkStatus(res.status) ? Promise.reject(res) : res.json
-  );
-
 export const use5SampleRecordsGET = (
-  args,
+  args = {},
   { refetchInterval, handlers = {} } = {}
 ) => {
   const Constants = GlobalVariables.useValues();
+  const fetcher = $SampleRecordsGET;
   return useQuery(
     ['Examples', args],
-    () => $SampleRecordsGET(Constants, args, handlers),
+    () => fetcher(Constants, args, handlers),
     {
       refetchInterval,
     }
@@ -75,28 +67,20 @@ export const Fetch5SampleRecordsGET = ({
   return children({ loading, data, error, refetch5SampleRecords: refetch });
 };
 
-export const getSampleDataList10GETStatusAndText = (
-  Constants,
-  _args,
-  handlers = {}
-) =>
+export const getSampleDataList10GET = (Constants, _args, handlers = {}) =>
   fetch(`https://example-data.draftbit.com/podcasts?_limit=10`, {
     headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
   }).then(res => handleResponse(res, handlers));
 
-export const getSampleDataList10GET = (Constants, _args, handlers = {}) =>
-  getSampleDataList10GETStatusAndText(Constants, {}, handlers).then(res =>
-    !isOkStatus(res.status) ? Promise.reject(res) : res.json
-  );
-
 export const useGetSampleDataList10GET = (
-  args,
+  args = {},
   { refetchInterval, handlers = {} } = {}
 ) => {
   const Constants = GlobalVariables.useValues();
+  const fetcher = getSampleDataList10GET;
   return useQuery(
     ['Sample Data', args],
-    () => getSampleDataList10GET(Constants, args, handlers),
+    () => fetcher(Constants, args, handlers),
     {
       refetchInterval,
     }

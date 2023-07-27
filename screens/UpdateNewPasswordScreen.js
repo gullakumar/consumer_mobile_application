@@ -324,15 +324,12 @@ const UpdateNewPasswordScreen = props => {
               try {
                 setErrorMessage('');
                 (
-                  await CISAPPApi.aftersentOTPforgorpasswordPOSTStatusAndText(
-                    Constants,
-                    {
-                      accno: Constants['OTP_SERVICE_NUMBER'],
-                      newPassword: newpassword,
-                      otp: props.route?.params?.userEnteredOTP ?? '',
-                      transid: Constants['OTP_ACK_NUMBER'],
-                    }
-                  )
+                  await CISAPPApi.aftersentOTPforgorpasswordPOST(Constants, {
+                    accno: Constants['OTP_SERVICE_NUMBER'],
+                    newPassword: newpassword,
+                    otp: props.route?.params?.userEnteredOTP ?? '',
+                    transid: Constants['OTP_ACK_NUMBER'],
+                  })
                 )?.json;
                 const passwordResult = passwordUpdate(
                   (() => {

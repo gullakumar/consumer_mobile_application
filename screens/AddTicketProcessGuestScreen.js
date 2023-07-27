@@ -238,10 +238,9 @@ const AddTicketProcessGuestScreen = props => {
             const handler = async () => {
               try {
                 const otpvalue = (
-                  await CISAPPApi.guestRaiseTicketSendOTPPOSTStatusAndText(
-                    Constants,
-                    { accno: serviceconnectionnumber }
-                  )
+                  await CISAPPApi.guestRaiseTicketSendOTPPOST(Constants, {
+                    accno: serviceconnectionnumber,
+                  })
                 )?.json;
                 console.log(otpvalue);
                 const messagejson = otpvalue?.[0].data?.error?.message;

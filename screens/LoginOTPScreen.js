@@ -239,7 +239,7 @@ const LoginOTPScreen = props => {
             const handler = async () => {
               try {
                 const otpvalue = (
-                  await CISAPPApi.loginWithOTPPOSTStatusAndText(Constants, {
+                  await CISAPPApi.loginWithOTPPOST(Constants, {
                     accno: serviceconnectionnumber,
                   })
                 )?.json;

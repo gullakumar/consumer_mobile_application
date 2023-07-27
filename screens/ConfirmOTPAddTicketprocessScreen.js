@@ -388,10 +388,10 @@ const ConfirmOTPAddTicketprocessScreen = props => {
                 const otpResult = createOTP();
                 console.log(otpResult);
                 const confirmotp = (
-                  await CISAPPApi.guestRaiseTicketAfterSendOTPPOSTStatusAndText(
-                    Constants,
-                    { otp: otpResult, transid: Constants['OTP_ACK_NUMBER'] }
-                  )
+                  await CISAPPApi.guestRaiseTicketAfterSendOTPPOST(Constants, {
+                    otp: otpResult,
+                    transid: Constants['OTP_ACK_NUMBER'],
+                  })
                 )?.json;
                 const messionj = confirmotp?.[0].data?.error?.message;
                 console.log(messionj);

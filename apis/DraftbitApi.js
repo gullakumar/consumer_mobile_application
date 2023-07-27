@@ -11,19 +11,18 @@ import { handleResponse, isOkStatus } from '../utils/handleRestApiResponse';
 import usePrevious from '../utils/usePrevious';
 import * as GlobalVariables from '../config/GlobalVariableContext';
 
-export const postsGETStatusAndText = (Constants, { limit }, handlers = {}) =>
+export const postsGET = (Constants, { limit }, handlers = {}) =>
   fetch(`https://example-data.draftbit.com/posts?_limit=${limit ?? ''}`, {
     headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
   }).then(res => handleResponse(res, handlers));
 
-export const postsGET = (Constants, { limit }, handlers = {}) =>
-  postsGETStatusAndText(Constants, { limit }, handlers).then(res =>
-    !isOkStatus(res.status) ? Promise.reject(res) : res.json
-  );
-
-export const usePostsGET = (args, { refetchInterval, handlers = {} } = {}) => {
+export const usePostsGET = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  return useQuery(['Posts', args], () => postsGET(Constants, args, handlers), {
+  const fetcher = postsGET;
+  return useQuery(['Posts', args], () => fetcher(Constants, args, handlers), {
     refetchInterval,
   });
 };

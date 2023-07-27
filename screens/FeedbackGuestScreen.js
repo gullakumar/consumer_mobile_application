@@ -407,7 +407,7 @@ console.log("i came here");
               try {
                 setSeconds('');
                 const feedbackvalues = (
-                  await CISAPPApi.feedbackPOSTStatusAndText(Constants, {
+                  await CISAPPApi.feedbackPOST(Constants, {
                     email: Email,
                     name: Name,
                     response: Response,

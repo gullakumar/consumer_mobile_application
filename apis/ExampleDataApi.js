@@ -11,28 +11,20 @@ import { handleResponse, isOkStatus } from '../utils/handleRestApiResponse';
 import usePrevious from '../utils/usePrevious';
 import * as GlobalVariables from '../config/GlobalVariableContext';
 
-export const exampleData10GETStatusAndText = (
-  Constants,
-  _args,
-  handlers = {}
-) =>
+export const exampleData10GET = (Constants, _args, handlers = {}) =>
   fetch(`https://example-data.draftbit.com/activists?_limit=10`, {
     headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
   }).then(res => handleResponse(res, handlers));
 
-export const exampleData10GET = (Constants, _args, handlers = {}) =>
-  exampleData10GETStatusAndText(Constants, {}, handlers).then(res =>
-    !isOkStatus(res.status) ? Promise.reject(res) : res.json
-  );
-
 export const useExampleData10GET = (
-  args,
+  args = {},
   { refetchInterval, handlers = {} } = {}
 ) => {
   const Constants = GlobalVariables.useValues();
+  const fetcher = exampleData10GET;
   return useQuery(
     ['Example Data', args],
-    () => exampleData10GET(Constants, args, handlers),
+    () => fetcher(Constants, args, handlers),
     {
       refetchInterval,
     }
@@ -75,32 +67,20 @@ export const FetchExampleData10GET = ({
   return children({ loading, data, error, refetchExampleData10: refetch });
 };
 
-export const grabDataPointsGETStatusAndText = (
-  Constants,
-  _args,
-  handlers = {}
-) =>
+export const grabDataPointsGET = (Constants, _args, handlers = {}) =>
   fetch(`https://example-data.draftbit.com/users?_limit=10`, {
     headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
   }).then(res => handleResponse(res, handlers));
 
-export const grabDataPointsGET = (Constants, _args, handlers = {}) =>
-  grabDataPointsGETStatusAndText(Constants, {}, handlers).then(res =>
-    !isOkStatus(res.status) ? Promise.reject(res) : res.json
-  );
-
 export const useGrabDataPointsGET = (
-  args,
+  args = {},
   { refetchInterval, handlers = {} } = {}
 ) => {
   const Constants = GlobalVariables.useValues();
-  return useQuery(
-    ['users', args],
-    () => grabDataPointsGET(Constants, args, handlers),
-    {
-      refetchInterval,
-    }
-  );
+  const fetcher = grabDataPointsGET;
+  return useQuery(['users', args], () => fetcher(Constants, args, handlers), {
+    refetchInterval,
+  });
 };
 
 export const FetchGrabDataPointsGET = ({
@@ -139,19 +119,18 @@ export const FetchGrabDataPointsGET = ({
   return children({ loading, data, error, refetchGrabDataPoints: refetch });
 };
 
-export const usersGETStatusAndText = (Constants, { limit }, handlers = {}) =>
+export const usersGET = (Constants, { limit }, handlers = {}) =>
   fetch(`https://example-data.draftbit.com/users?_limit=${limit ?? ''}`, {
     headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
   }).then(res => handleResponse(res, handlers));
 
-export const usersGET = (Constants, { limit }, handlers = {}) =>
-  usersGETStatusAndText(Constants, { limit }, handlers).then(res =>
-    !isOkStatus(res.status) ? Promise.reject(res) : res.json
-  );
-
-export const useUsersGET = (args, { refetchInterval, handlers = {} } = {}) => {
+export const useUsersGET = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  return useQuery(['Users', args], () => usersGET(Constants, args, handlers), {
+  const fetcher = usersGET;
+  return useQuery(['Users', args], () => fetcher(Constants, args, handlers), {
     refetchInterval,
   });
 };

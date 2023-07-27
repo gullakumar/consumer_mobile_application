@@ -51,7 +51,7 @@ const UpdatePhoneandEmailScreen = props => {
         }
         setServiceConNo(Constants['name']);
         const consumerDetailsJson = (
-          await CISAPPApi.consumerDetailsPOSTStatusAndText(Constants, {
+          await CISAPPApi.consumerDetailsPOST(Constants, {
             action: buildConsumerString(Constants['name']),
           })
         )?.json;
@@ -80,7 +80,7 @@ const UpdatePhoneandEmailScreen = props => {
         setPrepaidFlag(valuezsIVXeGE);
         const prepaidFlagData = valuezsIVXeGE;
         const ManageAccountDetails = (
-          await CISAPPApi.manageAccountsPOSTStatusAndText(Constants, {
+          await CISAPPApi.manageAccountsPOST(Constants, {
             accountNumber: Constants['name'],
           })
         )?.json;
@@ -214,10 +214,9 @@ const UpdatePhoneandEmailScreen = props => {
                     try {
                       setServiceConNo(newPickerValue);
                       const consumerDetailsJson = (
-                        await CISAPPApi.consumerDetailsPOSTStatusAndText(
-                          Constants,
-                          { action: buildConsumerString(newPickerValue) }
-                        )
+                        await CISAPPApi.consumerDetailsPOST(Constants, {
+                          action: buildConsumerString(newPickerValue),
+                        })
                       )?.json;
                       console.log(consumerDetailsJson);
 
