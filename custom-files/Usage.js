@@ -6,7 +6,7 @@ export function LineChartComponent({ billingHistoryScreen }) {
   let newData = [];
   let newBillDates = [];
   if (billingHistoryScreen.length) {
-    newData = billingHistoryScreen.map(item => item.BillAmount);
+    newData = billingHistoryScreen.map(item => item.BillUnits);
     newBillDates = billingHistoryScreen.map(item => item.BillMonth);
   }
   console.log('from custom code', billingHistoryScreen);

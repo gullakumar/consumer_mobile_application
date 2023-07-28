@@ -300,7 +300,6 @@ const UpdatePhoneandEmailScreen = props => {
               >
                 {'Name : '}
                 {consumerName}
-                {'\n'}
               </Text>
             </View>
             {/* Service Connection No */}

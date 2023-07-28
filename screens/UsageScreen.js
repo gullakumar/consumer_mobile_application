@@ -131,6 +131,7 @@ const UsageScreen = props => {
           ),
         });
         console.log(result);
+        setServiceConNumber(props.route?.params?.Name ?? '');
       } catch (err) {
         console.error(err);
       }
@@ -154,7 +155,7 @@ const UsageScreen = props => {
   return (
     <ScreenContainer
       style={StyleSheet.applyWidth(
-        { flex: 1, flexDirection: 'column', paddingTop: 40 },
+        { flex: 1, flexDirection: 'column' },
         dimensions.width
       )}
       hasTopSafeArea={false}
@@ -942,7 +943,7 @@ const UsageScreen = props => {
                             dimensions.width
                           )}
                         >
-                          {'Usage & Cost'}
+                          {'Usage'}
                         </Text>
                       </View>
                     )}
@@ -1507,7 +1508,7 @@ const UsageScreen = props => {
                             dimensions.width
                           )}
                         >
-                          {'Usage & Cost'}
+                          {'Usage'}
                         </Text>
                       </View>
                     )}
@@ -2020,22 +2021,14 @@ const UsageScreen = props => {
         {/* Home */}
         <Touchable
           onPress={() => {
-            const handler = async () => {
-              try {
-                navigation.navigate('DashboardScreen', {
-                  name: Constants['name'],
-                });
-                setServiceConNumber(Constants['name']);
-                const ManageAccountDetails = (
-                  await CISAPPApi.manageAccountsPOST(Constants, {
-                    accountNumber: Constants['name'],
-                  })
-                )?.json;
-              } catch (err) {
-                console.error(err);
-              }
-            };
-            handler();
+            try {
+              setServiceConNumber(props.route?.params?.Name ?? '');
+              navigation.navigate('DashboardScreen', {
+                name: Constants['name'],
+              });
+            } catch (err) {
+              console.error(err);
+            }
           }}
           activeOpacity={0.8}
           disabledOpacity={0.8}
@@ -2072,20 +2065,12 @@ const UsageScreen = props => {
         {/* Usage */}
         <Touchable
           onPress={() => {
-            const handler = async () => {
-              try {
-                navigation.navigate('UsageScreen', { name: Constants['name'] });
-                setServiceConNumber(Constants['name']);
-                const ManageAccountDetails = (
-                  await CISAPPApi.manageAccountsPOST(Constants, {
-                    accountNumber: Constants['name'],
-                  })
-                )?.json;
-              } catch (err) {
-                console.error(err);
-              }
-            };
-            handler();
+            try {
+              setServiceConNumber(props.route?.params?.Name ?? '');
+              navigation.navigate('UsageScreen', { name: Constants['name'] });
+            } catch (err) {
+              console.error(err);
+            }
           }}
           activeOpacity={0.8}
           disabledOpacity={0.8}
@@ -2122,22 +2107,12 @@ const UsageScreen = props => {
         {/* Billing */}
         <Touchable
           onPress={() => {
-            const handler = async () => {
-              try {
-                navigation.navigate('BillingScreen', {
-                  name: Constants['name'],
-                });
-                setServiceConNumber(Constants['name']);
-                const ManageAccountDetails = (
-                  await CISAPPApi.manageAccountsPOST(Constants, {
-                    accountNumber: Constants['name'],
-                  })
-                )?.json;
-              } catch (err) {
-                console.error(err);
-              }
-            };
-            handler();
+            try {
+              setServiceConNumber(props.route?.params?.Name ?? '');
+              navigation.navigate('BillingScreen', { name: Constants['name'] });
+            } catch (err) {
+              console.error(err);
+            }
           }}
           activeOpacity={0.8}
           disabledOpacity={0.8}
@@ -2174,22 +2149,14 @@ const UsageScreen = props => {
         {/* Payments */}
         <Touchable
           onPress={() => {
-            const handler = async () => {
-              try {
-                navigation.navigate('PaymentsScreen', {
-                  name: Constants['name'],
-                });
-                setServiceConNumber(Constants['name']);
-                const ManageAccountDetails = (
-                  await CISAPPApi.manageAccountsPOST(Constants, {
-                    accountNumber: Constants['name'],
-                  })
-                )?.json;
-              } catch (err) {
-                console.error(err);
-              }
-            };
-            handler();
+            try {
+              setServiceConNumber(props.route?.params?.Name ?? '');
+              navigation.navigate('PaymentsScreen', {
+                name: Constants['name'],
+              });
+            } catch (err) {
+              console.error(err);
+            }
           }}
           activeOpacity={0.8}
           disabledOpacity={0.8}

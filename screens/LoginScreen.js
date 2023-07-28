@@ -459,7 +459,9 @@ const LoginScreen = props => {
                   if (messagejson?.length) {
                     return;
                   }
-                  navigation.navigate('DashboardScreen');
+                  navigation.navigate('DashboardScreen', {
+                    Name: serviceconnectionnumber,
+                  });
                 } catch (err) {
                   console.error(err);
                 }

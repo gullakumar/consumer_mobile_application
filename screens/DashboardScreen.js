@@ -141,6 +141,7 @@ line two` ) and will not work with special characters inside of quotes ( example
           ),
         });
         console.log(result);
+        setTextInputValue(props.route?.params?.Name ?? '');
       } catch (err) {
         console.error(err);
       }
@@ -1248,22 +1249,15 @@ line two` ) and will not work with special characters inside of quotes ( example
         {/* Home */}
         <Touchable
           onPress={() => {
-            const handler = async () => {
-              try {
-                navigation.navigate('DashboardScreen', {
-                  name: Constants['name'],
-                });
-                setTextInputValue(Constants['name']);
-                const ManageAccountDetails = (
-                  await CISAPPApi.manageAccountsPOST(Constants, {
-                    accountNumber: Constants['name'],
-                  })
-                )?.json;
-              } catch (err) {
-                console.error(err);
-              }
-            };
-            handler();
+            try {
+              setTextInputValue(Constants['name']);
+              navigation.navigate('DashboardScreen', {
+                name: Constants['name'],
+                Name: props.route?.params?.Name ?? '',
+              });
+            } catch (err) {
+              console.error(err);
+            }
           }}
           activeOpacity={0.8}
           disabledOpacity={0.8}
@@ -1300,20 +1294,15 @@ line two` ) and will not work with special characters inside of quotes ( example
         {/* Usage */}
         <Touchable
           onPress={() => {
-            const handler = async () => {
-              try {
-                navigation.navigate('UsageScreen', { name: Constants['name'] });
-                setTextInputValue(Constants['name']);
-                const ManageAccountDetails = (
-                  await CISAPPApi.manageAccountsPOST(Constants, {
-                    accountNumber: Constants['name'],
-                  })
-                )?.json;
-              } catch (err) {
-                console.error(err);
-              }
-            };
-            handler();
+            try {
+              setTextInputValue(Constants['name']);
+              navigation.navigate('UsageScreen', {
+                name: Constants['name'],
+                Name: props.route?.params?.Name ?? '',
+              });
+            } catch (err) {
+              console.error(err);
+            }
           }}
           activeOpacity={0.8}
           disabledOpacity={0.8}
@@ -1349,22 +1338,15 @@ line two` ) and will not work with special characters inside of quotes ( example
         {/* Billing */}
         <Touchable
           onPress={() => {
-            const handler = async () => {
-              try {
-                navigation.navigate('BillingScreen', {
-                  name: Constants['name'],
-                });
-                setTextInputValue(Constants['name']);
-                const ManageAccountDetails = (
-                  await CISAPPApi.manageAccountsPOST(Constants, {
-                    accountNumber: Constants['name'],
-                  })
-                )?.json;
-              } catch (err) {
-                console.error(err);
-              }
-            };
-            handler();
+            try {
+              setTextInputValue(Constants['name']);
+              navigation.navigate('BillingScreen', {
+                name: Constants['name'],
+                Name: props.route?.params?.Name ?? '',
+              });
+            } catch (err) {
+              console.error(err);
+            }
           }}
           activeOpacity={0.8}
           disabledOpacity={0.8}
@@ -1400,22 +1382,15 @@ line two` ) and will not work with special characters inside of quotes ( example
         {/* Payments */}
         <Touchable
           onPress={() => {
-            const handler = async () => {
-              try {
-                navigation.navigate('PaymentsScreen', {
-                  name: Constants['name'],
-                });
-                setTextInputValue(Constants['name']);
-                const ManageAccountDetails = (
-                  await CISAPPApi.manageAccountsPOST(Constants, {
-                    accountNumber: Constants['name'],
-                  })
-                )?.json;
-              } catch (err) {
-                console.error(err);
-              }
-            };
-            handler();
+            try {
+              setTextInputValue(Constants['name']);
+              navigation.navigate('PaymentsScreen', {
+                name: Constants['name'],
+                Name: props.route?.params?.Name ?? '',
+              });
+            } catch (err) {
+              console.error(err);
+            }
           }}
           activeOpacity={0.8}
           disabledOpacity={0.8}
