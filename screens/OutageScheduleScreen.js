@@ -45,8 +45,8 @@ const OutageScheduleScreen = props => {
   return (
     <ScreenContainer
       hasSafeArea={false}
-      scrollable={false}
       hasTopSafeArea={true}
+      scrollable={false}
     >
       {/* header */}
       <View
@@ -77,9 +77,9 @@ const OutageScheduleScreen = props => {
             }}
           >
             <Icon
-              size={24}
-              name={'Ionicons/arrow-back-sharp'}
               color={theme.colors['Custom Color_2']}
+              name={'Ionicons/arrow-back-sharp'}
+              size={24}
             />
           </Touchable>
         </View>
@@ -404,7 +404,7 @@ const OutageScheduleScreen = props => {
       {/* Scroll Content View */}
       <>
         {listMissing ? null : (
-          <ScrollView showsVerticalScrollIndicator={true} bounces={true}>
+          <ScrollView bounces={true} showsVerticalScrollIndicator={true}>
             {/* Content Frame Tab 1 */}
             <>
               {!menuTab1 ? null : (
@@ -512,10 +512,10 @@ const OutageScheduleScreen = props => {
                                               </View>
 
                                               <Circle
-                                                size={36}
                                                 bgColor={
                                                   theme.colors.communityPrimary
                                                 }
+                                                size={36}
                                               >
                                                 <Text
                                                   style={StyleSheet.applyWidth(
@@ -576,8 +576,8 @@ const OutageScheduleScreen = props => {
                                                     },
                                                     dimensions.width
                                                   )}
-                                                  numberOfLines={3}
                                                   ellipsizeMode={'tail'}
+                                                  numberOfLines={3}
                                                 >
                                                   {'HH:MM To HH:MM'}
                                                 </Text>
@@ -612,8 +612,8 @@ const OutageScheduleScreen = props => {
                                                     },
                                                     dimensions.width
                                                   )}
-                                                  numberOfLines={3}
                                                   ellipsizeMode={'tail'}
+                                                  numberOfLines={3}
                                                 >
                                                   {
                                                     'Area Names to be displayed Area Names some dummy content here'
@@ -736,9 +736,9 @@ const OutageScheduleScreen = props => {
                     placeholderTextColor={theme.colors.textPlaceholder}
                   />
                   <Icon
+                    color={theme.colors.textPlaceholder}
                     name={'Feather/search'}
                     size={24}
-                    color={theme.colors.textPlaceholder}
                   />
                 </Surface>
               </View>
@@ -766,7 +766,7 @@ const OutageScheduleScreen = props => {
                 </Text>
 
                 <Touchable>
-                  <Icon size={30} name={'MaterialIcons/date-range'} />
+                  <Icon name={'MaterialIcons/date-range'} size={30} />
                 </Touchable>
               </View>
             </View>
@@ -790,18 +790,18 @@ const OutageScheduleScreen = props => {
                 )}
                 latitude={26.2389}
                 longitude={73.0243}
+                apiKey={'AIzaSyBzktToWosjNgrrUawZnbslB9NSXSXCkwo'}
+                followsUserLocation={true}
+                loadingEnabled={true}
+                loadingIndicatorColor={theme.colors.appGreen}
+                provider={'google'}
                 rotateEnabled={true}
                 scrollEnabled={true}
-                loadingEnabled={true}
-                showsPointsOfInterest={true}
-                provider={'google'}
                 showsCompass={true}
-                loadingIndicatorColor={theme.colors.appGreen}
+                showsPointsOfInterest={true}
                 showsUserLocation={true}
-                followsUserLocation={true}
                 zoom={5}
                 zoomEnabled={true}
-                apiKey={'AIzaSyBzktToWosjNgrrUawZnbslB9NSXSXCkwo'}
               >
                 <MapMarker
                   longitude={73.0243}
@@ -850,9 +850,9 @@ const OutageScheduleScreen = props => {
                   {/* Flex Frame for Icons */}
                   <View>
                     <Icon
+                      color={theme.colors.communityIconFill}
                       name={'MaterialIcons/event-busy'}
                       size={48}
-                      color={theme.colors.communityIconFill}
                     />
                   </View>
                   {/* Headline Frame */}
@@ -907,9 +907,9 @@ const OutageScheduleScreen = props => {
                   {/* Flex Frame for Icons */}
                   <View>
                     <Icon
+                      color={theme.colors.communityIconFill}
                       name={'Ionicons/md-notifications-off'}
                       size={48}
-                      color={theme.colors.communityIconFill}
                     />
                   </View>
                   {/* Headline Frame */}

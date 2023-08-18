@@ -36,8 +36,8 @@ const DownloadGuestScreen = props => {
   return (
     <ScreenContainer
       hasSafeArea={false}
-      scrollable={false}
       hasTopSafeArea={true}
+      scrollable={false}
     >
       {/* header */}
       <View
@@ -68,9 +68,9 @@ const DownloadGuestScreen = props => {
             }}
           >
             <Icon
-              size={24}
-              name={'Ionicons/arrow-back-sharp'}
               color={theme.colors['Custom Color_2']}
+              name={'Ionicons/arrow-back-sharp'}
+              size={24}
             />
           </Touchable>
         </View>
@@ -103,12 +103,12 @@ const DownloadGuestScreen = props => {
       >
         <CISAPPApi.FetchDownloadPOST>
           {({ loading, error, data, refetchDownload }) => {
-            const fetchData = data;
+            const fetchData = data?.json;
             if (loading) {
               return <ActivityIndicator />;
             }
 
-            if (error) {
+            if (error || data?.status < 200 || data?.status >= 300) {
               return <ActivityIndicator />;
             }
 
@@ -142,8 +142,8 @@ const DownloadGuestScreen = props => {
                             )}
                           >
                             <Icon
-                              size={24}
                               name={'Foundation/page-export-pdf'}
+                              size={24}
                             />
                             <View
                               style={StyleSheet.applyWidth(
@@ -187,8 +187,8 @@ const DownloadGuestScreen = props => {
                                 }}
                               >
                                 <Icon
-                                  size={24}
                                   name={'SimpleLineIcons/arrow-down-circle'}
+                                  size={24}
                                 />
                               </Touchable>
                             </View>
@@ -223,55 +223,7 @@ const DownloadGuestScreen = props => {
           },
           dimensions.width
         )}
-      >
-        {/* Flex Touchable */}
-        <View
-          style={StyleSheet.applyWidth(
-            { flexGrow: 0, flexShrink: 0 },
-            dimensions.width
-          )}
-        >
-          <Touchable>
-            {/* Button Frame */}
-            <View
-              style={StyleSheet.applyWidth(
-                {
-                  alignSelf: 'auto',
-                  backgroundColor: theme.colors['Community_Highlight_Blue'],
-                  flexDirection: 'row',
-                  flexGrow: 1,
-                  flexShrink: 0,
-                  justifyContent: 'center',
-                  marginLeft: 12,
-                  marginRight: 6,
-                },
-                dimensions.width
-              )}
-            >
-              {/* Button Label */}
-              <Text
-                style={StyleSheet.applyWidth(
-                  {
-                    alignSelf: 'stretch',
-                    color: theme.colors.internalWhite,
-                    fontFamily: 'Roboto_400Regular',
-                    fontSize: 14,
-                    lineHeight: 18,
-                    paddingBottom: 12,
-                    paddingLeft: 6,
-                    paddingRight: 6,
-                    paddingTop: 12,
-                    textAlign: 'center',
-                  },
-                  dimensions.width
-                )}
-              >
-                {'Download All'}
-              </Text>
-            </View>
-          </Touchable>
-        </View>
-      </View>
+      ></View>
     </ScreenContainer>
   );
 };

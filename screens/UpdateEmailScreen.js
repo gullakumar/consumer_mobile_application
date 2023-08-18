@@ -27,6 +27,32 @@ const UpdateEmailScreen = props => {
   const Variables = Constants;
   const setGlobalVariableValue = GlobalVariables.useSetValue();
 
+  const updateOldpassword = email => {
+    var errorMessage = null;
+    if (!email.trim()) {
+      errorMessage = 'Old Email is required';
+    } else {
+      const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+      if (!emailRegex.test(email)) {
+        errorMessage = 'Invalid email';
+      }
+    }
+    return errorMessage;
+  };
+
+  const validateNewEmail = email => {
+    var errorMessage = null;
+    if (!email.trim()) {
+      errorMessage = 'New Email is required';
+    } else {
+      const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+      if (!emailRegex.test(email)) {
+        errorMessage = 'Invalid email';
+      }
+    }
+    return errorMessage;
+  };
+
   const processErrorMessage = msg => {
     const scheme = {
       msg1: 'Password Changed Successfully',
@@ -77,9 +103,11 @@ const UpdateEmailScreen = props => {
 
   const [date, setDate] = React.useState(new Date());
   const [datePickerValue, setDatePickerValue] = React.useState(new Date());
+  const [emailErrorMsg, setEmailErrorMsg] = React.useState('');
+  const [emailErrorMsg2, setEmailErrorMsg2] = React.useState('');
   const [existAcct, setExistAcct] = React.useState('');
   const [newAcct, setNewAcct] = React.useState('');
-  const [newEmail, setNewEmail] = React.useState('');
+  const [newemail, setNewemail] = React.useState('');
   const [showNav, setShowNav] = React.useState(false);
 
   return (
@@ -127,7 +155,7 @@ const UpdateEmailScreen = props => {
                 dimensions.width
               )}
             >
-              <Icon size={24} name={'AntDesign/arrowleft'} />
+              <Icon name={'AntDesign/arrowleft'} size={24} />
             </View>
           </Touchable>
           {/* View bill and make payment */}
@@ -142,7 +170,7 @@ const UpdateEmailScreen = props => {
               dimensions.width
             )}
           >
-            {'View Bill '}
+            {'Update Email'}
           </Text>
         </View>
         {/* amblock */}
@@ -161,8 +189,8 @@ const UpdateEmailScreen = props => {
           <Text
             style={StyleSheet.applyWidth(
               StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
-                alignSelf: 'center',
-                color: theme.colors['Community_Dark_Red'],
+                alignSelf: 'flex-start',
+                color: theme.colors['Error'],
                 fontFamily: 'Roboto_400Regular',
                 paddingBottom: 20,
               }),
@@ -174,16 +202,14 @@ const UpdateEmailScreen = props => {
           {/* Service connection number */}
           <View
             style={StyleSheet.applyWidth(
-              StyleSheet.compose(GlobalStyles.ViewStyles(theme)['user name'], {
-                marginBottom: 30,
-              }),
+              GlobalStyles.ViewStyles(theme)['user name'],
               dimensions.width
             )}
           >
             <Icon
-              size={24}
-              name={'Ionicons/mail'}
               color={theme.colors['Medium']}
+              name={'Ionicons/mail'}
+              size={24}
             />
             <View
               style={StyleSheet.applyWidth(
@@ -194,7 +220,7 @@ const UpdateEmailScreen = props => {
               <TextInput
                 onChangeText={newTextInputValue => {
                   try {
-                    setNewEmail(newTextInputValue);
+                    setNewemail(newTextInputValue);
                   } catch (err) {
                     console.error(err);
                   }
@@ -210,23 +236,39 @@ const UpdateEmailScreen = props => {
                   },
                   dimensions.width
                 )}
+                value={newemail}
                 placeholder={'New Email'}
-                placeholderTextColor={theme.colors['Medium']}
                 editable={true}
+                placeholderTextColor={theme.colors['Medium']}
               />
             </View>
           </View>
+          {/* Email Error message */}
+          <Text
+            style={StyleSheet.applyWidth(
+              StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+                alignSelf: 'flex-start',
+                color: theme.colors['Error'],
+                fontFamily: 'Roboto_400Regular',
+              }),
+              dimensions.width
+            )}
+          >
+            {emailErrorMsg}
+          </Text>
           {/* Meter Number */}
           <View
             style={StyleSheet.applyWidth(
-              GlobalStyles.ViewStyles(theme)['user name'],
+              StyleSheet.compose(GlobalStyles.ViewStyles(theme)['user name'], {
+                marginTop: 20,
+              }),
               dimensions.width
             )}
           >
             <Icon
-              size={24}
               color={theme.colors['Medium']}
               name={'Ionicons/mail'}
+              size={24}
             />
             <View
               style={StyleSheet.applyWidth(
@@ -263,11 +305,36 @@ const UpdateEmailScreen = props => {
               />
             </View>
           </View>
+          {/* Old email Error mgs */}
+          <Text
+            style={StyleSheet.applyWidth(
+              StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+                alignSelf: 'flex-start',
+                color: theme.colors['Error'],
+                fontFamily: 'Roboto_400Regular',
+              }),
+              dimensions.width
+            )}
+          >
+            {emailErrorMsg2}
+          </Text>
           {/* Submit */}
           <Button
             onPress={() => {
               const handler = async () => {
                 try {
+                  const newEmailErrorMgs = validateNewEmail(newemail);
+                  const oldemailErrorMsg = updateOldpassword(
+                    Constants['email']
+                  );
+                  setEmailErrorMsg(newEmailErrorMgs);
+                  setEmailErrorMsg2(oldemailErrorMsg);
+                  if (newEmailErrorMgs?.length) {
+                    return;
+                  }
+                  if (oldemailErrorMsg?.length) {
+                    return;
+                  }
                   const adsercondetresult = (
                     await CISAPPApi.updateEmailPOST(Constants, {
                       accno: (() => {
@@ -276,7 +343,7 @@ const UpdateEmailScreen = props => {
                         return e;
                       })(),
                       newEmail: (() => {
-                        const e = newEmail;
+                        const e = newemail;
                         console.log(e);
                         return e;
                       })(),
@@ -317,7 +384,8 @@ const UpdateEmailScreen = props => {
                     return;
                   }
                   navigation.navigate('ConfirmOTPEmailUpdateScreen', {
-                    newEmail: newEmail,
+                    oldEmail: Constants['email'],
+                    newEmail: newemail,
                   });
                 } catch (err) {
                   console.error(err);

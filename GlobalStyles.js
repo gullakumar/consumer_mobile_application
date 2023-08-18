@@ -3,15 +3,7 @@ import * as StyleSheet from './utils/StyleSheet';
 import Breakpoints from './utils/Breakpoints';
 
 export const AccordionGroupStyles = theme =>
-  StyleSheet.create({
-    Accordion: {
-      fontSize: 16,
-      paddingBottom: 8,
-      paddingLeft: 8,
-      paddingRight: 8,
-      paddingTop: 8,
-    },
-  });
+  StyleSheet.create({ Accordion: { fontSize: 16 } });
 
 export const RadioButtonGroupStyles = theme =>
   StyleSheet.create({ 'AmountCard Radio Button Group': { marginTop: 10 } });
@@ -70,6 +62,9 @@ export const ViewStyles = theme =>
       flexDirection: 'row',
       justifyContent: 'space-between',
     },
+    VIEW: { alignItems: 'center' },
+    View: { alignItems: 'stretch', flex: 1, paddingLeft: 10, paddingRight: 10 },
+    View11: { flexDirection: 'row', justifyContent: 'flex-start', opacity: 1 },
     accordion: { borderColor: theme.colors['Divider'] },
     'b-views': { marginLeft: 16, marginRight: 16, marginTop: -120 },
     'botem tab': {
@@ -83,6 +78,7 @@ export const ViewStyles = theme =>
       paddingLeft: 30,
       paddingRight: 30,
     },
+    bottom: { flexDirection: 'row', justifyContent: 'space-between' },
     card: { paddingRight: 20 },
     'card 2': {
       backgroundColor: theme.colors['Background'],
@@ -99,7 +95,6 @@ export const ViewStyles = theme =>
       alignItems: 'center',
       flexDirection: 'row',
       justifyContent: 'space-between',
-      width: '100%',
     },
     charts: { flex: 1, paddingLeft: 20, paddingRight: 20 },
     'consumer no': {
@@ -127,6 +122,7 @@ export const ViewStyles = theme =>
       paddingLeft: 16,
       paddingRight: 16,
     },
+    footer: { flexGrow: 0, flexShrink: 0 },
     headerp: {
       alignItems: 'center',
       flexDirection: 'row',
@@ -197,6 +193,9 @@ export const ViewStyles = theme =>
       paddingRight: 20,
       width: '100%',
     },
+    'postpaid view': { alignItems: 'stretch' },
+    'postpaid view 2': { alignItems: 'stretch' },
+    'postpaid view 3': { alignItems: 'stretch' },
     pr1: {
       alignContent: 'space-between',
       alignItems: 'stretch',
@@ -217,6 +216,7 @@ export const ViewStyles = theme =>
       opacity: 1,
       width: '100%',
     },
+    'privacy text': { marginTop: 50 },
     profile: {
       alignItems: 'center',
       flexDirection: 'row',
@@ -228,11 +228,8 @@ export const ViewStyles = theme =>
       alignItems: 'center',
       flexDirection: 'row',
       justifyContent: 'space-between',
-      paddingBottom: 16,
       paddingLeft: 16,
       paddingRight: 16,
-      paddingTop: 16,
-      width: '100%',
     },
     'section header': {
       flexDirection: 'row',
@@ -293,7 +290,6 @@ export const ViewStyles = theme =>
     uname: {
       alignItems: 'center',
       flexDirection: 'row',
-      height: 50,
       justifyContent: 'space-between',
     },
     'user name': {
@@ -307,6 +303,40 @@ export const ViewStyles = theme =>
       flexDirection: 'row',
       height: 50,
       justifyContent: 'space-between',
+      paddingLeft: 20,
+      paddingRight: 20,
+      width: '100%',
+    },
+    'user name 2': {
+      alignItems: 'center',
+      backgroundColor: theme.colors['BG Gray'],
+      borderBottomWidth: 1,
+      borderColor: theme.colors['Divider'],
+      borderLeftWidth: 1,
+      borderRadius: 16,
+      borderRightWidth: 1,
+      borderTopWidth: 1,
+      flexDirection: 'row',
+      height: 50,
+      justifyContent: 'space-between',
+      opacity: 1,
+      paddingLeft: 20,
+      paddingRight: 20,
+      width: '100%',
+    },
+    'user name 3': {
+      alignItems: 'center',
+      backgroundColor: theme.colors['BG Gray'],
+      borderBottomWidth: 1,
+      borderColor: theme.colors['Divider'],
+      borderLeftWidth: 1,
+      borderRadius: 16,
+      borderRightWidth: 1,
+      borderTopWidth: 1,
+      flexDirection: 'row',
+      height: 50,
+      justifyContent: 'space-between',
+      opacity: 1,
       paddingLeft: 20,
       paddingRight: 20,
       width: '100%',
@@ -391,7 +421,7 @@ export const NumberInputStyles = theme =>
   });
 
 export const SwiperStyles = theme =>
-  StyleSheet.create({ Swiper: { height: 300, width: '100%' } });
+  StyleSheet.create({ Swiper: { height: 300 } });
 
 export const TabViewItemStyles = theme =>
   StyleSheet.create({ 'Tab View Item': { flex: 1 } });

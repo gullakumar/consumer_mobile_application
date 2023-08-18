@@ -13,6 +13,7 @@ import {
   CircleImage,
   DatePicker,
   Icon,
+  NumberInput,
   ScreenContainer,
   Surface,
   TextInput,
@@ -26,6 +27,27 @@ const UpdatePhonenumberScreen = props => {
   const Constants = GlobalVariables.useValues();
   const Variables = Constants;
   const setGlobalVariableValue = GlobalVariables.useSetValue();
+
+  const validateMobileNo = mobileNo => {
+    var errorMessage = null;
+    var mobileNumber = null;
+    mobileNumber = mobileNo.toString();
+    console.log('mobileNo' + mobileNumber);
+    if (mobileNumber.length == 0) {
+      // console.log("mobileNumber"+mobileNumber.length);
+      errorMessage = 'Mobile number is required';
+    } else if (mobileNumber.length == 10) {
+      console.log('number' + mobileNumber.length);
+      let regex = new RegExp(/(0|91)?[6-9][0-9]{9}/);
+      if (!regex.test(mobileNumber)) {
+        errorMessage = 'Invalid mobile number(ex: 987XXXX789)';
+      }
+    } else if (mobileNumber.length < 10) {
+      console.log('less' + mobileNumber.length);
+      errorMessage = 'Enter 10 digit mobile number';
+    }
+    return errorMessage;
+  };
 
   const processErrorMessage = msg => {
     const scheme = {
@@ -78,7 +100,10 @@ const UpdatePhonenumberScreen = props => {
   const [date, setDate] = React.useState(new Date());
   const [datePickerValue, setDatePickerValue] = React.useState(new Date());
   const [existAcct, setExistAcct] = React.useState('');
+  const [mobilenoErrorMsg, setMobilenoErrorMsg] = React.useState('');
   const [newAcct, setNewAcct] = React.useState('');
+  const [numberInputValue, setNumberInputValue] = React.useState('');
+  const [numberInputValue2, setNumberInputValue2] = React.useState('');
   const [showNav, setShowNav] = React.useState(false);
 
   return (
@@ -189,10 +214,10 @@ const UpdatePhonenumberScreen = props => {
                     )}
                   >
                     <Icon
-                      size={24}
                       name={
                         'MaterialCommunityIcons/account-arrow-right-outline'
                       }
+                      size={24}
                     />
                     <Text
                       style={StyleSheet.applyWidth(
@@ -234,8 +259,8 @@ const UpdatePhonenumberScreen = props => {
                     )}
                   >
                     <Icon
-                      size={24}
                       name={'Ionicons/ios-notifications-circle-outline'}
+                      size={24}
                     />
                     <Text
                       style={StyleSheet.applyWidth(
@@ -275,7 +300,7 @@ const UpdatePhonenumberScreen = props => {
                       dimensions.width
                     )}
                   >
-                    <Icon size={24} name={'Feather/loader'} />
+                    <Icon name={'Feather/loader'} size={24} />
                     <Text
                       style={StyleSheet.applyWidth(
                         {
@@ -314,7 +339,7 @@ const UpdatePhonenumberScreen = props => {
                       dimensions.width
                     )}
                   >
-                    <Icon size={24} name={'Feather/download'} />
+                    <Icon name={'Feather/download'} size={24} />
                     <Text
                       style={StyleSheet.applyWidth(
                         {
@@ -334,7 +359,7 @@ const UpdatePhonenumberScreen = props => {
                 <Touchable
                   onPress={() => {
                     try {
-                      navigation.navigate('HelpCenterScreen');
+                      navigation.navigate('ContactUsScreen');
                     } catch (err) {
                       console.error(err);
                     }
@@ -353,7 +378,7 @@ const UpdatePhonenumberScreen = props => {
                       dimensions.width
                     )}
                   >
-                    <Icon size={24} name={'Feather/help-circle'} />
+                    <Icon name={'Feather/help-circle'} size={24} />
                     <Text
                       style={StyleSheet.applyWidth(
                         {
@@ -392,7 +417,7 @@ const UpdatePhonenumberScreen = props => {
                       dimensions.width
                     )}
                   >
-                    <Icon size={24} name={'MaterialIcons/feedback'} />
+                    <Icon name={'MaterialIcons/feedback'} size={24} />
                     <Text
                       style={StyleSheet.applyWidth(
                         {
@@ -412,7 +437,7 @@ const UpdatePhonenumberScreen = props => {
                 <Touchable
                   onPress={() => {
                     try {
-                      navigation.navigate('HelpCenterScreen');
+                      navigation.navigate('ContactUsScreen');
                     } catch (err) {
                       console.error(err);
                     }
@@ -431,7 +456,7 @@ const UpdatePhonenumberScreen = props => {
                       dimensions.width
                     )}
                   >
-                    <Icon size={24} name={'Ionicons/md-help-buoy-outline'} />
+                    <Icon name={'Ionicons/md-help-buoy-outline'} size={24} />
                     <Text
                       style={StyleSheet.applyWidth(
                         {
@@ -523,7 +548,7 @@ const UpdatePhonenumberScreen = props => {
                 dimensions.width
               )}
             >
-              <Icon size={24} name={'AntDesign/arrowleft'} />
+              <Icon name={'AntDesign/arrowleft'} size={24} />
             </View>
           </Touchable>
           {/* Update Phone Number */}
@@ -557,8 +582,8 @@ const UpdatePhonenumberScreen = props => {
           <Text
             style={StyleSheet.applyWidth(
               StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
-                alignSelf: 'center',
-                color: theme.colors['Community_Dark_Red'],
+                alignSelf: 'flex-start',
+                color: theme.colors['Error'],
                 fontFamily: 'Roboto_400Regular',
                 paddingBottom: 20,
               }),
@@ -570,16 +595,14 @@ const UpdatePhonenumberScreen = props => {
           {/* Service connection number */}
           <View
             style={StyleSheet.applyWidth(
-              StyleSheet.compose(GlobalStyles.ViewStyles(theme)['user name'], {
-                marginBottom: 30,
-              }),
+              GlobalStyles.ViewStyles(theme)['user name'],
               dimensions.width
             )}
           >
             <Icon
-              size={24}
-              name={'Entypo/phone'}
               color={theme.colors['Medium']}
+              name={'Entypo/phone'}
+              size={24}
             />
             <View
               style={StyleSheet.applyWidth(
@@ -587,32 +610,42 @@ const UpdatePhonenumberScreen = props => {
                 dimensions.width
               )}
             >
-              <TextInput
-                onChangeText={newTextInputValue => {
+              <NumberInput
+                onChangeText={newNumberInputValue => {
                   try {
-                    setNewAcct(newTextInputValue);
+                    setNewAcct(newNumberInputValue);
                   } catch (err) {
                     console.error(err);
                   }
                 }}
                 style={StyleSheet.applyWidth(
-                  {
-                    borderRadius: 8,
-                    fontFamily: 'Roboto_400Regular',
-                    paddingBottom: 8,
-                    paddingLeft: 8,
-                    paddingRight: 8,
-                    paddingTop: 8,
-                  },
+                  GlobalStyles.NumberInputStyles(theme)['Number Input'],
                   dimensions.width
                 )}
                 value={newAcct}
-                placeholder={'New Mobile Number'}
+                changeTextDelay={500}
                 editable={true}
+                maxLength={10}
+                placeholder={'New Mobile Number'}
                 placeholderTextColor={theme.colors['Medium']}
               />
             </View>
           </View>
+          {/* Service connection number message */}
+          <Text
+            style={StyleSheet.applyWidth(
+              StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+                alignSelf: 'flex-start',
+                color: theme.colors['Error'],
+                fontFamily: 'Roboto_400Regular',
+                marginBottom: 30,
+                textAlign: 'left',
+              }),
+              dimensions.width
+            )}
+          >
+            {mobilenoErrorMsg}
+          </Text>
           {/* Meter Number */}
           <View
             style={StyleSheet.applyWidth(
@@ -621,9 +654,9 @@ const UpdatePhonenumberScreen = props => {
             )}
           >
             <Icon
-              size={24}
               color={theme.colors['Medium']}
               name={'Entypo/phone'}
+              size={24}
             />
             <View
               style={StyleSheet.applyWidth(
@@ -631,31 +664,26 @@ const UpdatePhonenumberScreen = props => {
                 dimensions.width
               )}
             >
-              <TextInput
-                onChangeText={newTextInputValue => {
+              <NumberInput
+                onChangeText={newNumberInputValue => {
                   try {
                     setGlobalVariableValue({
                       key: 'mobileNumber',
-                      value: newTextInputValue,
+                      value: newNumberInputValue,
                     });
                   } catch (err) {
                     console.error(err);
                   }
                 }}
                 style={StyleSheet.applyWidth(
-                  {
-                    borderRadius: 8,
-                    fontFamily: 'Roboto_400Regular',
-                    paddingBottom: 8,
-                    paddingLeft: 8,
-                    paddingRight: 8,
-                    paddingTop: 8,
-                  },
+                  GlobalStyles.NumberInputStyles(theme)['Number Input'],
                   dimensions.width
                 )}
                 value={Constants['mobileNumber']}
-                placeholder={'Old Mobile Number'}
+                changeTextDelay={500}
                 editable={true}
+                maxLength={10}
+                placeholder={'Old Mobile Number'}
                 placeholderTextColor={theme.colors['Medium']}
               />
             </View>
@@ -665,6 +693,11 @@ const UpdatePhonenumberScreen = props => {
             onPress={() => {
               const handler = async () => {
                 try {
+                  const mobilenoErrorMsg = validateMobileNo(newAcct);
+                  setMobilenoErrorMsg(mobilenoErrorMsg);
+                  if (mobilenoErrorMsg?.length) {
+                    return;
+                  }
                   const adsercondetresult = (
                     await CISAPPApi.updateProfileMobileNumberPOST(Constants, {
                       accno: (() => {
@@ -707,6 +740,7 @@ const UpdatePhonenumberScreen = props => {
                     return;
                   }
                   navigation.navigate('ConfirmOTPPhonenumberupdateScreen', {
+                    oldMobileNumber: Constants['mobileNumber'],
                     newMobileNumber: newAcct,
                   });
                 } catch (err) {

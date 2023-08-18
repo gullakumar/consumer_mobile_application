@@ -37,8 +37,8 @@ const DownloadsScreen = props => {
   return (
     <ScreenContainer
       hasSafeArea={false}
-      scrollable={false}
       hasTopSafeArea={true}
+      scrollable={false}
     >
       {/* header */}
       <View
@@ -69,9 +69,9 @@ const DownloadsScreen = props => {
             }}
           >
             <Icon
-              size={24}
-              name={'Ionicons/arrow-back-sharp'}
               color={theme.colors['Custom Color_2']}
+              name={'Ionicons/arrow-back-sharp'}
+              size={24}
             />
           </Touchable>
         </View>
@@ -104,12 +104,12 @@ const DownloadsScreen = props => {
       >
         <CISAPPApi.FetchDownloadPOST>
           {({ loading, error, data, refetchDownload }) => {
-            const fetchData = data;
+            const fetchData = data?.json;
             if (loading) {
               return <ActivityIndicator />;
             }
 
-            if (error) {
+            if (error || data?.status < 200 || data?.status >= 300) {
               return <ActivityIndicator />;
             }
 
@@ -139,7 +139,7 @@ const DownloadsScreen = props => {
                               dimensions.width
                             )}
                           >
-                            <Icon size={24} name={'FontAwesome/file-text-o'} />
+                            <Icon name={'FontAwesome/file-text-o'} size={24} />
                             <View
                               style={StyleSheet.applyWidth(
                                 { flex: 1, paddingLeft: 16 },
@@ -189,8 +189,8 @@ const DownloadsScreen = props => {
                                 }}
                               >
                                 <Icon
-                                  size={24}
                                   name={'SimpleLineIcons/arrow-down-circle'}
+                                  size={24}
                                 />
                               </Touchable>
                             </View>

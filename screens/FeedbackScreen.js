@@ -9,6 +9,7 @@ import openImagePickerUtil from '../utils/openImagePicker';
 import {
   Button,
   Icon,
+  Picker,
   ScreenContainer,
   StarRating,
   Surface,
@@ -16,12 +17,14 @@ import {
   Touchable,
   withTheme,
 } from '@draftbit/ui';
+import { useIsFocused } from '@react-navigation/native';
 import { Text, View, useWindowDimensions } from 'react-native';
 
 const FeedbackScreen = props => {
   const dimensions = useWindowDimensions();
   const Constants = GlobalVariables.useValues();
   const Variables = Constants;
+  const setGlobalVariableValue = GlobalVariables.useSetValue();
 
   const processErrorMessage = msg => {
     const scheme = {
@@ -62,26 +65,114 @@ const FeedbackScreen = props => {
     return scheme[msg];
   };
 
+  const validateEmail = email => {
+    var errorMessage = null;
+    if (!email.trim()) {
+      errorMessage = 'Email is required';
+    } else {
+      const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+      if (!emailRegex.test(email)) {
+        errorMessage = 'Invalid email address';
+      }
+    }
+    return errorMessage;
+  };
+
+  const validateScno = scNo => {
+    var errorMessage = null;
+    if (!scNo.trim()) {
+      errorMessage = 'Please enter service connection number';
+    }
+    return errorMessage;
+  };
+
+  const validateSubject = sub => {
+    var errorMessage = null;
+    if (!sub.trim()) {
+      errorMessage = 'Subject is required';
+    }
+    return errorMessage;
+  };
+
+  const buildConsumerString = Scno => {
+    // Type the code for the body of your function or hook here.
+    // Functions can be triggered via Button/Touchable actions.
+    // Hooks are run per ReactJS rules.
+
+    /* String line breaks are accomplished with backticks ( example: `line one
+line two` ) and will not work with special characters inside of quotes ( example: "line one line two" ) */
+
+    console.log(`billing/rest/AccountInfo/${Scno}`);
+    return `billing/rest/AccountInfo/${Scno}`;
+  };
+
+  const manageAccountFun = ManageAccountDetails => {
+    return ManageAccountDetails.map(team => {
+      return { label: team.new_added_account, value: team.new_added_account };
+    });
+  };
+
   const { theme } = props;
   const { navigation } = props;
 
+  const isFocused = useIsFocused();
+  React.useEffect(() => {
+    const handler = async () => {
+      try {
+        if (!isFocused) {
+          return;
+        }
+        const consumerDetailsJson = (
+          await CISAPPApi.consumerDetailsPOST(Constants, {
+            action: buildConsumerString(Constants['name']),
+          })
+        )?.json;
+        console.log(consumerDetailsJson);
+        buildConsumerString(Constants['name']);
+        const prepaidFlag = (consumerDetailsJson && consumerDetailsJson[0])
+          ?.data?.prepaidFlag;
+        setPrepaidFlag(prepaidFlag);
+        const ManageAccountDetails = (
+          await CISAPPApi.manageAccountsPOST(Constants, {
+            accountNumber: Constants['name'],
+          })
+        )?.json;
+        console.log(ManageAccountDetails);
+        const result = setGlobalVariableValue({
+          key: 'manageaccount_picker',
+          value: manageAccountFun(
+            ManageAccountDetails && ManageAccountDetails[0].data[0].data
+          ),
+        });
+        console.log(result);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    handler();
+  }, [isFocused]);
   const [Email, setEmail] = React.useState('');
-  const [Name, setName] = React.useState('');
   const [Response, setResponse] = React.useState('');
   const [Suggestion, setSuggestion] = React.useState('');
+  const [emailErrorMsg, setEmailErrorMsg] = React.useState('');
   const [feedbackMsg, setFeedbackMsg] = React.useState('');
+  const [pickerValue, setPickerValue] = React.useState('');
+  const [prepaidFlag, setPrepaidFlag] = React.useState('');
+  const [scnoErrorMsg, setScnoErrorMsg] = React.useState('');
   const [searchBarValue, setSearchBarValue] = React.useState('');
   const [selectedTab, setSelectedTab] = React.useState('tab1');
+  const [serviceno, setServiceno] = React.useState('');
   const [starRatingValue, setStarRatingValue] = React.useState(0);
   const [starRatingValue2, setStarRatingValue2] = React.useState(0);
+  const [subErrorMsg, setSubErrorMsg] = React.useState('');
   const [textAreaValue, setTextAreaValue] = React.useState('');
   const [textInputValue, setTextInputValue] = React.useState('');
 
   return (
     <ScreenContainer
+      hasBottomSafeArea={false}
       hasSafeArea={true}
       scrollable={true}
-      hasBottomSafeArea={false}
     >
       {/* Header */}
       <View
@@ -112,9 +203,9 @@ const FeedbackScreen = props => {
             }}
           >
             <Icon
-              size={24}
-              name={'Ionicons/arrow-back-sharp'}
               color={theme.colors['Custom Color_2']}
+              name={'Ionicons/arrow-back-sharp'}
+              size={24}
             />
           </Touchable>
         </View>
@@ -149,79 +240,85 @@ const FeedbackScreen = props => {
           dimensions.width
         )}
       >
-        {/* Feedback message */}
-        <Text
-          style={StyleSheet.applyWidth(
-            StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
-              color: theme.colors['Custom Color_9'],
-              fontFamily: 'Roboto_400Regular',
-            }),
-            dimensions.width
-          )}
-        >
-          {feedbackMsg}
-        </Text>
-        {/* s1 */}
+        {/* Service connection details */}
         <View
           style={StyleSheet.applyWidth(
-            StyleSheet.compose(GlobalStyles.ViewStyles(theme)['user name'], {
-              marginBottom: 20,
-              marginTop: 20,
+            StyleSheet.compose(GlobalStyles.ViewStyles(theme)['category'], {
+              borderBottomWidth: 1,
+              borderColor: theme.colors['Divider'],
+              borderLeftWidth: 1,
+              borderRadius: 16,
+              borderRightWidth: 1,
+              borderTopWidth: 1,
+              height: 50,
+              paddingLeft: 20,
+              paddingRight: 20,
+              width: '100%',
             }),
             dimensions.width
           )}
         >
           <Icon
             color={theme.colors['Medium']}
-            size={24}
             name={'MaterialIcons/house'}
+            size={24}
           />
-          <View
-            style={StyleSheet.applyWidth(
-              { flex: 1, paddingLeft: 10, paddingRight: 10 },
-              dimensions.width
-            )}
-          >
-            <TextInput
-              onChangeText={newTextInputValue => {
+          <Picker
+            onValueChange={newPickerValue => {
+              const handler = async () => {
+                const pickerValue = newPickerValue;
                 try {
-                  setName(newTextInputValue);
+                  const consumerDetailsJson = (
+                    await CISAPPApi.consumerDetailsPOST(Constants, {
+                      action: buildConsumerString(newPickerValue),
+                    })
+                  )?.json;
+                  console.log(consumerDetailsJson);
+                  buildConsumerString(newPickerValue);
+                  const prepaidFlag = (
+                    consumerDetailsJson && consumerDetailsJson[0]
+                  )?.data?.prepaidFlag;
+                  console.log(prepaidFlag);
                 } catch (err) {
                   console.error(err);
                 }
-              }}
-              style={StyleSheet.applyWidth(
-                {
-                  borderRadius: 8,
-                  fontFamily: 'Roboto_400Regular',
-                  paddingBottom: 8,
-                  paddingLeft: 8,
-                  paddingRight: 8,
-                  paddingTop: 8,
-                },
-                dimensions.width
-              )}
-              value={Name}
-              placeholder={'Enter service connection number'}
-              placeholderTextColor={theme.colors['Medium']}
-              editable={true}
-            />
-          </View>
+              };
+              handler();
+            }}
+            style={StyleSheet.applyWidth(
+              {
+                borderColor: theme.colors['Background'],
+                borderWidth: 1,
+                fontFamily: 'Roboto_400Regular',
+                marginTop: -5,
+              },
+              dimensions.width
+            )}
+            options={Constants['manageaccount_picker']}
+            autoDismissKeyboard={true}
+            defaultValue={Constants['name']}
+            iconColor={theme.colors['Medium']}
+            iconSize={24}
+            leftIconMode={'inset'}
+            placeholder={' '}
+            placeholderTextColor={theme.colors['Medium']}
+            rightIconName={'Feather/chevron-down'}
+            type={'solid'}
+          />
         </View>
         {/* s1 */}
         <View
           style={StyleSheet.applyWidth(
             StyleSheet.compose(GlobalStyles.ViewStyles(theme)['user name'], {
-              marginBottom: 20,
               marginTop: 20,
             }),
             dimensions.width
           )}
         >
           <Icon
-            size={24}
-            name={'Entypo/email'}
             color={theme.colors['Medium']}
+            name={'Entypo/email'}
+            size={24}
           />
           <View
             style={StyleSheet.applyWidth(
@@ -249,17 +346,29 @@ const FeedbackScreen = props => {
                 dimensions.width
               )}
               value={Email}
-              placeholder={'Enter your email'}
-              placeholderTextColor={theme.colors['Medium']}
+              placeholder={'Email'}
               editable={true}
+              placeholderTextColor={theme.colors['Medium']}
             />
           </View>
         </View>
+        {/* Email Error message */}
+        <Text
+          style={StyleSheet.applyWidth(
+            StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+              alignSelf: 'flex-start',
+              color: theme.colors['Error'],
+              fontFamily: 'Roboto_400Regular',
+            }),
+            dimensions.width
+          )}
+        >
+          {emailErrorMsg}
+        </Text>
         {/* s1 */}
         <View
           style={StyleSheet.applyWidth(
             StyleSheet.compose(GlobalStyles.ViewStyles(theme)['user name'], {
-              marginBottom: 20,
               marginTop: 20,
             }),
             dimensions.width
@@ -267,8 +376,8 @@ const FeedbackScreen = props => {
         >
           <Icon
             color={theme.colors['Medium']}
-            size={24}
             name={'MaterialIcons/feedback'}
+            size={24}
           />
           <View
             style={StyleSheet.applyWidth(
@@ -297,11 +406,24 @@ const FeedbackScreen = props => {
               )}
               value={Suggestion}
               placeholder={'Subject'}
-              placeholderTextColor={theme.colors['Medium']}
               editable={true}
+              placeholderTextColor={theme.colors['Medium']}
             />
           </View>
         </View>
+        {/* Subject Error Mgs */}
+        <Text
+          style={StyleSheet.applyWidth(
+            StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+              alignSelf: 'flex-start',
+              color: theme.colors['Error'],
+              fontFamily: 'Roboto_400Regular',
+            }),
+            dimensions.width
+          )}
+        >
+          {subErrorMsg}
+        </Text>
         {/* Feedback View */}
         <View
           style={StyleSheet.applyWidth(
@@ -351,10 +473,25 @@ const FeedbackScreen = props => {
           onPress={() => {
             const handler = async () => {
               try {
+                const scnoErrorMsg = validateScno(serviceno);
+                const emailErrorMsg = validateEmail(Email);
+                const subErrorMsg = validateSubject(Suggestion);
+                setScnoErrorMsg(scnoErrorMsg);
+                setEmailErrorMsg(emailErrorMsg);
+                setSubErrorMsg(subErrorMsg);
+                if (scnoErrorMsg?.length) {
+                  return;
+                }
+                if (emailErrorMsg?.length) {
+                  return;
+                }
+                if (subErrorMsg?.length) {
+                  return;
+                }
                 const feedbackvalues = (
                   await CISAPPApi.feedbackPOST(Constants, {
                     email: Email,
-                    name: Name,
+                    name: serviceno,
                     response: Response,
                     suggestion: Suggestion,
                   })
@@ -364,7 +501,9 @@ const FeedbackScreen = props => {
                   feedbackvalues && feedbackvalues[0].data[0].msg;
                 console.log(messageResult);
                 setFeedbackMsg(messageResult);
-                navigation.navigate('WelcomeScreen');
+                navigation.navigate('FeedbackSuccessScreen', {
+                  feedbackMessage: messageResult,
+                });
               } catch (err) {
                 console.error(err);
               }

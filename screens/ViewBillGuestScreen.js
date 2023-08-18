@@ -41,7 +41,7 @@ const ViewBillGuestScreen = props => {
   const [textInputValue, setTextInputValue] = React.useState('');
 
   return (
-    <ScreenContainer scrollable={false} hasSafeArea={true}>
+    <ScreenContainer hasSafeArea={true} scrollable={false}>
       {/* Header */}
       <View
         style={StyleSheet.applyWidth(
@@ -76,7 +76,7 @@ const ViewBillGuestScreen = props => {
               dimensions.width
             )}
           >
-            <Icon size={24} name={'AntDesign/arrowleft'} />
+            <Icon name={'AntDesign/arrowleft'} size={24} />
           </View>
         </Touchable>
         {/* View bill and make payment */}
@@ -100,8 +100,8 @@ const ViewBillGuestScreen = props => {
           { paddingBottom: 20, paddingTop: 20 },
           dimensions.width
         )}
-        showsVerticalScrollIndicator={true}
         bounces={true}
+        showsVerticalScrollIndicator={true}
       >
         {/* Payment summary */}
         <View>
@@ -194,7 +194,7 @@ const ViewBillGuestScreen = props => {
                   dimensions.width
                 )}
               >
-                {'Service connection no.'}
+                {'Service connection number'}
               </Text>
 
               <Text
@@ -242,8 +242,8 @@ const ViewBillGuestScreen = props => {
               )}
               label={'Bill details'}
               caretSize={24}
-              iconSize={24}
               expanded={true}
+              iconSize={24}
             >
               <View
                 style={StyleSheet.applyWidth(
@@ -456,6 +456,7 @@ const ViewBillGuestScreen = props => {
                     dimensions.width
                   )}
                 >
+                  {'₹'}
                   {props.route?.params?.BillAmount ?? ''}
                 </Text>
               </View>
@@ -499,6 +500,51 @@ const ViewBillGuestScreen = props => {
                     dimensions.width
                   )}
                 >
+                  {'₹'}
+                  {props.route?.params?.Arrear ?? ''}
+                </Text>
+              </View>
+
+              <View
+                style={StyleSheet.applyWidth(
+                  {
+                    borderColor: theme.colors['Divider'],
+                    borderTopWidth: 1,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    opacity: 0.8,
+                    width: '100%',
+                  },
+                  dimensions.width
+                )}
+              >
+                {/* Leger Amount */}
+                <Text
+                  style={StyleSheet.applyWidth(
+                    {
+                      alignSelf: 'flex-start',
+                      color: theme.colors.strong,
+                      fontFamily: 'Roboto_500Medium',
+                      lineHeight: 20,
+                    },
+                    dimensions.width
+                  )}
+                >
+                  {'Ledger Amount'}
+                </Text>
+                {/* amount */}
+                <Text
+                  style={StyleSheet.applyWidth(
+                    {
+                      alignSelf: 'stretch',
+                      color: theme.colors.strong,
+                      fontFamily: 'Roboto_500Medium',
+                      lineHeight: 20,
+                    },
+                    dimensions.width
+                  )}
+                >
+                  {'₹'}
                   {props.route?.params?.Arrear ?? ''}
                 </Text>
               </View>
@@ -542,6 +588,7 @@ const ViewBillGuestScreen = props => {
                     dimensions.width
                   )}
                 >
+                  {'₹'}
                   {props.route?.params?.RebateGiven ?? ''}
                 </Text>
               </View>
@@ -585,6 +632,7 @@ const ViewBillGuestScreen = props => {
                     dimensions.width
                   )}
                 >
+                  {'₹'}
                   {props.route?.params?.netcurrbill ?? ''}
                 </Text>
               </View>

@@ -22,7 +22,14 @@ import {
 } from '@draftbit/ui';
 import { useIsFocused } from '@react-navigation/native';
 import * as WebBrowser from 'expo-web-browser';
-import { FlatList, Image, Text, View, useWindowDimensions } from 'react-native';
+import {
+  FlatList,
+  Image,
+  ScrollView,
+  Text,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 
 const PaymentsScreen = props => {
   const dimensions = useWindowDimensions();
@@ -65,10 +72,10 @@ line two` ) and will not work with special characters inside of quotes ( example
     console.log('month' + month);
     console.log('year' + year);
     console.log('date' + day);
-    const formattedDate = `${year}-${month < 10 ? '0' + month : month}-${
-      day < 10 ? '0' + day : day
-    }`;
-
+    //const formattedDate = `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`;
+    const formattedDate = `${day < 10 ? '0' + day : day}-${
+      month < 10 ? '0' + month : month
+    }-${year}`;
     // Return the formatted date
     return formattedDate;
   };
@@ -133,7 +140,10 @@ line two` ) and will not work with special characters inside of quotes ( example
         setMeterNumber(meterNo);
         const Scno = (consumerDetailsJson && consumerDetailsJson[0])?.data
           ?.scno;
-        setConsumerScNo(Scno);
+        setGlobalVariableValue({
+          key: 'consumerScNo',
+          value: Scno,
+        });
         const Name = (consumerDetailsJson && consumerDetailsJson[0])?.data
           ?.name;
         setConsumerName(Name);
@@ -205,7 +215,6 @@ line two` ) and will not work with special characters inside of quotes ( example
     };
     handler();
   }, [isFocused]);
-
   const [availableBalance, setAvailableBalance] = React.useState('');
   const [consumerName, setConsumerName] = React.useState('');
   const [consumerScNo, setConsumerScNo] = React.useState('');
@@ -329,10 +338,10 @@ line two` ) and will not work with special characters inside of quotes ( example
                     )}
                   >
                     <Icon
-                      size={24}
                       name={
                         'MaterialCommunityIcons/account-arrow-right-outline'
                       }
+                      size={24}
                     />
                     <Text
                       style={StyleSheet.applyWidth(
@@ -374,8 +383,8 @@ line two` ) and will not work with special characters inside of quotes ( example
                     )}
                   >
                     <Icon
-                      size={24}
                       name={'Ionicons/ios-notifications-circle-outline'}
+                      size={24}
                     />
                     <Text
                       style={StyleSheet.applyWidth(
@@ -415,7 +424,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                       dimensions.width
                     )}
                   >
-                    <Icon size={24} name={'Feather/loader'} />
+                    <Icon name={'Feather/loader'} size={24} />
                     <Text
                       style={StyleSheet.applyWidth(
                         {
@@ -461,8 +470,8 @@ line two` ) and will not work with special characters inside of quotes ( example
                     )}
                   >
                     <Icon
-                      size={24}
                       name={'MaterialCommunityIcons/alert-outline'}
+                      size={24}
                     />
                     <Text
                       style={StyleSheet.applyWidth(
@@ -508,7 +517,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                       dimensions.width
                     )}
                   >
-                    <Icon size={24} name={'FontAwesome/exclamation-triangle'} />
+                    <Icon name={'FontAwesome/exclamation-triangle'} size={24} />
                     <Text
                       style={StyleSheet.applyWidth(
                         {
@@ -547,7 +556,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                       dimensions.width
                     )}
                   >
-                    <Icon size={24} name={'Feather/download'} />
+                    <Icon name={'Feather/download'} size={24} />
                     <Text
                       style={StyleSheet.applyWidth(
                         {
@@ -563,11 +572,11 @@ line two` ) and will not work with special characters inside of quotes ( example
                     </Text>
                   </View>
                 </Touchable>
-                {/* FAQ */}
+                {/* Help */}
                 <Touchable
                   onPress={() => {
                     try {
-                      navigation.navigate('HelpCenterScreen');
+                      navigation.navigate('HelpScreen');
                     } catch (err) {
                       console.error(err);
                     }
@@ -586,7 +595,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                       dimensions.width
                     )}
                   >
-                    <Icon size={24} name={'Feather/help-circle'} />
+                    <Icon name={'Feather/help-circle'} size={24} />
                     <Text
                       style={StyleSheet.applyWidth(
                         {
@@ -598,7 +607,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                         dimensions.width
                       )}
                     >
-                      {'FAQ'}
+                      {'Help'}
                     </Text>
                   </View>
                 </Touchable>
@@ -625,7 +634,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                       dimensions.width
                     )}
                   >
-                    <Icon size={24} name={'MaterialIcons/feedback'} />
+                    <Icon name={'MaterialIcons/feedback'} size={24} />
                     <Text
                       style={StyleSheet.applyWidth(
                         {
@@ -641,11 +650,11 @@ line two` ) and will not work with special characters inside of quotes ( example
                     </Text>
                   </View>
                 </Touchable>
-                {/* Help */}
+                {/* Contact Us */}
                 <Touchable
                   onPress={() => {
                     try {
-                      navigation.navigate('HelpCenterScreen');
+                      navigation.navigate('ContactUsScreen');
                     } catch (err) {
                       console.error(err);
                     }
@@ -664,7 +673,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                       dimensions.width
                     )}
                   >
-                    <Icon size={24} name={'Ionicons/md-help-buoy-outline'} />
+                    <Icon name={'Ionicons/md-help-buoy-outline'} size={24} />
                     <Text
                       style={StyleSheet.applyWidth(
                         {
@@ -676,7 +685,85 @@ line two` ) and will not work with special characters inside of quotes ( example
                         dimensions.width
                       )}
                     >
-                      {'Help'}
+                      {'Contact Us'}
+                    </Text>
+                  </View>
+                </Touchable>
+                {/* Energy Tips */}
+                <Touchable
+                  onPress={() => {
+                    try {
+                      navigation.navigate('EnergyTipsScreen');
+                    } catch (err) {
+                      console.error(err);
+                    }
+                  }}
+                >
+                  <View
+                    style={StyleSheet.applyWidth(
+                      {
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                        paddingBottom: 12,
+                        paddingLeft: 24,
+                        paddingRight: 24,
+                        paddingTop: 12,
+                      },
+                      dimensions.width
+                    )}
+                  >
+                    <Icon name={'SimpleLineIcons/energy'} size={24} />
+                    <Text
+                      style={StyleSheet.applyWidth(
+                        {
+                          color: theme.colors['Strong'],
+                          fontFamily: 'Roboto_400Regular',
+                          fontSize: 16,
+                          marginLeft: 8,
+                        },
+                        dimensions.width
+                      )}
+                    >
+                      {'Energy Tips'}
+                    </Text>
+                  </View>
+                </Touchable>
+                {/* Privacy Policy */}
+                <Touchable
+                  onPress={() => {
+                    try {
+                      navigation.navigate('PrivacyPolicyScreen');
+                    } catch (err) {
+                      console.error(err);
+                    }
+                  }}
+                >
+                  <View
+                    style={StyleSheet.applyWidth(
+                      {
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                        paddingBottom: 12,
+                        paddingLeft: 24,
+                        paddingRight: 24,
+                        paddingTop: 12,
+                      },
+                      dimensions.width
+                    )}
+                  >
+                    <Icon name={'MaterialCommunityIcons/security'} size={24} />
+                    <Text
+                      style={StyleSheet.applyWidth(
+                        {
+                          color: theme.colors['Strong'],
+                          fontFamily: 'Roboto_400Regular',
+                          fontSize: 16,
+                          marginLeft: 8,
+                        },
+                        dimensions.width
+                      )}
+                    >
+                      {'Privacy Policy'}
                     </Text>
                   </View>
                 </Touchable>
@@ -745,10 +832,10 @@ line two` ) and will not work with special characters inside of quotes ( example
           }}
           status={showNav}
           checkedIcon={'Feather/x'}
-          uncheckedIcon={'Feather/menu'}
-          size={32}
           color={theme.colors['Custom Color_22']}
+          size={32}
           uncheckedColor={theme.colors['Custom Color_22']}
+          uncheckedIcon={'Feather/menu'}
         />
         <View
           style={StyleSheet.applyWidth(
@@ -833,9 +920,9 @@ line two` ) and will not work with special characters inside of quotes ( example
             }}
           >
             <Icon
-              size={24}
-              name={'Ionicons/md-notifications-circle-outline'}
               color={theme.colors['Community_Light_Black']}
+              name={'Ionicons/md-notifications-circle-outline'}
+              size={24}
             />
           </Touchable>
 
@@ -849,9 +936,9 @@ line two` ) and will not work with special characters inside of quotes ( example
             }}
           >
             <Icon
-              size={24}
-              name={'Ionicons/person-circle-outline'}
               color={theme.colors['Community_Light_Black']}
+              name={'Ionicons/person-circle-outline'}
+              size={24}
             />
           </Touchable>
         </View>
@@ -863,604 +950,539 @@ line two` ) and will not work with special characters inside of quotes ( example
           dimensions.width
         )}
       >
-        {/* amblock */}
-        <View
-          style={StyleSheet.applyWidth(
-            { justifyContent: 'flex-start', paddingLeft: 20, paddingRight: 20 },
-            dimensions.width
-          )}
+        <ScrollView
+          bounces={true}
+          showsHorizontalScrollIndicator={true}
+          showsVerticalScrollIndicator={true}
         >
-          {/* Service connection number */}
+          {/* amblock */}
           <View
             style={StyleSheet.applyWidth(
-              StyleSheet.compose(GlobalStyles.ViewStyles(theme)['category'], {
-                borderBottomWidth: 1,
-                borderColor: theme.colors['Divider'],
-                borderLeftWidth: 1,
-                borderRadius: 16,
-                borderRightWidth: 1,
-                borderTopWidth: 1,
-                height: 50,
+              {
+                justifyContent: 'flex-start',
                 paddingLeft: 20,
                 paddingRight: 20,
-              }),
+              },
               dimensions.width
             )}
           >
-            <Icon
-              size={24}
-              name={'MaterialIcons/house'}
-              color={theme.colors['Medium']}
-            />
-            <Picker
-              onValueChange={newPickerValue => {
-                const handler = async () => {
-                  const pickerValue = newPickerValue;
-                  try {
-                    setServiceConNumber(newPickerValue);
-                    const consumerDetailsJson = (
-                      await CISAPPApi.consumerDetailsPOST(Constants, {
-                        action: buildConsumerString(newPickerValue),
-                      })
-                    )?.json;
-                    console.log(consumerDetailsJson);
-                    buildConsumerString(newPickerValue);
-                    const prepaidFlag = (
-                      consumerDetailsJson && consumerDetailsJson[0]
-                    )?.data?.prepaidFlag;
-                    setPrepaidFlag(prepaidFlag);
-                    const meterNo = (
-                      consumerDetailsJson && consumerDetailsJson[0]
-                    )?.data?.meterNumber;
-                    setMeterNumber(meterNo);
-                    console.log(meterNo);
-                    const Scno = (consumerDetailsJson && consumerDetailsJson[0])
-                      ?.data?.scno;
-                    setConsumerScNo(Scno);
-                    const Name = (consumerDetailsJson && consumerDetailsJson[0])
-                      ?.data?.name;
-                    setConsumerName(Name);
-                    const Billdetailsjson = await (async () => {
-                      if (prepaidFlag === 'N') {
-                        return (
-                          await CISAPPApi.viewBillDetailsPOST(Constants, {
-                            action: buildString(newPickerValue),
-                          })
-                        )?.json;
-                      }
-                    })();
-                    console.log(Billdetailsjson);
-                    buildString(newPickerValue);
-
-                    const valuejko4fzFB =
-                      Billdetailsjson &&
-                      Billdetailsjson[0].data.BillDataJson[0];
-                    setViewBillDetails(valuejko4fzFB);
-                    const Billdetailslog = valuejko4fzFB;
-                    const paymenthistoryjson = (
-                      await CISAPPApi.paymentHistoryPOST(Constants, {
-                        action: paymentBuildString(newPickerValue),
-                      })
-                    )?.json;
-                    paymentBuildString(newPickerValue);
-
-                    const valueswbjlC9X =
-                      paymenthistoryjson && paymenthistoryjson[0].data;
-                    setViewPaymentDetails(valueswbjlC9X);
-                    const paymentdetailslog = valueswbjlC9X;
-                    const prepaidJson = await (async () => {
-                      if (prepaidFlag === 'Y') {
-                        return (
-                          await CISAPPApi.prepaidApiPOST(Constants, {
-                            mtrno: meterNo,
-                          })
-                        )?.json;
-                      }
-                    })();
-                    console.log(prepaidJson);
-                    const availableBalance = (prepaidJson && prepaidJson[0])
-                      ?.data[0]?.avail_balance;
-                    console.log(availableBalance);
-                    setAvailableBalance(availableBalance);
-                    const RechargeHistoryJson = await (async () => {
-                      if (prepaidFlag === 'Y') {
-                        return (
-                          await CISAPPApi.rechargeHistoryPrepaidPOST(
-                            Constants,
-                            { action: rechargeHistoryBuildString(meterNo) }
-                          )
-                        )?.json;
-                      }
-                    })();
-                    rechargeHistoryBuildString(meterNo);
-                    console.log(RechargeHistoryJson);
-                    const rechargeData =
-                      RechargeHistoryJson && RechargeHistoryJson[0].data.data;
-                    setViewRechargeDetails(rechargeData);
-                  } catch (err) {
-                    console.error(err);
-                  }
-                };
-                handler();
-              }}
+            {/* Service connection number */}
+            <View
               style={StyleSheet.applyWidth(
-                {
-                  borderColor: theme.colors['Background'],
-                  borderWidth: 1,
-                  fontFamily: 'Roboto_400Regular',
-                  marginTop: -5,
-                },
+                StyleSheet.compose(GlobalStyles.ViewStyles(theme)['category'], {
+                  borderBottomWidth: 1,
+                  borderColor: theme.colors['Divider'],
+                  borderLeftWidth: 1,
+                  borderRadius: 16,
+                  borderRightWidth: 1,
+                  borderTopWidth: 1,
+                  height: 50,
+                  paddingLeft: 20,
+                  paddingRight: 20,
+                }),
                 dimensions.width
               )}
-              options={Constants['manageaccount_picker']}
-              leftIconMode={'inset'}
-              type={'solid'}
-              iconSize={24}
-              autoDismissKeyboard={true}
-              rightIconName={'Feather/chevron-down'}
-              placeholder={' '}
-              iconColor={theme.colors['Medium']}
-              placeholderTextColor={theme.colors['Medium']}
-              defaultValue={Constants['name']}
-            />
-          </View>
-          {/* card */}
-          <>
-            {!(prepaidFlag === 'N') ? null : (
-              <View
-                style={StyleSheet.applyWidth(
-                  StyleSheet.compose(GlobalStyles.ViewStyles(theme)['card'], {
-                    backgroundColor: 'rgb(255, 255, 255)',
-                    borderColor: 'rgb(199, 198, 198)',
-                    borderRadius: 8,
-                    borderWidth: 1,
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    marginBottom: 15,
-                    marginTop: 30,
-                    paddingBottom: 10,
-                    paddingLeft: 20,
-                    paddingTop: 10,
-                  }),
-                  dimensions.width
-                )}
-              >
-                <View
-                  style={StyleSheet.applyWidth(
-                    { alignSelf: 'auto' },
-                    dimensions.width
-                  )}
-                >
-                  {/* Amount due */}
-                  <Text
-                    style={StyleSheet.applyWidth(
-                      {
-                        color: theme.colors.strong,
-                        fontFamily: 'Roboto_400Regular',
-                        fontSize: 14,
-                        opacity: 1,
-                      },
-                      dimensions.width
-                    )}
-                  >
-                    {'Amount due'}
-                  </Text>
-                  {/* Amount  */}
-                  <Text
-                    style={StyleSheet.applyWidth(
-                      {
-                        color: theme.colors.strong,
-                        fontFamily: 'Roboto_700Bold',
-                        fontSize: 14,
-                        opacity: 1,
-                      },
-                      dimensions.width
-                    )}
-                  >
-                    {'₹'}
-                    {viewBillDetails?.BillAmount}
-                  </Text>
-                  {/* Sub title */}
-                  <Text
-                    style={StyleSheet.applyWidth(
-                      {
-                        color: theme.colors.strong,
-                        fontFamily: 'Roboto_400Regular',
-                        fontSize: 12,
-                        marginTop: 5,
-                        opacity: 1,
-                      },
-                      dimensions.width
-                    )}
-                  >
-                    {'Due Date: '}
-                    {viewBillDetails?.BillDueDate}
-                  </Text>
-                </View>
-                {/* View */}
-                <Button
-                  onPress={() => {
+            >
+              <Icon
+                color={theme.colors['Medium']}
+                name={'MaterialIcons/house'}
+                size={24}
+              />
+              <Picker
+                onValueChange={newPickerValue => {
+                  const handler = async () => {
+                    const pickerValue = newPickerValue;
                     try {
-                      navigation.navigate('ViewBillScreen', {
-                        Name: viewBillDetails?.Name,
-                        Scno: viewBillDetails?.Scno,
-                        BillMonth: viewBillDetails?.BillMonth,
-                        BillDame: viewBillDetails?.BillIssueDate,
-                        BillNo: viewBillDetails?.BillNo,
-                        BillDueDate: viewBillDetails?.BillDueDate,
-                        BillAmount: viewBillDetails?.BillAmount,
-                        Arrear: viewBillDetails?.Arrear,
-                        RebateGiven: viewBillDetails?.RebateGiven,
-                        netcurrbill: viewBillDetails?.netcurrbill,
-                        BillIssueDate: viewBillDetails?.BillIssueDate,
+                      setServiceConNumber(newPickerValue);
+                      const consumerDetailsJson = (
+                        await CISAPPApi.consumerDetailsPOST(Constants, {
+                          action: buildConsumerString(newPickerValue),
+                        })
+                      )?.json;
+                      console.log(consumerDetailsJson);
+                      buildConsumerString(newPickerValue);
+                      const prepaidFlag = (
+                        consumerDetailsJson && consumerDetailsJson[0]
+                      )?.data?.prepaidFlag;
+                      setPrepaidFlag(prepaidFlag);
+                      const meterNo = (
+                        consumerDetailsJson && consumerDetailsJson[0]
+                      )?.data?.meterNumber;
+                      setMeterNumber(meterNo);
+                      console.log(meterNo);
+                      const Scno = (
+                        consumerDetailsJson && consumerDetailsJson[0]
+                      )?.data?.scno;
+                      setGlobalVariableValue({
+                        key: 'consumerScNo',
+                        value: Scno,
                       });
+                      const Name = (
+                        consumerDetailsJson && consumerDetailsJson[0]
+                      )?.data?.name;
+                      setConsumerName(Name);
+                      const Billdetailsjson = await (async () => {
+                        if (prepaidFlag === 'N') {
+                          return (
+                            await CISAPPApi.viewBillDetailsPOST(Constants, {
+                              action: buildString(newPickerValue),
+                            })
+                          )?.json;
+                        }
+                      })();
+                      console.log(Billdetailsjson);
+                      buildString(newPickerValue);
+
+                      const valuejko4fzFB =
+                        Billdetailsjson &&
+                        Billdetailsjson[0].data.BillDataJson[0];
+                      setViewBillDetails(valuejko4fzFB);
+                      const Billdetailslog = valuejko4fzFB;
+                      const paymenthistoryjson = (
+                        await CISAPPApi.paymentHistoryPOST(Constants, {
+                          action: paymentBuildString(newPickerValue),
+                        })
+                      )?.json;
+                      paymentBuildString(newPickerValue);
+
+                      const valueswbjlC9X =
+                        paymenthistoryjson && paymenthistoryjson[0].data;
+                      setViewPaymentDetails(valueswbjlC9X);
+                      const paymentdetailslog = valueswbjlC9X;
+                      const prepaidJson = await (async () => {
+                        if (prepaidFlag === 'Y') {
+                          return (
+                            await CISAPPApi.prepaidApiPOST(Constants, {
+                              mtrno: meterNo,
+                            })
+                          )?.json;
+                        }
+                      })();
+                      console.log(prepaidJson);
+                      const availableBalance = (prepaidJson && prepaidJson[0])
+                        ?.data[0]?.avail_balance;
+                      console.log(availableBalance);
+                      setAvailableBalance(availableBalance);
+                      const RechargeHistoryJson = await (async () => {
+                        if (prepaidFlag === 'Y') {
+                          return (
+                            await CISAPPApi.rechargeHistoryPrepaidPOST(
+                              Constants,
+                              { action: rechargeHistoryBuildString(meterNo) }
+                            )
+                          )?.json;
+                        }
+                      })();
+                      rechargeHistoryBuildString(meterNo);
+                      console.log(RechargeHistoryJson);
+                      const rechargeData =
+                        RechargeHistoryJson && RechargeHistoryJson[0].data.data;
+                      setViewRechargeDetails(rechargeData);
                     } catch (err) {
                       console.error(err);
                     }
-                  }}
-                  style={StyleSheet.applyWidth(
-                    {
-                      backgroundColor: theme.colors['GetFit Orange'],
-                      borderRadius: 14,
-                      fontFamily: 'Roboto_400Regular',
-                      fontSize: 16,
-                      height: 36,
-                      marginTop: 5,
-                      textAlign: 'center',
-                      width: '23%',
-                    },
-                    dimensions.width
-                  )}
-                  title={'View'}
-                />
-                {/* Pay Now */}
-                <Button
-                  onPress={() => {
-                    try {
-                      navigation.navigate('MakePaymentScreen', {
-                        Name: viewBillDetails?.Name,
-                        Scno: viewBillDetails?.Scno,
-                        BillMonth: viewBillDetails?.BillMonth,
-                        BillDame: viewBillDetails?.BillIssueDate,
-                        BillNo: viewBillDetails?.BillNo,
-                        BillDueDate: viewBillDetails?.BillDueDate,
-                        BillAmount: viewBillDetails?.BillAmount,
-                        Arrear: viewBillDetails?.Arrear,
-                        RebateGiven: viewBillDetails?.RebateGiven,
-                        netcurrbill: viewBillDetails?.netcurrbill,
-                        BillIssueDate: viewBillDetails?.BillIssueDate,
-                        Billid: viewBillDetails?.BillDetailsId,
-                        accno: viewBillDetails?.AccNo,
-                      });
-                    } catch (err) {
-                      console.error(err);
-                    }
-                  }}
-                  style={StyleSheet.applyWidth(
-                    {
-                      backgroundColor: theme.colors['GetFit Orange'],
-                      borderRadius: 14,
-                      fontFamily: 'Roboto_400Regular',
-                      fontSize: 16,
-                      height: 36,
-                      marginTop: 5,
-                      textAlign: 'center',
-                      width: '30%',
-                    },
-                    dimensions.width
-                  )}
-                  title={'Pay Now'}
-                />
-              </View>
-            )}
-          </>
-          {/* prepaid */}
-          <>
-            {!(prepaidFlag === 'Y') ? null : (
-              <View
-                style={StyleSheet.applyWidth(
-                  StyleSheet.compose(GlobalStyles.ViewStyles(theme)['card'], {
-                    backgroundColor: 'rgb(255, 255, 255)',
-                    borderColor: theme.colors['Community_Divider'],
-                    borderRadius: 8,
-                    borderWidth: 1,
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    marginBottom: 15,
-                    marginTop: 30,
-                    paddingBottom: 10,
-                    paddingLeft: 20,
-                    paddingTop: 10,
-                  }),
-                  dimensions.width
-                )}
-              >
-                {/* Name */}
-                <Text
-                  style={StyleSheet.applyWidth(
-                    {
-                      color: theme.colors.strong,
-                      fontFamily: 'Roboto_400Regular',
-                      fontSize: 14,
-                      opacity: 1,
-                      paddingTop: 12,
-                    },
-                    dimensions.width
-                  )}
-                >
-                  {'Available balance  ₹'}
-                  {availableBalance}
-                </Text>
-                {/* Recharge Now */}
-                <Button
-                  onPress={() => {
-                    try {
-                      navigation.navigate('RechargeScreen', {
-                        Name: consumerName,
-                        serviceConNo: consumerScNo,
-                      });
-                    } catch (err) {
-                      console.error(err);
-                    }
-                  }}
-                  style={StyleSheet.applyWidth(
-                    {
-                      backgroundColor: theme.colors.primary,
-                      borderRadius: 14,
-                      fontFamily: 'Roboto_400Regular',
-                      fontSize: 16,
-                      height: 36,
-                      textAlign: 'center',
-                      width: '45%',
-                    },
-                    dimensions.width
-                  )}
-                  title={'Recharge Now'}
-                />
-              </View>
-            )}
-          </>
-          {/* section header */}
-          <>
-            {!(prepaidFlag === 'N') ? null : (
-              <View
+                  };
+                  handler();
+                }}
                 style={StyleSheet.applyWidth(
                   {
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    marginTop: 10,
-                    paddingBottom: 12,
-                    paddingLeft: 20,
-                    paddingRight: 20,
+                    borderColor: theme.colors['Background'],
+                    borderWidth: 1,
+                    fontFamily: 'Roboto_400Regular',
+                    marginTop: -5,
                   },
                   dimensions.width
                 )}
-              >
-                <Text
+                options={Constants['manageaccount_picker']}
+                autoDismissKeyboard={true}
+                defaultValue={Constants['name']}
+                iconColor={theme.colors['Medium']}
+                iconSize={24}
+                leftIconMode={'inset'}
+                rightIconName={'Feather/chevron-down'}
+                type={'solid'}
+              />
+            </View>
+
+            <View
+              style={StyleSheet.applyWidth(
+                StyleSheet.compose(
+                  GlobalStyles.ViewStyles(theme)['postpaid view'],
+                  { marginBottom: 5, marginTop: 10 }
+                ),
+                dimensions.width
+              )}
+            >
+              {/* Prepaid */}
+              <>
+                {!(prepaidFlag === 'Y') ? null : (
+                  <Text
+                    style={StyleSheet.applyWidth(
+                      StyleSheet.compose(
+                        GlobalStyles.TextStyles(theme)['Text'],
+                        { fontFamily: 'Roboto_400Regular', textAlign: 'right' }
+                      ),
+                      dimensions.width
+                    )}
+                  >
+                    {'Prepaid'}
+                  </Text>
+                )}
+              </>
+              {/* Postpaid */}
+              <>
+                {!(prepaidFlag === 'N') ? null : (
+                  <Text
+                    style={StyleSheet.applyWidth(
+                      StyleSheet.compose(
+                        GlobalStyles.TextStyles(theme)['Text'],
+                        { fontFamily: 'Roboto_400Regular', textAlign: 'right' }
+                      ),
+                      dimensions.width
+                    )}
+                  >
+                    {'Postpaid'}
+                  </Text>
+                )}
+              </>
+            </View>
+            {/* Postpaid Card */}
+            <>
+              {!(prepaidFlag === 'N') ? null : (
+                <View
                   style={StyleSheet.applyWidth(
-                    StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
-                      alignSelf: 'center',
-                      color: theme.colors['ShopAppBlue'],
-                      fontFamily: 'Roboto_400Regular',
-                      fontSize: 16,
+                    StyleSheet.compose(GlobalStyles.ViewStyles(theme)['card'], {
+                      backgroundColor: 'rgb(255, 255, 255)',
+                      borderColor: 'rgb(199, 198, 198)',
+                      borderRadius: 8,
+                      borderWidth: 1,
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      marginBottom: 15,
+                      marginTop: 5,
+                      paddingBottom: 10,
+                      paddingLeft: 20,
+                      paddingTop: 10,
                     }),
                     dimensions.width
                   )}
                 >
-                  {'Payment History'}
-                </Text>
-              </View>
-            )}
-          </>
-          {/* postpaid */}
-          <>
-            {!(prepaidFlag === 'N') ? null : (
-              <View
-                style={StyleSheet.applyWidth(
-                  StyleSheet.compose(
-                    GlobalStyles.ViewStyles(theme)['accordion'],
-                    {
+                  <View
+                    style={StyleSheet.applyWidth(
+                      { alignSelf: 'auto' },
+                      dimensions.width
+                    )}
+                  >
+                    {/* Amount due */}
+                    <Text
+                      style={StyleSheet.applyWidth(
+                        {
+                          color: theme.colors.strong,
+                          fontFamily: 'Roboto_400Regular',
+                          fontSize: 14,
+                          opacity: 1,
+                        },
+                        dimensions.width
+                      )}
+                    >
+                      {'Amount due'}
+                    </Text>
+                    {/* Amount  */}
+                    <Text
+                      style={StyleSheet.applyWidth(
+                        {
+                          color: theme.colors.strong,
+                          fontFamily: 'Roboto_700Bold',
+                          fontSize: 14,
+                          opacity: 1,
+                        },
+                        dimensions.width
+                      )}
+                    >
+                      {'₹'}
+                      {viewBillDetails?.LEDGERAMT}
+                    </Text>
+                    {/* Sub title */}
+                    <Text
+                      style={StyleSheet.applyWidth(
+                        {
+                          color: theme.colors.strong,
+                          fontFamily: 'Roboto_400Regular',
+                          fontSize: 12,
+                          marginTop: 5,
+                          opacity: 1,
+                        },
+                        dimensions.width
+                      )}
+                    >
+                      {'Due Date: '}
+                      {viewBillDetails?.BillDueDate}
+                    </Text>
+                  </View>
+                  {/* View */}
+                  <Button
+                    onPress={() => {
+                      try {
+                        navigation.navigate('ViewBillScreen', {
+                          ledgerAmt: viewBillDetails?.LEDGERAMT,
+                          Name: viewBillDetails?.Name,
+                          Scno: viewBillDetails?.Scno,
+                          BillMonth: viewBillDetails?.BillMonth,
+                          BillDame: viewBillDetails?.BillIssueDate,
+                          BillNo: viewBillDetails?.BillNo,
+                          BillDueDate: viewBillDetails?.BillDueDate,
+                          BillAmount: viewBillDetails?.BillAmount,
+                          Arrear: viewBillDetails?.Arrear,
+                          RebateGiven: viewBillDetails?.RebateGiven,
+                          netcurrbill: viewBillDetails?.netcurrbill,
+                          BillIssueDate: viewBillDetails?.BillIssueDate,
+                          billYear: viewBillDetails?.BillYear,
+                        });
+                      } catch (err) {
+                        console.error(err);
+                      }
+                    }}
+                    style={StyleSheet.applyWidth(
+                      {
+                        backgroundColor: theme.colors['GetFit Orange'],
+                        borderRadius: 14,
+                        fontFamily: 'Roboto_400Regular',
+                        fontSize: 16,
+                        height: 36,
+                        marginTop: 5,
+                        textAlign: 'center',
+                        width: '23%',
+                      },
+                      dimensions.width
+                    )}
+                    title={'View'}
+                  />
+                  {/* Pay Now */}
+                  <Button
+                    onPress={() => {
+                      try {
+                        navigation.navigate('MakePaymentScreen', {
+                          ledgerAmt: viewBillDetails?.LEDGERAMT,
+                          billYear: viewBillDetails?.BillYear,
+                          Name: viewBillDetails?.Name,
+                          Scno: viewBillDetails?.Scno,
+                          BillMonth: viewBillDetails?.BillMonth,
+                          BillDame: viewBillDetails?.BillIssueDate,
+                          BillNo: viewBillDetails?.BillNo,
+                          BillDueDate: viewBillDetails?.BillDueDate,
+                          BillAmount: viewBillDetails?.BillAmount,
+                          Arrear: viewBillDetails?.Arrear,
+                          RebateGiven: viewBillDetails?.RebateGiven,
+                          netcurrbill: viewBillDetails?.netcurrbill,
+                          BillIssueDate: viewBillDetails?.BillIssueDate,
+                          Billid: viewBillDetails?.BillDetailsId,
+                          accno: viewBillDetails?.AccNo,
+                        });
+                      } catch (err) {
+                        console.error(err);
+                      }
+                    }}
+                    style={StyleSheet.applyWidth(
+                      {
+                        backgroundColor: theme.colors['GetFit Orange'],
+                        borderRadius: 14,
+                        fontFamily: 'Roboto_400Regular',
+                        fontSize: 16,
+                        height: 36,
+                        marginTop: 5,
+                        textAlign: 'center',
+                        width: '30%',
+                      },
+                      dimensions.width
+                    )}
+                    title={'Pay Now'}
+                  />
+                </View>
+              )}
+            </>
+            {/* prepaid */}
+            <>
+              {!(prepaidFlag === 'Y') ? null : (
+                <View
+                  style={StyleSheet.applyWidth(
+                    StyleSheet.compose(GlobalStyles.ViewStyles(theme)['card'], {
                       backgroundColor: 'rgb(255, 255, 255)',
-                      borderColor: theme.colors['Community_Border'],
+                      borderColor: theme.colors['Community_Divider'],
+                      borderRadius: 8,
+                      borderWidth: 1,
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      marginBottom: 15,
+                      marginTop: 5,
+                      paddingBottom: 10,
+                      paddingLeft: 20,
+                      paddingTop: 10,
+                    }),
+                    dimensions.width
+                  )}
+                >
+                  {/* Name */}
+                  <Text
+                    style={StyleSheet.applyWidth(
+                      {
+                        color: theme.colors.strong,
+                        fontFamily: 'Roboto_400Regular',
+                        fontSize: 14,
+                        opacity: 1,
+                        paddingTop: 12,
+                      },
+                      dimensions.width
+                    )}
+                  >
+                    {'Available balance  ₹'}
+                    {availableBalance}
+                  </Text>
+                  {/* Recharge Now */}
+                  <Button
+                    onPress={() => {
+                      try {
+                        navigation.navigate('RechargeScreen', {
+                          Name: consumerName,
+                          serviceConNo: Constants['consumerScNo'],
+                        });
+                      } catch (err) {
+                        console.error(err);
+                      }
+                    }}
+                    style={StyleSheet.applyWidth(
+                      {
+                        backgroundColor: theme.colors.primary,
+                        borderRadius: 14,
+                        fontFamily: 'Roboto_400Regular',
+                        fontSize: 16,
+                        height: 36,
+                        textAlign: 'center',
+                        width: '45%',
+                      },
+                      dimensions.width
+                    )}
+                    title={'Recharge Now'}
+                  />
+                </View>
+              )}
+            </>
+            {/* section header */}
+            <>
+              {!(prepaidFlag === 'N') ? null : (
+                <View
+                  style={StyleSheet.applyWidth(
+                    {
+                      flexDirection: 'row',
+                      justifyContent: 'center',
+                      marginTop: 10,
                       paddingBottom: 12,
-                      paddingTop: 12,
-                    }
-                  ),
-                  dimensions.width
-                )}
-              >
-                {/* Details */}
+                      paddingLeft: 20,
+                      paddingRight: 20,
+                    },
+                    dimensions.width
+                  )}
+                >
+                  <Text
+                    style={StyleSheet.applyWidth(
+                      StyleSheet.compose(
+                        GlobalStyles.TextStyles(theme)['Text'],
+                        {
+                          alignSelf: 'center',
+                          color: theme.colors['ShopAppBlue'],
+                          fontFamily: 'Roboto_400Regular',
+                          fontSize: 16,
+                        }
+                      ),
+                      dimensions.width
+                    )}
+                  >
+                    {'Payment History'}
+                  </Text>
+                </View>
+              )}
+            </>
+            {/* postpaid */}
+            <>
+              {!(prepaidFlag === 'N') ? null : (
                 <View
                   style={StyleSheet.applyWidth(
                     StyleSheet.compose(
-                      GlobalStyles.ViewStyles(theme)['Details'],
+                      GlobalStyles.ViewStyles(theme)['accordion'],
                       {
-                        borderBottomWidth: 1,
-                        borderLeftWidth: 1,
-                        borderRightWidth: 1,
-                        borderTopWidth: 1,
+                        backgroundColor: 'rgb(255, 255, 255)',
+                        borderColor: theme.colors['Community_Border'],
+                        paddingBottom: 12,
+                        paddingTop: 12,
                       }
                     ),
                     dimensions.width
                   )}
                 >
-                  {/* Date */}
-                  <View
-                    style={StyleSheet.applyWidth(
-                      { borderRightWidth: 1, flex: 1 },
-                      dimensions.width
-                    )}
-                  >
-                    <View
-                      style={StyleSheet.applyWidth(
-                        {
-                          backgroundColor: theme.colors.viewBG,
-                          height: 40,
-                          justifyContent: 'center',
-                        },
-                        dimensions.width
-                      )}
-                    >
-                      <Text
-                        style={StyleSheet.applyWidth(
-                          {
-                            color: theme.colors.strong,
-                            fontFamily: 'Roboto_700Bold',
-                            fontSize: 14,
-                            textAlign: 'center',
-                            textTransform: 'capitalize',
-                          },
-                          dimensions.width
-                        )}
-                      >
-                        {'Date'}
-                      </Text>
-                    </View>
-                  </View>
-                  {/* Amount */}
-                  <View
-                    style={StyleSheet.applyWidth(
-                      { borderRightWidth: 1, flex: 1 },
-                      dimensions.width
-                    )}
-                  >
-                    <View
-                      style={StyleSheet.applyWidth(
-                        {
-                          backgroundColor: theme.colors.viewBG,
-                          height: 40,
-                          justifyContent: 'center',
-                        },
-                        dimensions.width
-                      )}
-                    >
-                      <Text
-                        style={StyleSheet.applyWidth(
-                          {
-                            color: theme.colors.strong,
-                            fontFamily: 'Roboto_700Bold',
-                            fontSize: 14,
-                            textAlign: 'center',
-                            textTransform: 'capitalize',
-                          },
-                          dimensions.width
-                        )}
-                      >
-                        {'Amount'}
-                      </Text>
-                    </View>
-                  </View>
-                  {/* Purpose */}
-                  <View
-                    style={StyleSheet.applyWidth({ flex: 1 }, dimensions.width)}
-                  >
-                    <View
-                      style={StyleSheet.applyWidth(
-                        {
-                          backgroundColor: theme.colors.viewBG,
-                          height: 40,
-                          justifyContent: 'center',
-                        },
-                        dimensions.width
-                      )}
-                    >
-                      <Text
-                        style={StyleSheet.applyWidth(
-                          {
-                            color: theme.colors.strong,
-                            fontFamily: 'Roboto_700Bold',
-                            fontSize: 14,
-                            textAlign: 'center',
-                            textTransform: 'capitalize',
-                          },
-                          dimensions.width
-                        )}
-                      >
-                        {'Purpose'}
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-                <FlatList
-                  renderItem={({ item }) => {
-                    const listData = item;
-                    return (
-                      <>
-                        {/* Details */}
-                        <View
-                          style={StyleSheet.applyWidth(
-                            StyleSheet.compose(
-                              GlobalStyles.ViewStyles(theme)['Details'],
-                              {
-                                borderBottomWidth: 1,
-                                borderLeftWidth: 1,
-                                borderRightWidth: 1,
-                              }
-                            ),
-                            dimensions.width
-                          )}
-                        >
-                          {/* Date */}
+                  {/* List  */}
+                  <FlatList
+                    renderItem={({ item }) => {
+                      const listData = item;
+                      return (
+                        <>
+                          {/* card */}
                           <View
                             style={StyleSheet.applyWidth(
-                              { borderRightWidth: 1, flex: 1 },
+                              {
+                                alignItems: 'center',
+                                borderBottomWidth: 1,
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                paddingBottom: 10,
+                                paddingLeft: 20,
+                                paddingRight: 20,
+                                paddingTop: 10,
+                              },
                               dimensions.width
                             )}
                           >
-                            <View
-                              style={StyleSheet.applyWidth(
-                                { height: 40, justifyContent: 'center' },
-                                dimensions.width
-                              )}
-                            >
+                            <View>
+                              {/* date */}
                               <Text
                                 style={StyleSheet.applyWidth(
-                                  {
-                                    fontFamily: 'Roboto_400Regular',
-                                    fontSize: 14,
-                                    textAlign: 'center',
-                                    textTransform: 'capitalize',
-                                  },
+                                  StyleSheet.compose(
+                                    GlobalStyles.TextStyles(theme)['Text'],
+                                    {
+                                      fontFamily: 'Roboto_400Regular',
+                                      fontSize: 16,
+                                    }
+                                  ),
                                   dimensions.width
                                 )}
                               >
-                                {(() => {
-                                  const e = convertTimestampToDate(
-                                    listData?.paymentDate
-                                  );
-                                  console.log(e);
-                                  return e;
-                                })()}
+                                {convertTimestampToDate(listData?.paymentDate)}
                               </Text>
-                            </View>
-                          </View>
-                          {/* Amount */}
-                          <View
-                            style={StyleSheet.applyWidth(
-                              { borderRightWidth: 1, flex: 1 },
-                              dimensions.width
-                            )}
-                          >
-                            <View
-                              style={StyleSheet.applyWidth(
-                                {
-                                  alignItems: 'flex-end',
-                                  alignSelf: 'flex-end',
-                                  height: 40,
-                                  justifyContent: 'center',
-                                  padding: 12,
-                                },
-                                dimensions.width
-                              )}
-                            >
+                              {/* purpose */}
                               <Text
                                 style={StyleSheet.applyWidth(
-                                  {
-                                    fontFamily: 'Roboto_400Regular',
-                                    fontSize: 14,
-                                    textAlign: 'center',
-                                    textTransform: 'capitalize',
-                                  },
+                                  StyleSheet.compose(
+                                    GlobalStyles.TextStyles(theme)['Text'],
+                                    {
+                                      fontFamily: 'Roboto_400Regular',
+                                      fontSize: 16,
+                                    }
+                                  ),
+                                  dimensions.width
+                                )}
+                              >
+                                {listData?.paymentMode}
+                              </Text>
+                            </View>
+                            {/* View 2 */}
+                            <View>
+                              <Text
+                                style={StyleSheet.applyWidth(
+                                  StyleSheet.compose(
+                                    GlobalStyles.TextStyles(theme)['Text'],
+                                    {
+                                      fontFamily: 'Roboto_400Regular',
+                                      fontSize: 16,
+                                    }
+                                  ),
                                   dimensions.width
                                 )}
                               >
@@ -1468,350 +1490,196 @@ line two` ) and will not work with special characters inside of quotes ( example
                                 {listData?.amountPaid}
                               </Text>
                             </View>
-                          </View>
-                          {/* Purpose */}
-                          <View
-                            style={StyleSheet.applyWidth(
-                              { flex: 1 },
-                              dimensions.width
-                            )}
-                          >
+                            {/* download */}
                             <View
                               style={StyleSheet.applyWidth(
-                                { height: 40, justifyContent: 'center' },
+                                {
+                                  alignSelf: 'center',
+                                  justifyContent: 'center',
+                                },
                                 dimensions.width
                               )}
                             >
-                              <Text
-                                style={StyleSheet.applyWidth(
-                                  {
-                                    fontFamily: 'Roboto_400Regular',
-                                    fontSize: 14,
-                                    textAlign: 'center',
-                                    textTransform: 'capitalize',
-                                  },
-                                  dimensions.width
-                                )}
+                              <Touchable
+                                onPress={() => {
+                                  const handler = async () => {
+                                    try {
+                                      await WebBrowser.openBrowserAsync(
+                                        `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.plugin.DynamicServiceReportGenerator/service?name=BILL_PAYMENT_RECEIPT&prno=${listData?.prno}&scno=${listData?.scno}`
+                                      );
+                                    } catch (err) {
+                                      console.error(err);
+                                    }
+                                  };
+                                  handler();
+                                }}
                               >
-                                {listData?.paymentMode}
-                              </Text>
+                                <Icon
+                                  name={'Feather/arrow-down-circle'}
+                                  size={24}
+                                />
+                              </Touchable>
                             </View>
                           </View>
-                        </View>
-                      </>
-                    );
-                  }}
-                  data={viewPaymentDetails}
-                  listKey={'ab97FAva'}
-                  keyExtractor={listData =>
-                    listData?.id || listData?.uuid || JSON.stringify(listData)
-                  }
-                  numColumns={1}
-                  onEndReachedThreshold={0.5}
-                  showsHorizontalScrollIndicator={true}
-                  showsVerticalScrollIndicator={true}
-                />
-              </View>
-            )}
-          </>
-          {/* section header */}
-          <>
-            {!(prepaidFlag === 'Y') ? null : (
-              <View
-                style={StyleSheet.applyWidth(
-                  {
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    marginTop: 10,
-                    paddingBottom: 12,
-                    paddingLeft: 20,
-                    paddingRight: 20,
-                  },
-                  dimensions.width
-                )}
-              >
-                <Text
+                        </>
+                      );
+                    }}
+                    data={viewPaymentDetails}
+                    listKey={'zhK2f9jS'}
+                    keyExtractor={listData =>
+                      listData?.id || listData?.uuid || JSON.stringify(listData)
+                    }
+                    numColumns={1}
+                    onEndReachedThreshold={0.5}
+                    showsHorizontalScrollIndicator={true}
+                    showsVerticalScrollIndicator={true}
+                  />
+                </View>
+              )}
+            </>
+            {/* section header */}
+            <>
+              {!(prepaidFlag === 'Y') ? null : (
+                <View
                   style={StyleSheet.applyWidth(
-                    StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
-                      alignSelf: 'center',
-                      color: theme.colors['ShopAppBlue'],
-                      fontFamily: 'Roboto_400Regular',
-                      fontSize: 16,
-                    }),
+                    {
+                      flexDirection: 'row',
+                      justifyContent: 'center',
+                      marginTop: 10,
+                      paddingBottom: 12,
+                      paddingLeft: 20,
+                      paddingRight: 20,
+                    },
                     dimensions.width
                   )}
                 >
-                  {'Recharge History'}
-                </Text>
-              </View>
-            )}
-          </>
-          {/* prepaid */}
-          <>
-            {!(prepaidFlag === 'Y') ? null : (
-              <View
-                style={StyleSheet.applyWidth(
-                  StyleSheet.compose(
-                    GlobalStyles.ViewStyles(theme)['accordion'],
-                    {
-                      backgroundColor: 'rgb(255, 255, 255)',
-                      borderColor: theme.colors['Community_Border'],
-                      paddingBottom: 12,
-                      paddingTop: 12,
-                    }
-                  ),
-                  dimensions.width
-                )}
-              >
-                {/* Prepaid Details */}
+                  <Text
+                    style={StyleSheet.applyWidth(
+                      StyleSheet.compose(
+                        GlobalStyles.TextStyles(theme)['Text'],
+                        {
+                          alignSelf: 'center',
+                          color: theme.colors['ShopAppBlue'],
+                          fontFamily: 'Roboto_400Regular',
+                          fontSize: 16,
+                        }
+                      ),
+                      dimensions.width
+                    )}
+                  >
+                    {'Recharge History'}
+                  </Text>
+                </View>
+              )}
+            </>
+            {/* prepaid */}
+            <>
+              {!(prepaidFlag === 'Y') ? null : (
                 <View
                   style={StyleSheet.applyWidth(
                     StyleSheet.compose(
-                      GlobalStyles.ViewStyles(theme)['Details'],
+                      GlobalStyles.ViewStyles(theme)['accordion'],
                       {
-                        borderBottomWidth: 1,
-                        borderLeftWidth: 1,
-                        borderRightWidth: 1,
-                        borderTopWidth: 1,
+                        backgroundColor: 'rgb(255, 255, 255)',
+                        borderColor: theme.colors['Community_Border'],
+                        paddingBottom: 12,
+                        paddingTop: 12,
                       }
                     ),
                     dimensions.width
                   )}
                 >
-                  {/* Date */}
-                  <View
-                    style={StyleSheet.applyWidth(
-                      { borderRightWidth: 1, flex: 1 },
-                      dimensions.width
-                    )}
-                  >
-                    <View
-                      style={StyleSheet.applyWidth(
-                        {
-                          backgroundColor: theme.colors.viewBG,
-                          height: 40,
-                          justifyContent: 'center',
-                        },
-                        dimensions.width
-                      )}
-                    >
-                      <Text
-                        style={StyleSheet.applyWidth(
-                          {
-                            color: theme.colors.strong,
-                            fontFamily: 'Roboto_700Bold',
-                            fontSize: 14,
-                            textAlign: 'center',
-                            textTransform: 'capitalize',
-                          },
-                          dimensions.width
-                        )}
-                      >
-                        {'Date'}
-                      </Text>
-                    </View>
-                  </View>
-                  {/* Amount */}
-                  <View
-                    style={StyleSheet.applyWidth(
-                      { borderRightWidth: 1, flex: 1 },
-                      dimensions.width
-                    )}
-                  >
-                    <View
-                      style={StyleSheet.applyWidth(
-                        {
-                          backgroundColor: theme.colors.viewBG,
-                          height: 40,
-                          justifyContent: 'center',
-                        },
-                        dimensions.width
-                      )}
-                    >
-                      <Text
-                        style={StyleSheet.applyWidth(
-                          {
-                            color: theme.colors.strong,
-                            fontFamily: 'Roboto_700Bold',
-                            fontSize: 14,
-                            textAlign: 'center',
-                            textTransform: 'capitalize',
-                          },
-                          dimensions.width
-                        )}
-                      >
-                        {'Amount'}
-                      </Text>
-                    </View>
-                  </View>
-                  {/* Purpose */}
-                  <View
-                    style={StyleSheet.applyWidth({ flex: 1 }, dimensions.width)}
-                  >
-                    <View
-                      style={StyleSheet.applyWidth(
-                        {
-                          backgroundColor: theme.colors.viewBG,
-                          height: 40,
-                          justifyContent: 'center',
-                        },
-                        dimensions.width
-                      )}
-                    >
-                      <Text
-                        style={StyleSheet.applyWidth(
-                          {
-                            color: theme.colors.strong,
-                            fontFamily: 'Roboto_700Bold',
-                            fontSize: 14,
-                            textAlign: 'center',
-                            textTransform: 'capitalize',
-                          },
-                          dimensions.width
-                        )}
-                      >
-                        {'Purpose'}
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-                {/* Prepaid List */}
-                <FlatList
-                  renderItem={({ item }) => {
-                    const prepaidListData = item;
-                    return (
-                      <>
-                        {/* Details */}
-                        <View
-                          style={StyleSheet.applyWidth(
-                            StyleSheet.compose(
-                              GlobalStyles.ViewStyles(theme)['Details'],
-                              {
-                                borderBottomWidth: 1,
-                                borderLeftWidth: 1,
-                                borderRightWidth: 1,
-                              }
-                            ),
-                            dimensions.width
-                          )}
-                        >
-                          {/* Date */}
+                  <FlatList
+                    renderItem={({ item }) => {
+                      const listData = item;
+                      return (
+                        <>
+                          {/* card */}
                           <View
                             style={StyleSheet.applyWidth(
-                              { borderRightWidth: 1, flex: 1 },
+                              {
+                                alignItems: 'center',
+                                borderBottomWidth: 1,
+                                borderColor: theme.colors['Custom Color_21'],
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                paddingBottom: 10,
+                                paddingLeft: 20,
+                                paddingRight: 20,
+                                paddingTop: 10,
+                              },
                               dimensions.width
                             )}
                           >
-                            <View
-                              style={StyleSheet.applyWidth(
-                                { height: 40, justifyContent: 'center' },
-                                dimensions.width
-                              )}
-                            >
+                            <View>
+                              {/* date */}
                               <Text
                                 style={StyleSheet.applyWidth(
-                                  {
-                                    fontFamily: 'Roboto_400Regular',
-                                    fontSize: 14,
-                                    textAlign: 'center',
-                                    textTransform: 'capitalize',
-                                  },
+                                  StyleSheet.compose(
+                                    GlobalStyles.TextStyles(theme)['Text'],
+                                    {
+                                      fontFamily: 'Roboto_400Regular',
+                                      fontSize: 16,
+                                    }
+                                  ),
                                   dimensions.width
                                 )}
                               >
-                                {(() => {
-                                  const e = converDateTimeToDate(
-                                    prepaidListData?.prstRdgDate
-                                  );
-                                  console.log(e);
-                                  return e;
-                                })()}
+                                {converDateTimeToDate(listData?.prstRdgDate)}
                               </Text>
-                            </View>
-                          </View>
-                          {/* Amount */}
-                          <View
-                            style={StyleSheet.applyWidth(
-                              { borderRightWidth: 1, flex: 1 },
-                              dimensions.width
-                            )}
-                          >
-                            <View
-                              style={StyleSheet.applyWidth(
-                                {
-                                  alignItems: 'flex-end',
-                                  alignSelf: 'flex-end',
-                                  height: 40,
-                                  justifyContent: 'center',
-                                  padding: 12,
-                                },
-                                dimensions.width
-                              )}
-                            >
+                              {/* purpose */}
                               <Text
                                 style={StyleSheet.applyWidth(
-                                  {
-                                    fontFamily: 'Roboto_400Regular',
-                                    fontSize: 14,
-                                    textAlign: 'center',
-                                    textTransform: 'capitalize',
-                                  },
+                                  StyleSheet.compose(
+                                    GlobalStyles.TextStyles(theme)['Text'],
+                                    {
+                                      fontFamily: 'Roboto_400Regular',
+                                      fontSize: 16,
+                                    }
+                                  ),
+                                  dimensions.width
+                                )}
+                              >
+                                {listData?.billType}
+                              </Text>
+                            </View>
+                            {/* View 2 */}
+                            <View>
+                              <Text
+                                style={StyleSheet.applyWidth(
+                                  StyleSheet.compose(
+                                    GlobalStyles.TextStyles(theme)['Text'],
+                                    {
+                                      fontFamily: 'Roboto_400Regular',
+                                      fontSize: 16,
+                                    }
+                                  ),
                                   dimensions.width
                                 )}
                               >
                                 {'₹'}
-                                {prepaidListData?.closingBalance}
+                                {listData?.closingBalance}
                               </Text>
                             </View>
                           </View>
-                          {/* Purpose */}
-                          <View
-                            style={StyleSheet.applyWidth(
-                              { flex: 1 },
-                              dimensions.width
-                            )}
-                          >
-                            <View
-                              style={StyleSheet.applyWidth(
-                                { height: 40, justifyContent: 'center' },
-                                dimensions.width
-                              )}
-                            >
-                              <Text
-                                style={StyleSheet.applyWidth(
-                                  {
-                                    fontFamily: 'Roboto_400Regular',
-                                    fontSize: 14,
-                                    textAlign: 'center',
-                                    textTransform: 'capitalize',
-                                  },
-                                  dimensions.width
-                                )}
-                              >
-                                {prepaidListData?.billType}
-                              </Text>
-                            </View>
-                          </View>
-                        </View>
-                      </>
-                    );
-                  }}
-                  data={viewRechargeDetails}
-                  listKey={'aHssmBVz'}
-                  keyExtractor={prepaidListData =>
-                    prepaidListData?.id ||
-                    prepaidListData?.uuid ||
-                    JSON.stringify(prepaidListData)
-                  }
-                  numColumns={1}
-                  onEndReachedThreshold={0.5}
-                  showsHorizontalScrollIndicator={true}
-                  showsVerticalScrollIndicator={true}
-                />
-              </View>
-            )}
-          </>
-        </View>
+                        </>
+                      );
+                    }}
+                    data={viewRechargeDetails}
+                    listKey={'xqEtrbYw'}
+                    keyExtractor={listData =>
+                      listData?.id || listData?.uuid || JSON.stringify(listData)
+                    }
+                    numColumns={1}
+                    onEndReachedThreshold={0.5}
+                    showsHorizontalScrollIndicator={true}
+                    showsVerticalScrollIndicator={true}
+                  />
+                </View>
+              )}
+            </>
+          </View>
+        </ScrollView>
         {/* Body */}
         <View
           style={StyleSheet.applyWidth(
@@ -1858,9 +1726,9 @@ line two` ) and will not work with special characters inside of quotes ( example
             )}
           >
             <Icon
-              size={24}
-              name={'Entypo/home'}
               color={theme.colors['Community_Light_Black']}
+              name={'Entypo/home'}
+              size={24}
             />
             <Text
               style={StyleSheet.applyWidth(
@@ -1900,9 +1768,9 @@ line two` ) and will not work with special characters inside of quotes ( example
             )}
           >
             <Icon
-              size={24}
-              name={'FontAwesome/bar-chart-o'}
               color={theme.colors['Community_Light_Black']}
+              name={'FontAwesome/bar-chart-o'}
+              size={24}
             />
             <Text
               style={StyleSheet.applyWidth(
@@ -1942,9 +1810,9 @@ line two` ) and will not work with special characters inside of quotes ( example
             )}
           >
             <Icon
-              size={24}
               color={theme.colors['Community_Light_Black']}
               name={'Entypo/text-document-inverted'}
+              size={24}
             />
             <Text
               style={StyleSheet.applyWidth(
@@ -1986,9 +1854,9 @@ line two` ) and will not work with special characters inside of quotes ( example
             )}
           >
             <Icon
-              size={24}
               color={theme.colors['Community_Dark_UI']}
               name={'MaterialIcons/payments'}
+              size={24}
             />
             <Text
               style={StyleSheet.applyWidth(
@@ -2027,9 +1895,9 @@ line two` ) and will not work with special characters inside of quotes ( example
             )}
           >
             <Icon
-              size={24}
-              name={'MaterialIcons/support-agent'}
               color={theme.colors['Community_Light_Black']}
+              name={'MaterialIcons/support-agent'}
+              size={24}
             />
             <Text
               style={StyleSheet.applyWidth(

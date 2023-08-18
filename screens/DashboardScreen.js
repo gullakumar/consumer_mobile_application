@@ -97,7 +97,11 @@ line two` ) and will not work with special characters inside of quotes ( example
         setMeterNumber(meterNo);
         const Scno = (consumerDetailsJson && consumerDetailsJson[0])?.data
           ?.scno;
-        setConsumerScNo(Scno);
+        setGlobalVariableValue({
+          key: 'consumerScNo',
+          value: Scno,
+        });
+        console.log(Scno);
         const Name = (consumerDetailsJson && consumerDetailsJson[0])?.data
           ?.name;
         setConsumerName(Name);
@@ -141,14 +145,13 @@ line two` ) and will not work with special characters inside of quotes ( example
           ),
         });
         console.log(result);
-        setTextInputValue(props.route?.params?.Name ?? '');
+        setTextInputValue(props.route?.params?.name ?? '');
       } catch (err) {
         console.error(err);
       }
     };
     handler();
   }, [isFocused]);
-
   const [accountno, setAccountno] = React.useState('');
   const [availableBalance, setAvailableBalance] = React.useState('');
   const [consumerName, setConsumerName] = React.useState('');
@@ -274,10 +277,10 @@ line two` ) and will not work with special characters inside of quotes ( example
                     )}
                   >
                     <Icon
-                      size={24}
                       name={
                         'MaterialCommunityIcons/account-arrow-right-outline'
                       }
+                      size={24}
                     />
                     <Text
                       style={StyleSheet.applyWidth(
@@ -319,8 +322,8 @@ line two` ) and will not work with special characters inside of quotes ( example
                     )}
                   >
                     <Icon
-                      size={24}
                       name={'Ionicons/ios-notifications-circle-outline'}
+                      size={24}
                     />
                     <Text
                       style={StyleSheet.applyWidth(
@@ -360,7 +363,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                       dimensions.width
                     )}
                   >
-                    <Icon size={24} name={'Feather/loader'} />
+                    <Icon name={'Feather/loader'} size={24} />
                     <Text
                       style={StyleSheet.applyWidth(
                         {
@@ -406,8 +409,8 @@ line two` ) and will not work with special characters inside of quotes ( example
                     )}
                   >
                     <Icon
-                      size={24}
                       name={'MaterialCommunityIcons/alert-outline'}
+                      size={24}
                     />
                     <Text
                       style={StyleSheet.applyWidth(
@@ -453,7 +456,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                       dimensions.width
                     )}
                   >
-                    <Icon size={24} name={'FontAwesome/exclamation-triangle'} />
+                    <Icon name={'FontAwesome/exclamation-triangle'} size={24} />
                     <Text
                       style={StyleSheet.applyWidth(
                         {
@@ -492,7 +495,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                       dimensions.width
                     )}
                   >
-                    <Icon size={24} name={'Feather/download'} />
+                    <Icon name={'Feather/download'} size={24} />
                     <Text
                       style={StyleSheet.applyWidth(
                         {
@@ -508,11 +511,11 @@ line two` ) and will not work with special characters inside of quotes ( example
                     </Text>
                   </View>
                 </Touchable>
-                {/* FAQ */}
+                {/* Help */}
                 <Touchable
                   onPress={() => {
                     try {
-                      navigation.navigate('HelpCenterScreen');
+                      navigation.navigate('HelpScreen');
                     } catch (err) {
                       console.error(err);
                     }
@@ -531,7 +534,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                       dimensions.width
                     )}
                   >
-                    <Icon size={24} name={'Feather/help-circle'} />
+                    <Icon name={'Feather/help-circle'} size={24} />
                     <Text
                       style={StyleSheet.applyWidth(
                         {
@@ -543,7 +546,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                         dimensions.width
                       )}
                     >
-                      {'FAQ'}
+                      {'Help'}
                     </Text>
                   </View>
                 </Touchable>
@@ -570,7 +573,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                       dimensions.width
                     )}
                   >
-                    <Icon size={24} name={'MaterialIcons/feedback'} />
+                    <Icon name={'MaterialIcons/feedback'} size={24} />
                     <Text
                       style={StyleSheet.applyWidth(
                         {
@@ -586,11 +589,11 @@ line two` ) and will not work with special characters inside of quotes ( example
                     </Text>
                   </View>
                 </Touchable>
-                {/* Help */}
+                {/* Contact Us */}
                 <Touchable
                   onPress={() => {
                     try {
-                      navigation.navigate('HelpCenterScreen');
+                      navigation.navigate('ContactUsScreen');
                     } catch (err) {
                       console.error(err);
                     }
@@ -609,7 +612,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                       dimensions.width
                     )}
                   >
-                    <Icon size={24} name={'Ionicons/md-help-buoy-outline'} />
+                    <Icon name={'Ionicons/md-help-buoy-outline'} size={24} />
                     <Text
                       style={StyleSheet.applyWidth(
                         {
@@ -621,7 +624,85 @@ line two` ) and will not work with special characters inside of quotes ( example
                         dimensions.width
                       )}
                     >
-                      {'Help'}
+                      {'Contact Us'}
+                    </Text>
+                  </View>
+                </Touchable>
+                {/* Energy Tips */}
+                <Touchable
+                  onPress={() => {
+                    try {
+                      navigation.navigate('EnergyTipsScreen');
+                    } catch (err) {
+                      console.error(err);
+                    }
+                  }}
+                >
+                  <View
+                    style={StyleSheet.applyWidth(
+                      {
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                        paddingBottom: 12,
+                        paddingLeft: 24,
+                        paddingRight: 24,
+                        paddingTop: 12,
+                      },
+                      dimensions.width
+                    )}
+                  >
+                    <Icon name={'SimpleLineIcons/energy'} size={24} />
+                    <Text
+                      style={StyleSheet.applyWidth(
+                        {
+                          color: theme.colors['Strong'],
+                          fontFamily: 'Roboto_400Regular',
+                          fontSize: 16,
+                          marginLeft: 8,
+                        },
+                        dimensions.width
+                      )}
+                    >
+                      {'Energy Tips'}
+                    </Text>
+                  </View>
+                </Touchable>
+                {/* Privacy Policy */}
+                <Touchable
+                  onPress={() => {
+                    try {
+                      navigation.navigate('PrivacyPolicyScreen');
+                    } catch (err) {
+                      console.error(err);
+                    }
+                  }}
+                >
+                  <View
+                    style={StyleSheet.applyWidth(
+                      {
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                        paddingBottom: 12,
+                        paddingLeft: 24,
+                        paddingRight: 24,
+                        paddingTop: 12,
+                      },
+                      dimensions.width
+                    )}
+                  >
+                    <Icon name={'MaterialCommunityIcons/security'} size={24} />
+                    <Text
+                      style={StyleSheet.applyWidth(
+                        {
+                          color: theme.colors['Strong'],
+                          fontFamily: 'Roboto_400Regular',
+                          fontSize: 16,
+                          marginLeft: 8,
+                        },
+                        dimensions.width
+                      )}
+                    >
+                      {'Privacy Policy'}
                     </Text>
                   </View>
                 </Touchable>
@@ -690,10 +771,10 @@ line two` ) and will not work with special characters inside of quotes ( example
           }}
           status={showNav}
           checkedIcon={'Feather/x'}
-          uncheckedIcon={'Feather/menu'}
-          size={32}
           color={theme.colors['Custom Color_22']}
+          size={32}
           uncheckedColor={theme.colors['Custom Color_22']}
+          uncheckedIcon={'Feather/menu'}
         />
         <View
           style={StyleSheet.applyWidth(
@@ -778,9 +859,9 @@ line two` ) and will not work with special characters inside of quotes ( example
             }}
           >
             <Icon
-              size={24}
-              name={'Ionicons/md-notifications-circle-outline'}
               color={theme.colors['Community_Light_Black']}
+              name={'Ionicons/md-notifications-circle-outline'}
+              size={24}
             />
           </Touchable>
 
@@ -794,9 +875,9 @@ line two` ) and will not work with special characters inside of quotes ( example
             }}
           >
             <Icon
-              size={24}
-              name={'Ionicons/person-circle-outline'}
               color={theme.colors['Community_Light_Black']}
+              name={'Ionicons/person-circle-outline'}
+              size={24}
             />
           </Touchable>
         </View>
@@ -832,7 +913,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                 dimensions.width
               )}
             >
-              {/* Enter custmoer service number */}
+              {/* Enter customer service number */}
               <View
                 style={StyleSheet.applyWidth(
                   GlobalStyles.ViewStyles(theme)['user name'],
@@ -841,8 +922,8 @@ line two` ) and will not work with special characters inside of quotes ( example
               >
                 <Icon
                   color={theme.colors['Medium']}
-                  size={24}
                   name={'MaterialIcons/house'}
+                  size={24}
                 />
                 <Picker
                   onValueChange={newPickerValue => {
@@ -869,7 +950,11 @@ line two` ) and will not work with special characters inside of quotes ( example
                         const Scno = (
                           consumerDetailsJson && consumerDetailsJson[0]
                         )?.data?.scno;
-                        setConsumerScNo(Scno);
+                        setGlobalVariableValue({
+                          key: 'consumerScNo',
+                          value: Scno,
+                        });
+                        console.log(Scno);
                         const Name = (
                           consumerDetailsJson && consumerDetailsJson[0]
                         )?.data?.name;
@@ -921,17 +1006,58 @@ line two` ) and will not work with special characters inside of quotes ( example
                     dimensions.width
                   )}
                   options={Constants['manageaccount_picker']}
-                  leftIconMode={'inset'}
-                  type={'solid'}
-                  iconSize={24}
                   autoDismissKeyboard={true}
-                  rightIconName={'Feather/chevron-down'}
-                  placeholder={' '}
+                  defaultValue={textInputValue}
                   iconColor={theme.colors['Medium']}
-                  placeholderTextColor={theme.colors['Medium']}
-                  defaultValue={Constants['name']}
+                  iconSize={24}
+                  leftIconMode={'inset'}
+                  rightIconName={'Feather/chevron-down'}
+                  type={'solid'}
                 />
               </View>
+            </View>
+
+            <View
+              style={StyleSheet.applyWidth(
+                StyleSheet.compose(
+                  GlobalStyles.ViewStyles(theme)['postpaid view 2'],
+                  { marginBottom: 5, marginTop: 10 }
+                ),
+                dimensions.width
+              )}
+            >
+              {/* Prepaid */}
+              <>
+                {!(prepaidFlag === 'Y') ? null : (
+                  <Text
+                    style={StyleSheet.applyWidth(
+                      StyleSheet.compose(
+                        GlobalStyles.TextStyles(theme)['Text'],
+                        { fontFamily: 'Roboto_400Regular', textAlign: 'right' }
+                      ),
+                      dimensions.width
+                    )}
+                  >
+                    {'Prepaid'}
+                  </Text>
+                )}
+              </>
+              {/* Postpaid */}
+              <>
+                {!(prepaidFlag === 'N') ? null : (
+                  <Text
+                    style={StyleSheet.applyWidth(
+                      StyleSheet.compose(
+                        GlobalStyles.TextStyles(theme)['Text'],
+                        { fontFamily: 'Roboto_400Regular', textAlign: 'right' }
+                      ),
+                      dimensions.width
+                    )}
+                  >
+                    {'Postpaid'}
+                  </Text>
+                )}
+              </>
             </View>
             {/* postpaid */}
             <>
@@ -946,7 +1072,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                       flexDirection: 'row',
                       justifyContent: 'space-between',
                       marginBottom: 15,
-                      marginTop: 30,
+                      marginTop: 5,
                       paddingBottom: 10,
                       paddingLeft: 20,
                       paddingTop: 10,
@@ -987,7 +1113,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                       )}
                     >
                       {'₹'}
-                      {viewbilldetails?.BillAmount}
+                      {viewbilldetails?.LEDGERAMT}
                     </Text>
                     {/* Sub title */}
                     <Text
@@ -1011,6 +1137,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                     onPress={() => {
                       try {
                         navigation.navigate('ViewBillScreen', {
+                          ledgerAmt: viewbilldetails?.LEDGERAMT,
                           Name: viewbilldetails?.Name,
                           Scno: viewbilldetails?.Scno,
                           BillMonth: viewbilldetails?.BillMonth,
@@ -1022,6 +1149,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                           RebateGiven: viewbilldetails?.RebateGiven,
                           netcurrbill: viewbilldetails?.netcurrbill,
                           BillIssueDate: viewbilldetails?.BillIssueDate,
+                          billYear: viewbilldetails?.BillYear,
                         });
                       } catch (err) {
                         console.error(err);
@@ -1047,6 +1175,8 @@ line two` ) and will not work with special characters inside of quotes ( example
                     onPress={() => {
                       try {
                         navigation.navigate('MakePaymentScreen', {
+                          ledgerAmt: viewbilldetails?.LEDGERAMT,
+                          billYear: viewbilldetails?.BillYear,
                           Name: viewbilldetails?.Name,
                           Scno: viewbilldetails?.Scno,
                           BillMonth: viewbilldetails?.BillMonth,
@@ -1097,7 +1227,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                       flexDirection: 'row',
                       justifyContent: 'space-between',
                       marginBottom: 15,
-                      marginTop: 30,
+                      marginTop: 5,
                       paddingBottom: 10,
                       paddingLeft: 20,
                       paddingTop: 10,
@@ -1155,19 +1285,18 @@ line two` ) and will not work with special characters inside of quotes ( example
             style={StyleSheet.applyWidth(
               StyleSheet.compose(GlobalStyles.ViewStyles(theme)['Promotions'], {
                 marginTop: 10,
-                paddingTop: 10,
               }),
               dimensions.width
             )}
           >
             <CISAPPApi.FetchBANNERSPOST>
               {({ loading, error, data, refetchBANNERS }) => {
-                const fetchData = data;
+                const fetchData = data?.json;
                 if (loading) {
                   return <ActivityIndicator />;
                 }
 
-                if (error) {
+                if (error || data?.status < 200 || data?.status >= 300) {
                   return <ActivityIndicator />;
                 }
 
@@ -1181,7 +1310,11 @@ line two` ) and will not work with special characters inside of quotes ( example
                             {!swiperData ? null : (
                               <SwiperItem
                                 style={StyleSheet.applyWidth(
-                                  { alignSelf: 'stretch' },
+                                  {
+                                    alignSelf: 'stretch',
+                                    height: 108,
+                                    width: '100%',
+                                  },
                                   dimensions.width
                                 )}
                               >
@@ -1190,7 +1323,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                                   style={StyleSheet.applyWidth(
                                     StyleSheet.compose(
                                       GlobalStyles.ImageStyles(theme)['banner'],
-                                      { height: 200 }
+                                      { borderRadius: 8, height: 108 }
                                     ),
                                     dimensions.width
                                   )}
@@ -1217,14 +1350,14 @@ line two` ) and will not work with special characters inside of quotes ( example
                           alignSelf: 'auto',
                           backgroundColor: 'rgb(255, 255, 255)',
                           borderColor: 'rgb(222, 221, 221)',
-                          height: 200,
+                          height: 108,
                           position: 'relative',
                         }
                       ),
                       dimensions.width
                     )}
-                    dotColor={theme.colors.light}
                     dotActiveColor={theme.colors.primary}
+                    dotColor={theme.colors.light}
                     dotsTouchable={true}
                   />
                 );
@@ -1274,9 +1407,9 @@ line two` ) and will not work with special characters inside of quotes ( example
             )}
           >
             <Icon
-              size={24}
-              name={'Entypo/home'}
               color={theme.colors['Community_Dark_UI']}
+              name={'Entypo/home'}
+              size={24}
             />
             <Text
               style={StyleSheet.applyWidth(
@@ -1319,9 +1452,9 @@ line two` ) and will not work with special characters inside of quotes ( example
             )}
           >
             <Icon
-              size={24}
-              name={'FontAwesome/bar-chart-o'}
               color={theme.colors['Community_Light_Black']}
+              name={'FontAwesome/bar-chart-o'}
+              size={24}
             />
             <Text
               style={StyleSheet.applyWidth(
@@ -1363,9 +1496,9 @@ line two` ) and will not work with special characters inside of quotes ( example
             )}
           >
             <Icon
-              size={24}
               color={theme.colors['Community_Light_Black']}
               name={'Entypo/text-document-inverted'}
+              size={24}
             />
             <Text
               style={StyleSheet.applyWidth(
@@ -1408,8 +1541,8 @@ line two` ) and will not work with special characters inside of quotes ( example
           >
             <Icon
               color={theme.colors['Community_Light_Black']}
-              size={24}
               name={'MaterialIcons/payments'}
+              size={24}
             />
             <Text
               style={StyleSheet.applyWidth(
@@ -1447,9 +1580,9 @@ line two` ) and will not work with special characters inside of quotes ( example
             )}
           >
             <Icon
-              size={24}
-              name={'MaterialIcons/support-agent'}
               color={theme.colors['Community_Light_Black']}
+              name={'MaterialIcons/support-agent'}
+              size={24}
             />
             <Text
               style={StyleSheet.applyWidth(

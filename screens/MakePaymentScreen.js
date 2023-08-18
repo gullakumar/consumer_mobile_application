@@ -37,6 +37,71 @@ const MakePaymentScreen = props => {
   const Variables = Constants;
   const setGlobalVariableValue = GlobalVariables.useSetValue();
 
+  const convertMonthNoToMonthNumber = monthNo => {
+    const monthNames = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sept',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+    const monthName = monthNames[monthNo - 1];
+    console.log(monthName);
+    return monthName;
+  };
+
+  const validateMobileNo = mobileNo => {
+    var errorMessage = null;
+    var mobileNumber = null;
+    mobileNumber = mobileNo.toString();
+    console.log('mobileNo' + mobileNumber);
+    if (mobileNumber.length == 0) {
+      // console.log("mobileNumber"+mobileNumber.length);
+      errorMessage = 'Mobile number is required';
+    } else if (mobileNumber.length == 10) {
+      console.log('number' + mobileNumber.length);
+      let regex = new RegExp(/(0|91)?[6-9][0-9]{9}/);
+      if (!regex.test(mobileNumber)) {
+        errorMessage = 'Invalid mobile number(ex: 987XXXX789)';
+      }
+    } else if (mobileNumber.length < 10) {
+      console.log('less' + mobileNumber.length);
+      errorMessage = 'Enter 10 digit mobile number';
+    }
+    return errorMessage;
+  };
+
+  const validateEmail = email => {
+    var errorMessage = null;
+    if (!email.trim()) {
+      errorMessage = 'Email is required';
+    } else {
+      const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+      if (!emailRegex.test(email)) {
+        errorMessage = 'Invalid email';
+      }
+    }
+    return errorMessage;
+  };
+
+  const validateAmount = amount => {
+    var errorMessage = null;
+    var amountValue = null;
+    amountValue = amount.toString();
+    console.log('amount' + amountValue);
+    if (amountValue.length == 0) {
+      errorMessage = 'Amount is required';
+    }
+    return errorMessage;
+  };
+
   const buildConsumerString = Scno => {
     console.log(`billing/rest/AccountInfo/${Scno}`);
     return `billing/rest/AccountInfo/${Scno}`;
@@ -46,9 +111,12 @@ const MakePaymentScreen = props => {
   const { navigation } = props;
 
   const [amount, setAmount] = React.useState('');
+  const [amountErrorMsg, setAmountErrorMsg] = React.useState('');
   const [consumerId, setConsumerId] = React.useState('');
   const [email, setEmail] = React.useState('');
+  const [emailErrorMsg, setEmailErrorMsg] = React.useState('');
   const [mobileNumber, setMobileNumber] = React.useState('');
+  const [mobilenoErrorMsg, setMobilenoErrorMsg] = React.useState('');
   const [numberInputValue, setNumberInputValue] = React.useState('');
   const [numberInputValue2, setNumberInputValue2] = React.useState('');
   const [office, setOffice] = React.useState('');
@@ -61,7 +129,7 @@ const MakePaymentScreen = props => {
   const [ucode, setUcode] = React.useState('');
 
   return (
-    <ScreenContainer scrollable={false} hasSafeArea={true}>
+    <ScreenContainer hasSafeArea={true} scrollable={false}>
       {/* Header */}
       <View
         style={StyleSheet.applyWidth(
@@ -96,7 +164,7 @@ const MakePaymentScreen = props => {
               dimensions.width
             )}
           >
-            <Icon size={24} name={'AntDesign/arrowleft'} />
+            <Icon name={'AntDesign/arrowleft'} size={24} />
           </View>
         </Touchable>
         {/* View bill and make payment */}
@@ -111,7 +179,7 @@ const MakePaymentScreen = props => {
             dimensions.width
           )}
         >
-          {'View Bill '}
+          {'Make Payment'}
         </Text>
       </View>
 
@@ -120,8 +188,8 @@ const MakePaymentScreen = props => {
           { paddingBottom: 20, paddingTop: 20 },
           dimensions.width
         )}
-        showsVerticalScrollIndicator={true}
         bounces={true}
+        showsVerticalScrollIndicator={true}
       >
         {/* Payment summary */}
         <View>
@@ -214,7 +282,7 @@ const MakePaymentScreen = props => {
                   dimensions.width
                 )}
               >
-                {'Service connection no.'}
+                {'Service connection number'}
               </Text>
 
               <Text
@@ -262,8 +330,8 @@ const MakePaymentScreen = props => {
               )}
               label={'Bill details'}
               caretSize={24}
-              iconSize={24}
               expanded={true}
+              iconSize={24}
             >
               <View
                 style={StyleSheet.applyWidth(
@@ -304,7 +372,11 @@ const MakePaymentScreen = props => {
                     dimensions.width
                   )}
                 >
-                  {props.route?.params?.BillMonth ?? ''}
+                  {convertMonthNoToMonthNumber(
+                    props.route?.params?.BillMonth ?? ''
+                  )}
+                  {' - '}
+                  {props.route?.params?.billYear ?? ''}
                 </Text>
               </View>
               {/* view */}
@@ -476,6 +548,7 @@ const MakePaymentScreen = props => {
                     dimensions.width
                   )}
                 >
+                  {'₹'}
                   {props.route?.params?.BillAmount ?? ''}
                 </Text>
               </View>
@@ -519,6 +592,7 @@ const MakePaymentScreen = props => {
                     dimensions.width
                   )}
                 >
+                  {'₹'}
                   {props.route?.params?.Arrear ?? ''}
                 </Text>
               </View>
@@ -562,6 +636,7 @@ const MakePaymentScreen = props => {
                     dimensions.width
                   )}
                 >
+                  {'₹'}
                   {props.route?.params?.RebateGiven ?? ''}
                 </Text>
               </View>
@@ -605,7 +680,8 @@ const MakePaymentScreen = props => {
                     dimensions.width
                   )}
                 >
-                  {props.route?.params?.netcurrbill ?? ''}
+                  {'₹'}
+                  {props.route?.params?.ledgerAmt ?? ''}
                   {'\n'}
                 </Text>
               </View>
@@ -639,8 +715,8 @@ const MakePaymentScreen = props => {
               )}
               label={'Enter details'}
               caretSize={24}
-              iconSize={24}
               expanded={true}
+              iconSize={24}
             >
               <View
                 style={StyleSheet.applyWidth(
@@ -663,9 +739,9 @@ const MakePaymentScreen = props => {
                   )}
                 >
                   <Icon
-                    size={24}
-                    name={'FontAwesome/rupee'}
                     color={theme.colors['Medium']}
+                    name={'FontAwesome/rupee'}
+                    size={24}
                   />
                   <View
                     style={StyleSheet.applyWidth(
@@ -689,11 +765,24 @@ const MakePaymentScreen = props => {
                       value={numberInputValue2}
                       changeTextDelay={500}
                       editable={true}
-                      placeholder={'Enter amount'}
+                      placeholder={'Amount'}
                       placeholderTextColor={theme.colors['Medium']}
                     />
                   </View>
                 </View>
+                {/* Amount valid message */}
+                <Text
+                  style={StyleSheet.applyWidth(
+                    StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+                      alignSelf: 'flex-start',
+                      color: theme.colors['Error'],
+                      fontFamily: 'Roboto_400Regular',
+                    }),
+                    dimensions.width
+                  )}
+                >
+                  {amountErrorMsg}
+                </Text>
                 {/* Mobile */}
                 <View
                   style={StyleSheet.applyWidth(
@@ -707,9 +796,9 @@ const MakePaymentScreen = props => {
                   <>
                     {!'+91' ? null : (
                       <Icon
-                        size={24}
-                        name={'Entypo/phone'}
                         color={theme.colors['Medium']}
+                        name={'Entypo/phone'}
+                        size={24}
                       />
                     )}
                   </>
@@ -762,6 +851,18 @@ const MakePaymentScreen = props => {
                     />
                   </View>
                 </View>
+                {/* Mobile valid message */}
+                <Text
+                  style={StyleSheet.applyWidth(
+                    StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+                      color: theme.colors['Error'],
+                      fontFamily: 'Roboto_400Regular',
+                    }),
+                    dimensions.width
+                  )}
+                >
+                  {mobilenoErrorMsg}
+                </Text>
                 {/* Mail */}
                 <View
                   style={StyleSheet.applyWidth(
@@ -773,9 +874,9 @@ const MakePaymentScreen = props => {
                   )}
                 >
                   <Icon
-                    size={24}
-                    name={'MaterialCommunityIcons/email'}
                     color={theme.colors['Medium']}
+                    name={'MaterialCommunityIcons/email'}
+                    size={24}
                   />
                   <View
                     style={StyleSheet.applyWidth(
@@ -808,6 +909,18 @@ const MakePaymentScreen = props => {
                     />
                   </View>
                 </View>
+                {/* Email Error message */}
+                <Text
+                  style={StyleSheet.applyWidth(
+                    StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+                      color: theme.colors['Error'],
+                      fontFamily: 'Roboto_400Regular',
+                    }),
+                    dimensions.width
+                  )}
+                >
+                  {emailErrorMsg}
+                </Text>
               </View>
               {/* Section Header */}
               <View
@@ -864,12 +977,16 @@ const MakePaymentScreen = props => {
                     {/* Payment Methods */}
                     <CISAPPApi.FetchPaymentGatewayPOST>
                       {({ loading, error, data, refetchPaymentGateway }) => {
-                        const paymentMethodsData = data;
+                        const paymentMethodsData = data?.json;
                         if (loading) {
                           return <ActivityIndicator />;
                         }
 
-                        if (error) {
+                        if (
+                          error ||
+                          data?.status < 200 ||
+                          data?.status >= 300
+                        ) {
                           return <ActivityIndicator />;
                         }
 
@@ -954,6 +1071,21 @@ const MakePaymentScreen = props => {
           onPress={() => {
             const handler = async () => {
               try {
+                const amountErrorMsg = validateAmount(amount);
+                const mobilenoErrorMsg = validateMobileNo(mobileNumber);
+                const emailErrorMsg = validateEmail(email);
+                setAmountErrorMsg(amountErrorMsg);
+                setMobilenoErrorMsg(mobilenoErrorMsg);
+                setEmailErrorMsg(emailErrorMsg);
+                if (false) {
+                  return;
+                }
+                if (mobilenoErrorMsg?.length) {
+                  return;
+                }
+                if (emailErrorMsg?.length) {
+                  return;
+                }
                 const consumerDetailsJson = (
                   await CISAPPApi.consumerDetailsPOST(Constants, {
                     action: buildConsumerString(
@@ -997,11 +1129,6 @@ const MakePaymentScreen = props => {
                     })(),
                     consid: (() => {
                       const e = consumerIdData;
-                      console.log(e);
-                      return e;
-                    })(),
-                    email: (() => {
-                      const e = email;
                       console.log(e);
                       return e;
                     })(),
@@ -1054,7 +1181,9 @@ const MakePaymentScreen = props => {
                 });
                 console.log(url);
                 await WebBrowser.openBrowserAsync(`${url}`);
-                navigation.navigate('DashboardScreen');
+                navigation.navigate('DashboardScreen', {
+                  name: props.route?.params?.Name ?? '',
+                });
               } catch (err) {
                 console.error(err);
               }

@@ -17,8 +17,8 @@ const PaymentConfirmationGuestScreen = props => {
         { backgroundColor: theme.colors['Primary'], justifyContent: 'center' },
         dimensions.width
       )}
-      scrollable={false}
       hasSafeArea={false}
+      scrollable={false}
     >
       <View
         style={StyleSheet.applyWidth(

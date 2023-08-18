@@ -21,6 +21,60 @@ const UpdateNewPasswordScreen = props => {
   const Constants = GlobalVariables.useValues();
   const Variables = Constants;
 
+  const processErrorMessage = msg => {
+    const scheme = {
+      msg1: 'Password Changed Successfully',
+      msg2: 'Problem while Sending OTP SMS',
+      msg3: 'OTP send SuccessFully TO the existing Mobile',
+      msg4: 'Input password details not same as in DB !',
+      msg5: 'The user is already registered',
+      msg6: 'You are not smart meter consumer',
+      msg7: 'Invalid OTP',
+      msg8: 'Problem while creating an user',
+      msg9: 'User Creation Done Successfully',
+      msg10: 'Mobile Number Doesnot exist for this consumer!',
+      msg11: 'Problem while generating OTP!',
+      msg12: 'Email ID Doesnot exist for this consumer in registration Table',
+      msg13: 'OTP sent to your Registred Email Address',
+      msg14: 'The OTP has expired!',
+      msg15: 'Problem while updating password!',
+      msg16: 'Existing email not Found',
+      msg17: 'password details not found in the input data!',
+      msg18: 'Old password and New Password must not be same !',
+      msg19: 'Problem while updating password',
+      msg20: 'OTP sent SuccessFully',
+      msg21: 'Phone Number Changed Successfully',
+      msg22: 'Logical Error',
+      msg23: 'Entered consumer number is already registered',
+      msg24: 'Entered consumer number already mapped',
+      msg26: 'Accounts added for the existing consumer limit is exceeded',
+      msg27: 'Should not same login account and entered account',
+      msg28: '* Invalid Consumer Number',
+      msg29: '* Invalid Credentials',
+      msg30: 'Invalid Password',
+      msg31: 'OTP Limit Exceeded, Please Try Again!',
+      msg32: "Account Dosen't Have SmartMeter",
+    };
+
+    return scheme[msg];
+  };
+
+  const validateUpdatepassword = password => {
+    var errorMessage = null;
+    if (!password.trim()) {
+      errorMessage = 'New password is required';
+    }
+    return errorMessage;
+  };
+
+  const validateConfirmpassword = password => {
+    var errorMessage = null;
+    if (!password.trim()) {
+      errorMessage = 'Confirm password is required';
+    }
+    return errorMessage;
+  };
+
   const passwordUpdate = (newPwd, confirmPwd) => {
     console.log('newPassword' + newPwd);
     console.log('confirmPassword' + confirmPwd);
@@ -39,10 +93,14 @@ const UpdateNewPasswordScreen = props => {
   const [errorMessage, setErrorMessage] = React.useState('');
   const [hiddenPassword, setHiddenPassword] = React.useState(true);
   const [newpassword, setNewpassword] = React.useState('');
+  const [updateConfirmpasswordErrorMgs, setUpdateConfirmpasswordErrorMgs] =
+    React.useState('');
+  const [updatePasswordErrorMgs, setUpdatePasswordErrorMgs] =
+    React.useState('');
   const [visiblePassword, setVisiblePassword] = React.useState(false);
 
   return (
-    <ScreenContainer scrollable={false} hasSafeArea={true}>
+    <ScreenContainer hasSafeArea={true} scrollable={false}>
       {/* Header */}
       <View
         style={StyleSheet.applyWidth(
@@ -79,9 +137,9 @@ const UpdateNewPasswordScreen = props => {
             }}
           >
             <Icon
-              size={24}
-              name={'Ionicons/arrow-back-sharp'}
               color={theme.colors['Custom Color_2']}
+              name={'Ionicons/arrow-back-sharp'}
+              size={24}
             />
           </Touchable>
         </View>
@@ -105,22 +163,19 @@ const UpdateNewPasswordScreen = props => {
       <Text
         style={StyleSheet.applyWidth(
           {
-            alignSelf: 'center',
+            alignSelf: 'flex-start',
             color: theme.colors['Error'],
             fontFamily: 'Roboto_400Regular',
             fontSize: 14,
-            letterSpacing: 0.3,
-            lineHeight: 21,
-            marginLeft: 20,
-            marginRight: 20,
             marginTop: 75,
             opacity: 1,
+            paddingLeft: 20,
             textAlign: 'center',
           },
           dimensions.width
         )}
       >
-        {errorMessage}
+        {processErrorMessage(errorMessage)}
       </Text>
       {/* OTP */}
       <View
@@ -129,7 +184,6 @@ const UpdateNewPasswordScreen = props => {
             alignItems: 'center',
             flexDirection: 'column',
             justifyContent: 'space-evenly',
-            marginTop: 50,
             paddingLeft: 20,
             paddingRight: 20,
           },
@@ -147,8 +201,8 @@ const UpdateNewPasswordScreen = props => {
             >
               <Icon
                 color={theme.colors['Medium']}
-                size={24}
                 name={'FontAwesome/lock'}
+                size={24}
               />
               <View
                 style={StyleSheet.applyWidth(
@@ -176,9 +230,9 @@ const UpdateNewPasswordScreen = props => {
                     dimensions.width
                   )}
                   value={newpassword}
-                  placeholder={'Enter new password'}
-                  placeholderTextColor={theme.colors['Medium']}
+                  placeholder={'New password'}
                   editable={true}
+                  placeholderTextColor={theme.colors['Medium']}
                   secureTextEntry={true}
                 />
               </View>
@@ -194,8 +248,8 @@ const UpdateNewPasswordScreen = props => {
                   }
                 }}
                 status={checkboxValue}
-                uncheckedIcon={'Ionicons/eye-off'}
                 checkedIcon={'Ionicons/eye-off'}
+                uncheckedIcon={'Ionicons/eye-off'}
               />
             </View>
           )}
@@ -210,9 +264,9 @@ const UpdateNewPasswordScreen = props => {
               )}
             >
               <Icon
-                size={24}
                 color={theme.colors['Custom Color_20']}
                 name={'FontAwesome/lock'}
+                size={24}
               />
               <View
                 style={StyleSheet.applyWidth(
@@ -239,7 +293,7 @@ const UpdateNewPasswordScreen = props => {
                     dimensions.width
                   )}
                   value={newpassword}
-                  placeholder={'Enter new password'}
+                  placeholder={'New password'}
                   editable={true}
                   placeholderTextColor={theme.colors['Custom Color_20']}
                   secureTextEntry={false}
@@ -255,13 +309,26 @@ const UpdateNewPasswordScreen = props => {
                     console.error(err);
                   }
                 }}
+                checkedIcon={'Ionicons/eye'}
                 status={checkboxValue}
                 uncheckedIcon={'Ionicons/eye'}
-                checkedIcon={'Ionicons/eye'}
               />
             </View>
           )}
         </>
+        {/* Error new password mgs */}
+        <Text
+          style={StyleSheet.applyWidth(
+            StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+              alignSelf: 'flex-start',
+              color: theme.colors['Error'],
+              fontFamily: 'Roboto_400Regular',
+            }),
+            dimensions.width
+          )}
+        >
+          {updatePasswordErrorMgs}
+        </Text>
         {/* password */}
         <View
           style={StyleSheet.applyWidth(
@@ -272,9 +339,9 @@ const UpdateNewPasswordScreen = props => {
           )}
         >
           <Icon
-            size={24}
-            name={'FontAwesome/lock'}
             color={theme.colors['Medium']}
+            name={'FontAwesome/lock'}
+            size={24}
           />
           <View
             style={StyleSheet.applyWidth(
@@ -304,11 +371,24 @@ const UpdateNewPasswordScreen = props => {
               value={confirmpassword}
               placeholder={'Confirm password'}
               editable={true}
-              secureTextEntry={true}
               placeholderTextColor={theme.colors['Medium']}
+              secureTextEntry={true}
             />
           </View>
         </View>
+        {/* Error new password mgs */}
+        <Text
+          style={StyleSheet.applyWidth(
+            StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+              alignSelf: 'flex-start',
+              color: theme.colors['Error'],
+              fontFamily: 'Roboto_400Regular',
+            }),
+            dimensions.width
+          )}
+        >
+          {updateConfirmpasswordErrorMgs}
+        </Text>
       </View>
 
       <View
@@ -322,6 +402,18 @@ const UpdateNewPasswordScreen = props => {
           onPress={() => {
             const handler = async () => {
               try {
+                const updatePasswordErrorMgs =
+                  validateUpdatepassword(newpassword);
+                const updateConfirmpasswordErrorMgs =
+                  validateConfirmpassword(confirmpassword);
+                setUpdatePasswordErrorMgs(updatePasswordErrorMgs);
+                setUpdateConfirmpasswordErrorMgs(updateConfirmpasswordErrorMgs);
+                if (updatePasswordErrorMgs?.length) {
+                  return;
+                }
+                if (updateConfirmpasswordErrorMgs?.length) {
+                  return;
+                }
                 setErrorMessage('');
                 (
                   await CISAPPApi.aftersentOTPforgorpasswordPOST(Constants, {

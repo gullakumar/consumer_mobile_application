@@ -21,10 +21,9 @@ export const useExampleData10GET = (
   { refetchInterval, handlers = {} } = {}
 ) => {
   const Constants = GlobalVariables.useValues();
-  const fetcher = exampleData10GET;
   return useQuery(
     ['Example Data', args],
-    () => fetcher(Constants, args, handlers),
+    () => exampleData10GET(Constants, args, handlers),
     {
       refetchInterval,
     }
@@ -63,7 +62,6 @@ export const FetchExampleData10GET = ({
       console.error(error);
     }
   }, [error]);
-
   return children({ loading, data, error, refetchExampleData10: refetch });
 };
 
@@ -77,10 +75,13 @@ export const useGrabDataPointsGET = (
   { refetchInterval, handlers = {} } = {}
 ) => {
   const Constants = GlobalVariables.useValues();
-  const fetcher = grabDataPointsGET;
-  return useQuery(['users', args], () => fetcher(Constants, args, handlers), {
-    refetchInterval,
-  });
+  return useQuery(
+    ['users', args],
+    () => grabDataPointsGET(Constants, args, handlers),
+    {
+      refetchInterval,
+    }
+  );
 };
 
 export const FetchGrabDataPointsGET = ({
@@ -115,7 +116,6 @@ export const FetchGrabDataPointsGET = ({
       console.error(error);
     }
   }, [error]);
-
   return children({ loading, data, error, refetchGrabDataPoints: refetch });
 };
 
@@ -129,8 +129,7 @@ export const useUsersGET = (
   { refetchInterval, handlers = {} } = {}
 ) => {
   const Constants = GlobalVariables.useValues();
-  const fetcher = usersGET;
-  return useQuery(['Users', args], () => fetcher(Constants, args, handlers), {
+  return useQuery(['Users', args], () => usersGET(Constants, args, handlers), {
     refetchInterval,
   });
 };
@@ -168,6 +167,5 @@ export const FetchUsersGET = ({
       console.error(error);
     }
   }, [error]);
-
   return children({ loading, data, error, refetchUsers: refetch });
 };

@@ -16,7 +16,7 @@ import {
   Touchable,
   withTheme,
 } from '@draftbit/ui';
-import { Text, View, useWindowDimensions } from 'react-native';
+import { Modal, Text, View, useWindowDimensions } from 'react-native';
 
 const FeedbackGuestScreen = props => {
   const dimensions = useWindowDimensions();
@@ -74,6 +74,35 @@ const FeedbackGuestScreen = props => {
     return scheme[msg];
   };
 
+  const validateScno = scNo => {
+    var errorMessage = null;
+    if (!scNo.trim()) {
+      errorMessage = 'Service connection number is required';
+    }
+    return errorMessage;
+  };
+
+  const validateEmail = email => {
+    var errorMessage = null;
+    if (!email.trim()) {
+      errorMessage = 'Email is required';
+    } else {
+      const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+      if (!emailRegex.test(email)) {
+        errorMessage = 'Invalid email address';
+      }
+    }
+    return errorMessage;
+  };
+
+  const validateSubject = sub => {
+    var errorMessage = null;
+    if (!sub.trim()) {
+      errorMessage = 'Subject is required ';
+    }
+    return errorMessage;
+  };
+
   const DisplayFun = display => {
     /*const myTimeout = setTimeout(messageFun,10000);
 
@@ -107,21 +136,24 @@ console.log("i came here");
   const [Response, setResponse] = React.useState('');
   const [Suggestion, setSuggestion] = React.useState('');
   const [display, setDisplay] = React.useState(true);
+  const [emailErrorMsg, setEmailErrorMsg] = React.useState('');
   const [feedBackMsg, setFeedBackMsg] = React.useState('');
+  const [scnoErrorMsg, setScnoErrorMsg] = React.useState('');
   const [searchBarValue, setSearchBarValue] = React.useState('');
   const [seconds, setSeconds] = React.useState(5);
   const [selectedTab, setSelectedTab] = React.useState('tab1');
   const [starRatingValue, setStarRatingValue] = React.useState(0);
   const [starRatingValue2, setStarRatingValue2] = React.useState(0);
+  const [subErrorMsg, setSubErrorMsg] = React.useState('');
   const [textAreaValue, setTextAreaValue] = React.useState('');
   const [textInputValue, setTextInputValue] = React.useState('');
   const [timerResult, setTimerResult] = React.useState('');
 
   return (
     <ScreenContainer
+      hasBottomSafeArea={false}
       hasSafeArea={true}
       scrollable={true}
-      hasBottomSafeArea={false}
     >
       {/* Header */}
       <View
@@ -152,9 +184,9 @@ console.log("i came here");
             }}
           >
             <Icon
-              size={24}
-              name={'Ionicons/arrow-back-sharp'}
               color={theme.colors['Custom Color_2']}
+              name={'Ionicons/arrow-back-sharp'}
+              size={24}
             />
           </Touchable>
         </View>
@@ -189,20 +221,6 @@ console.log("i came here");
           dimensions.width
         )}
       >
-        {/* Feedback Msg */}
-        <Text
-          style={StyleSheet.applyWidth(
-            StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
-              alignSelf: 'center',
-              color: theme.colors['Custom Color_9'],
-              fontFamily: 'Roboto_400Regular',
-              textAlign: 'center',
-            }),
-            dimensions.width
-          )}
-        >
-          {feedBackMsg}
-        </Text>
         <>
           {!feedBackMsg?.length ? null : (
             <Text
@@ -219,16 +237,15 @@ console.log("i came here");
         <View
           style={StyleSheet.applyWidth(
             StyleSheet.compose(GlobalStyles.ViewStyles(theme)['user name'], {
-              marginBottom: 20,
               marginTop: 20,
             }),
             dimensions.width
           )}
         >
           <Icon
-            size={24}
-            name={'MaterialIcons/house'}
             color={theme.colors['Medium']}
+            name={'MaterialIcons/house'}
+            size={24}
           />
           <View
             style={StyleSheet.applyWidth(
@@ -256,17 +273,29 @@ console.log("i came here");
                 dimensions.width
               )}
               value={Name}
-              placeholder={'Enter service connection number'}
+              placeholder={'Service connection number'}
               editable={true}
               placeholderTextColor={theme.colors['Medium']}
             />
           </View>
         </View>
+        {/* Scno Error message */}
+        <Text
+          style={StyleSheet.applyWidth(
+            StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+              alignSelf: 'flex-start',
+              color: theme.colors['Error'],
+              fontFamily: 'Roboto_400Regular',
+            }),
+            dimensions.width
+          )}
+        >
+          {scnoErrorMsg}
+        </Text>
         {/* s1 */}
         <View
           style={StyleSheet.applyWidth(
             StyleSheet.compose(GlobalStyles.ViewStyles(theme)['user name'], {
-              marginBottom: 20,
               marginTop: 20,
             }),
             dimensions.width
@@ -274,8 +303,8 @@ console.log("i came here");
         >
           <Icon
             color={theme.colors['Medium']}
-            size={24}
             name={'Entypo/email'}
+            size={24}
           />
           <View
             style={StyleSheet.applyWidth(
@@ -303,17 +332,29 @@ console.log("i came here");
                 dimensions.width
               )}
               value={Email}
-              placeholder={'Enter your email'}
-              placeholderTextColor={theme.colors['Medium']}
+              placeholder={'Email'}
               editable={true}
+              placeholderTextColor={theme.colors['Medium']}
             />
           </View>
         </View>
+        {/* Email Error message */}
+        <Text
+          style={StyleSheet.applyWidth(
+            StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+              alignSelf: 'flex-start',
+              color: theme.colors['Error'],
+              fontFamily: 'Roboto_400Regular',
+            }),
+            dimensions.width
+          )}
+        >
+          {emailErrorMsg}
+        </Text>
         {/* s1 */}
         <View
           style={StyleSheet.applyWidth(
             StyleSheet.compose(GlobalStyles.ViewStyles(theme)['user name'], {
-              marginBottom: 20,
               marginTop: 20,
             }),
             dimensions.width
@@ -321,8 +362,8 @@ console.log("i came here");
         >
           <Icon
             color={theme.colors['Medium']}
-            size={24}
             name={'MaterialIcons/feedback'}
+            size={24}
           />
           <View
             style={StyleSheet.applyWidth(
@@ -350,12 +391,25 @@ console.log("i came here");
                 dimensions.width
               )}
               value={Suggestion}
-              placeholder={'Suggestion'}
+              placeholder={'Subject'}
               editable={true}
               placeholderTextColor={theme.colors['Medium']}
             />
           </View>
         </View>
+        {/* Subject Error Mgs */}
+        <Text
+          style={StyleSheet.applyWidth(
+            StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+              alignSelf: 'flex-start',
+              color: theme.colors['Error'],
+              fontFamily: 'Roboto_400Regular',
+            }),
+            dimensions.width
+          )}
+        >
+          {subErrorMsg}
+        </Text>
         {/* Feedback View */}
         <View
           style={StyleSheet.applyWidth(
@@ -405,6 +459,21 @@ console.log("i came here");
           onPress={() => {
             const handler = async () => {
               try {
+                const scnoErrorMsg = validateScno(Name);
+                const emailErrorMsg = validateEmail(Email);
+                const subErrorMsg = validateSubject(Suggestion);
+                setScnoErrorMsg(scnoErrorMsg);
+                setEmailErrorMsg(emailErrorMsg);
+                setSubErrorMsg(subErrorMsg);
+                if (scnoErrorMsg?.length) {
+                  return;
+                }
+                if (emailErrorMsg?.length) {
+                  return;
+                }
+                if (subErrorMsg?.length) {
+                  return;
+                }
                 setSeconds('');
                 const feedbackvalues = (
                   await CISAPPApi.feedbackPOST(Constants, {
@@ -418,11 +487,9 @@ console.log("i came here");
                 const messageResult =
                   feedbackvalues && feedbackvalues[0].data[0].msg;
                 setFeedBackMsg(messageResult);
-                const seconds = startTimer();
-                setSeconds(seconds);
-                if (seconds === 0) {
-                  navigation.navigate('WelcomeScreen');
-                }
+                navigation.navigate('FeedbackGuestSuccessScreen', {
+                  feedbackMessage: messageResult,
+                });
               } catch (err) {
                 console.error(err);
               }

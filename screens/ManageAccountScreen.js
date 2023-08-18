@@ -43,7 +43,6 @@ const ManageAccountScreen = props => {
     };
     handler();
   }, [isFocused]);
-
   const [hiddenHindi, setHiddenHindi] = React.useState(true);
   const [managead, setManagead] = React.useState({});
   const [serviceConNo, setServiceConNo] = React.useState('');
@@ -90,7 +89,7 @@ const ManageAccountScreen = props => {
               dimensions.width
             )}
           >
-            <Icon size={24} name={'AntDesign/arrowleft'} />
+            <Icon name={'AntDesign/arrowleft'} size={24} />
           </View>
         </Touchable>
         {/* View bill and make payment */}
@@ -185,9 +184,9 @@ const ManageAccountScreen = props => {
             }}
           >
             <Icon
+              color={theme.colors['App Green']}
               name={'Ionicons/md-add-circle-outline'}
               size={30}
-              color={theme.colors['App Green']}
             />
           </Touchable>
         </View>
@@ -287,15 +286,21 @@ const ManageAccountScreen = props => {
                           dimensions.width
                         )}
                       >
-                        <Icon
-                          style={StyleSheet.applyWidth(
-                            { marginTop: 2 },
-                            dimensions.width
+                        <>
+                          {!(
+                            listData?.new_added_account !== Constants['name']
+                          ) ? null : (
+                            <Icon
+                              style={StyleSheet.applyWidth(
+                                { marginTop: 2 },
+                                dimensions.width
+                              )}
+                              color={theme.colors['Error']}
+                              name={'Feather/minus-circle'}
+                              size={27}
+                            />
                           )}
-                          name={'Feather/minus-circle'}
-                          color={theme.colors['Error']}
-                          size={27}
-                        />
+                        </>
                       </Touchable>
                     </View>
                   </View>
@@ -381,9 +386,9 @@ const ManageAccountScreen = props => {
             )}
           >
             <Icon
-              size={24}
-              name={'Entypo/home'}
               color={theme.colors['Community_Light_Black']}
+              name={'Entypo/home'}
+              size={24}
             />
             <Text
               style={StyleSheet.applyWidth(
@@ -422,9 +427,9 @@ const ManageAccountScreen = props => {
             )}
           >
             <Icon
-              size={24}
-              name={'FontAwesome/bar-chart-o'}
               color={theme.colors['Community_Light_Black']}
+              name={'FontAwesome/bar-chart-o'}
+              size={24}
             />
             <Text
               style={StyleSheet.applyWidth(
@@ -463,9 +468,9 @@ const ManageAccountScreen = props => {
             )}
           >
             <Icon
-              size={24}
               color={theme.colors['Community_Light_Black']}
               name={'Entypo/text-document-inverted'}
+              size={24}
             />
             <Text
               style={StyleSheet.applyWidth(
@@ -505,8 +510,8 @@ const ManageAccountScreen = props => {
           >
             <Icon
               color={theme.colors['Community_Light_Black']}
-              size={24}
               name={'MaterialIcons/payments'}
+              size={24}
             />
             <Text
               style={StyleSheet.applyWidth(
@@ -545,9 +550,9 @@ const ManageAccountScreen = props => {
             )}
           >
             <Icon
-              size={24}
-              name={'MaterialIcons/support-agent'}
               color={theme.colors['Community_Light_Black']}
+              name={'MaterialIcons/support-agent'}
+              size={24}
             />
             <Text
               style={StyleSheet.applyWidth(

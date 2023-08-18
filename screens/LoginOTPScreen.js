@@ -2,6 +2,7 @@ import React from 'react';
 import * as GlobalStyles from '../GlobalStyles.js';
 import * as CISAPPApi from '../apis/CISAPPApi.js';
 import * as GlobalVariables from '../config/GlobalVariableContext';
+import Images from '../config/Images';
 import * as CustomCode from '../custom-files/CustomCode';
 import Breakpoints from '../utils/Breakpoints';
 import * as StyleSheet from '../utils/StyleSheet';
@@ -13,13 +14,21 @@ import {
   Touchable,
   withTheme,
 } from '@draftbit/ui';
-import { Text, View, useWindowDimensions } from 'react-native';
+import { Image, Text, View, useWindowDimensions } from 'react-native';
 
 const LoginOTPScreen = props => {
   const dimensions = useWindowDimensions();
   const Constants = GlobalVariables.useValues();
   const Variables = Constants;
   const setGlobalVariableValue = GlobalVariables.useSetValue();
+
+  const validateScno = scNo => {
+    var errorMessage = null;
+    if (!scNo.trim()) {
+      errorMessage = 'Service connection number is required';
+    }
+    return errorMessage;
+  };
 
   const myFunctionName = async a => {
     console.log(a);
@@ -70,12 +79,13 @@ const LoginOTPScreen = props => {
 
   const [ERROR_MESSAGE, setERROR_MESSAGE] = React.useState('');
   const [afterotpvalue, setAfterotpvalue] = React.useState('');
+  const [scnoErrorMsg, setScnoErrorMsg] = React.useState('');
   const [serviceconnectionnumber, setServiceconnectionnumber] =
     React.useState('');
   const [textInputValue, setTextInputValue] = React.useState('');
 
   return (
-    <ScreenContainer scrollable={false} hasSafeArea={true}>
+    <ScreenContainer hasSafeArea={true} scrollable={false}>
       {/* Header */}
       <View
         style={StyleSheet.applyWidth(
@@ -112,9 +122,9 @@ const LoginOTPScreen = props => {
             }}
           >
             <Icon
-              size={24}
-              name={'Ionicons/arrow-back-sharp'}
               color={theme.colors['Custom Color_2']}
+              name={'Ionicons/arrow-back-sharp'}
+              size={24}
             />
           </Touchable>
         </View>
@@ -134,31 +144,63 @@ const LoginOTPScreen = props => {
           {'Login with OTP'}
         </Text>
       </View>
-      {/* OTP Mobile and email */}
-      <Text
+      {/* View 2 */}
+      <View
         style={StyleSheet.applyWidth(
-          {
-            color: theme.colors['Strong'],
-            fontFamily: 'Roboto_400Regular',
-            fontSize: 14,
-            letterSpacing: 0.3,
-            lineHeight: 21,
-            marginLeft: 20,
-            marginRight: 20,
-            marginTop: 75,
-            opacity: 1,
-            textAlign: 'center',
-          },
+          { alignItems: 'center', justifyContent: 'center', marginTop: 10 },
           dimensions.width
         )}
       >
-        {'Enter your service connection number'}
-      </Text>
+        <Image
+          style={StyleSheet.applyWidth(
+            StyleSheet.compose(GlobalStyles.ImageStyles(theme)['banner 3'], {
+              height: 110,
+              width: 110,
+            }),
+            dimensions.width
+          )}
+          resizeMode={'cover'}
+          source={Images.JBNL}
+        />
+        <View
+          style={StyleSheet.applyWidth({ marginTop: 10 }, dimensions.width)}
+        >
+          <Text
+            style={StyleSheet.applyWidth(
+              StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+                fontFamily: 'Roboto_700Bold',
+                fontSize: 18,
+              }),
+              dimensions.width
+            )}
+          >
+            {'Jharkhand Bijli Vitran Nigam Limited'}
+          </Text>
+
+          <Text
+            style={StyleSheet.applyWidth(
+              StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+                fontFamily: 'Roboto_400Regular',
+                fontSize: 16,
+                marginTop: 10,
+                textAlign: 'center',
+              }),
+              dimensions.width
+            )}
+          >
+            {'Consumer Mobile App'}
+          </Text>
+        </View>
+      </View>
       {/* error message */}
       <Text
         style={StyleSheet.applyWidth(
           StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+            alignSelf: 'flex-start',
+            color: theme.colors['Error'],
             fontFamily: 'Roboto_400Regular',
+            marginTop: 30,
+            paddingLeft: 20,
             paddingTop: 5,
             textAlign: 'center',
           }),
@@ -174,7 +216,6 @@ const LoginOTPScreen = props => {
             alignItems: 'center',
             flexDirection: 'column',
             justifyContent: 'space-evenly',
-            marginTop: 30,
             paddingLeft: 20,
             paddingRight: 20,
           },
@@ -189,9 +230,9 @@ const LoginOTPScreen = props => {
           )}
         >
           <Icon
-            size={24}
-            name={'Ionicons/person'}
             color={theme.colors['Medium']}
+            name={'MaterialIcons/house'}
+            size={24}
           />
           <View
             style={StyleSheet.applyWidth(
@@ -219,12 +260,25 @@ const LoginOTPScreen = props => {
                 dimensions.width
               )}
               value={serviceconnectionnumber}
-              placeholder={'Enter service connection no'}
+              placeholder={'Service connection number'}
               editable={true}
               placeholderTextColor={theme.colors['Medium']}
             />
           </View>
         </View>
+        {/* Scno Error message */}
+        <Text
+          style={StyleSheet.applyWidth(
+            StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+              alignSelf: 'flex-start',
+              color: theme.colors['Error'],
+              fontFamily: 'Roboto_400Regular',
+            }),
+            dimensions.width
+          )}
+        >
+          {scnoErrorMsg}
+        </Text>
       </View>
 
       <View
@@ -238,6 +292,11 @@ const LoginOTPScreen = props => {
           onPress={() => {
             const handler = async () => {
               try {
+                const scnoErrorMsg = validateScno(serviceconnectionnumber);
+                setScnoErrorMsg(scnoErrorMsg);
+                if (scnoErrorMsg?.length) {
+                  return;
+                }
                 const otpvalue = (
                   await CISAPPApi.loginWithOTPPOST(Constants, {
                     accno: serviceconnectionnumber,
@@ -258,7 +317,9 @@ const LoginOTPScreen = props => {
                 if (messagejson?.length) {
                   return;
                 }
-                navigation.navigate('ConfirmOTPLoginScreen');
+                navigation.navigate('ConfirmOTPLoginScreen', {
+                  userenterscno: serviceconnectionnumber,
+                });
               } catch (err) {
                 console.error(err);
               }

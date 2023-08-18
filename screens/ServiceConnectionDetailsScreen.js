@@ -69,6 +69,14 @@ const ServiceConnectionDetailsScreen = props => {
     return scheme[msg];
   };
 
+  const validateScno = scNo => {
+    var errorMessage = null;
+    if (!scNo.trim()) {
+      errorMessage = 'Service connection number is required';
+    }
+    return errorMessage;
+  };
+
   const { theme } = props;
   const { navigation } = props;
 
@@ -77,6 +85,7 @@ const ServiceConnectionDetailsScreen = props => {
   const [existAcct, setExistAcct] = React.useState('');
   const [hiddenHindi, setHiddenHindi] = React.useState(true);
   const [newAcct, setNewAcct] = React.useState('');
+  const [scnoErrorMsg, setScnoErrorMsg] = React.useState('');
   const [showNav, setShowNav] = React.useState(false);
   const [visibleHindi, setVisibleHindi] = React.useState(false);
 
@@ -125,7 +134,7 @@ const ServiceConnectionDetailsScreen = props => {
                 dimensions.width
               )}
             >
-              <Icon size={24} name={'AntDesign/arrowleft'} />
+              <Icon name={'AntDesign/arrowleft'} size={24} />
             </View>
           </Touchable>
           {/* View bill and make payment */}
@@ -140,7 +149,7 @@ const ServiceConnectionDetailsScreen = props => {
               dimensions.width
             )}
           >
-            {'Add New Service Connection'}
+            {'Add Service Connection'}
           </Text>
         </View>
         {/* amblock */}
@@ -159,10 +168,9 @@ const ServiceConnectionDetailsScreen = props => {
           <Text
             style={StyleSheet.applyWidth(
               StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
-                alignSelf: 'center',
-                color: theme.colors['Community_Dark_Red'],
+                alignSelf: 'flex-start',
+                color: theme.colors['Error'],
                 fontFamily: 'Roboto_400Regular',
-                paddingBottom: 20,
               }),
               dimensions.width
             )}
@@ -172,16 +180,14 @@ const ServiceConnectionDetailsScreen = props => {
           {/* Service connection number */}
           <View
             style={StyleSheet.applyWidth(
-              StyleSheet.compose(GlobalStyles.ViewStyles(theme)['user name'], {
-                marginBottom: 15,
-              }),
+              GlobalStyles.ViewStyles(theme)['user name'],
               dimensions.width
             )}
           >
             <Icon
               color={theme.colors['Medium']}
-              size={24}
               name={'MaterialIcons/house'}
+              size={24}
             />
             <View
               style={StyleSheet.applyWidth(
@@ -209,56 +215,36 @@ const ServiceConnectionDetailsScreen = props => {
                   dimensions.width
                 )}
                 value={newAcct}
-                placeholder={'Enter new service connection'}
+                placeholder={'Service connection number'}
                 editable={true}
                 placeholderTextColor={theme.colors['Medium']}
               />
             </View>
           </View>
-          {/* Meter Number */}
-          <View
+          {/* New service connection error message */}
+          <Text
             style={StyleSheet.applyWidth(
-              StyleSheet.compose(GlobalStyles.ViewStyles(theme)['user name'], {
-                marginTop: 10,
+              StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+                alignSelf: 'flex-start',
+                color: theme.colors['Error'],
+                fontFamily: 'Roboto_400Regular',
+                paddingBottom: 20,
               }),
               dimensions.width
             )}
           >
-            <Icon
-              size={24}
-              color={theme.colors['Medium']}
-              name={'MaterialIcons/house'}
-            />
-            <View
-              style={StyleSheet.applyWidth(
-                { flex: 1, paddingLeft: 10, paddingRight: 10 },
-                dimensions.width
-              )}
-            >
-              <TextInput
-                style={StyleSheet.applyWidth(
-                  {
-                    borderRadius: 8,
-                    fontFamily: 'Roboto_400Regular',
-                    paddingBottom: 8,
-                    paddingLeft: 8,
-                    paddingRight: 8,
-                    paddingTop: 8,
-                  },
-                  dimensions.width
-                )}
-                value={Constants['name']}
-                placeholder={'Exiting service connection number'}
-                editable={true}
-                placeholderTextColor={theme.colors['Medium']}
-              />
-            </View>
-          </View>
+            {scnoErrorMsg}
+          </Text>
           {/* Submit */}
           <Button
             onPress={() => {
               const handler = async () => {
                 try {
+                  const scnoErrorMsg = validateScno(newAcct);
+                  setScnoErrorMsg(scnoErrorMsg);
+                  if (scnoErrorMsg?.length) {
+                    return;
+                  }
                   const adsercondetresult = (
                     await CISAPPApi.addServiceConnectionAccountPOST(Constants, {
                       existAcct: (() => {
@@ -290,7 +276,8 @@ const ServiceConnectionDetailsScreen = props => {
                     return;
                   }
                   navigation.navigate(
-                    'ConfirmOTPAddNewServiceConnectionScreen'
+                    'ConfirmOTPAddNewServiceConnectionScreen',
+                    { userenterscno: existAcct }
                   );
                 } catch (err) {
                   console.error(err);

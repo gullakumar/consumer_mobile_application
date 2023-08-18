@@ -18,20 +18,19 @@ export const newbillendpointPOST = (Constants, _args, handlers = {}) =>
     method: 'POST',
   }).then(res => handleResponse(res, handlers));
 
-export const useNewbillendpointPOST = () => {
+export const useNewbillendpointPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://fgeam.fluentgrid.com:8888/consumerapi/getAccountDetails`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['newBillNewbillendpointPOST', args],
+    () => newbillendpointPOST(Constants, args, handlers),
     {
-      body: JSON.stringify({ accno: '1234343' }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () =>
+        queryClient.invalidateQueries(['newBillNewbillendpointPOSTS']),
     }
   );
 };
@@ -46,22 +45,14 @@ export const FetchNewbillendpointPOST = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://fgeam.fluentgrid.com:8888/consumerapi/getAccountDetails`,
-    {
-      body: JSON.stringify({ accno: '1234343' }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = useNewbillendpointPOST(
+    {},
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -76,12 +67,5 @@ export const FetchNewbillendpointPOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({ loading, data, error, refetchNewbillendpoint: refetch });
 };

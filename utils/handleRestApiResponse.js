@@ -26,6 +26,9 @@ export const handleResponse = async (res, handlers = {}) => {
   if (handlers.onData) {
     handlers.onData(json);
   }
+  if (status === 401 && handlers.on401) {
+    handlers.on401(ret);
+  }
   if (status === 403 && handlers.on403) {
     handlers.on403(ret);
   }

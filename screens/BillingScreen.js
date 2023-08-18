@@ -23,7 +23,14 @@ import {
 } from '@draftbit/ui';
 import { useIsFocused } from '@react-navigation/native';
 import * as WebBrowser from 'expo-web-browser';
-import { FlatList, Image, Text, View, useWindowDimensions } from 'react-native';
+import {
+  FlatList,
+  Image,
+  ScrollView,
+  Text,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 
 const BillingScreen = props => {
   const dimensions = useWindowDimensions();
@@ -71,6 +78,26 @@ line two` ) and will not work with special characters inside of quotes ( example
 
     console.log(`billing/rest/getBillDataService/${Scno}`);
     return `billing/rest/getBillDataService/${Scno}`;
+  };
+
+  const convertMonthNoToMonthName = monthNo => {
+    const monthNames = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+    const monthName = monthNames[monthNo - 1];
+    console.log(monthName);
+    return monthName;
   };
 
   const convertDateTimeToDate = dateTime => {
@@ -124,8 +151,8 @@ line two` ) and will not work with special characters inside of quotes ( example
             )?.json;
           }
         })();
-        console.log(Billdetailsjson);
         buildString(Constants['name']);
+        console.log(Billdetailsjson);
 
         const valuexIxNMeaF =
           Billdetailsjson && Billdetailsjson[0].data.BillDataJson[0];
@@ -182,14 +209,12 @@ line two` ) and will not work with special characters inside of quotes ( example
           ),
         });
         console.log(result);
-        setServiceConNumber(props.route?.params?.Name ?? '');
       } catch (err) {
         console.error(err);
       }
     };
     handler();
   }, [isFocused]);
-
   const [ShowNav, setShowNav] = React.useState(false);
   const [availableBalance, setAvailableBalance] = React.useState('');
   const [billingHistoryScreen, setBillingHistoryScreen] = React.useState({});
@@ -208,7 +233,7 @@ line two` ) and will not work with special characters inside of quotes ( example
   return (
     <ScreenContainer
       style={StyleSheet.applyWidth(
-        { flex: 1, flexDirection: 'column' },
+        { flex: 1, flexDirection: 'column', marginTop: 30 },
         dimensions.width
       )}
       hasTopSafeArea={false}
@@ -311,10 +336,10 @@ line two` ) and will not work with special characters inside of quotes ( example
                     )}
                   >
                     <Icon
-                      size={24}
                       name={
                         'MaterialCommunityIcons/account-arrow-right-outline'
                       }
+                      size={24}
                     />
                     <Text
                       style={StyleSheet.applyWidth(
@@ -355,8 +380,8 @@ line two` ) and will not work with special characters inside of quotes ( example
                     )}
                   >
                     <Icon
-                      size={24}
                       name={'Ionicons/ios-notifications-circle-outline'}
+                      size={24}
                     />
                     <Text
                       style={StyleSheet.applyWidth(
@@ -396,7 +421,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                       dimensions.width
                     )}
                   >
-                    <Icon size={24} name={'Feather/loader'} />
+                    <Icon name={'Feather/loader'} size={24} />
                     <Text
                       style={StyleSheet.applyWidth(
                         {
@@ -442,8 +467,8 @@ line two` ) and will not work with special characters inside of quotes ( example
                     )}
                   >
                     <Icon
-                      size={24}
                       name={'MaterialCommunityIcons/alert-outline'}
+                      size={24}
                     />
                     <Text
                       style={StyleSheet.applyWidth(
@@ -489,7 +514,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                       dimensions.width
                     )}
                   >
-                    <Icon size={24} name={'FontAwesome/exclamation-triangle'} />
+                    <Icon name={'FontAwesome/exclamation-triangle'} size={24} />
                     <Text
                       style={StyleSheet.applyWidth(
                         {
@@ -528,7 +553,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                       dimensions.width
                     )}
                   >
-                    <Icon size={24} name={'Feather/download'} />
+                    <Icon name={'Feather/download'} size={24} />
                     <Text
                       style={StyleSheet.applyWidth(
                         {
@@ -544,11 +569,11 @@ line two` ) and will not work with special characters inside of quotes ( example
                     </Text>
                   </View>
                 </Touchable>
-                {/* FAQ */}
+                {/* Help */}
                 <Touchable
                   onPress={() => {
                     try {
-                      navigation.navigate('HelpCenterScreen');
+                      navigation.navigate('HelpScreen');
                     } catch (err) {
                       console.error(err);
                     }
@@ -567,7 +592,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                       dimensions.width
                     )}
                   >
-                    <Icon size={24} name={'Feather/help-circle'} />
+                    <Icon name={'Feather/help-circle'} size={24} />
                     <Text
                       style={StyleSheet.applyWidth(
                         {
@@ -579,7 +604,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                         dimensions.width
                       )}
                     >
-                      {'FAQ'}
+                      {'Help'}
                     </Text>
                   </View>
                 </Touchable>
@@ -606,7 +631,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                       dimensions.width
                     )}
                   >
-                    <Icon size={24} name={'MaterialIcons/feedback'} />
+                    <Icon name={'MaterialIcons/feedback'} size={24} />
                     <Text
                       style={StyleSheet.applyWidth(
                         {
@@ -622,11 +647,11 @@ line two` ) and will not work with special characters inside of quotes ( example
                     </Text>
                   </View>
                 </Touchable>
-                {/* Help */}
+                {/* Contact Us */}
                 <Touchable
                   onPress={() => {
                     try {
-                      navigation.navigate('HelpCenterScreen');
+                      navigation.navigate('ContactUsScreen');
                     } catch (err) {
                       console.error(err);
                     }
@@ -645,7 +670,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                       dimensions.width
                     )}
                   >
-                    <Icon size={24} name={'Ionicons/md-help-buoy-outline'} />
+                    <Icon name={'Ionicons/md-help-buoy-outline'} size={24} />
                     <Text
                       style={StyleSheet.applyWidth(
                         {
@@ -657,7 +682,85 @@ line two` ) and will not work with special characters inside of quotes ( example
                         dimensions.width
                       )}
                     >
-                      {'Help'}
+                      {'Contact Us'}
+                    </Text>
+                  </View>
+                </Touchable>
+                {/* Energy Tips */}
+                <Touchable
+                  onPress={() => {
+                    try {
+                      navigation.navigate('EnergyTipsScreen');
+                    } catch (err) {
+                      console.error(err);
+                    }
+                  }}
+                >
+                  <View
+                    style={StyleSheet.applyWidth(
+                      {
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                        paddingBottom: 12,
+                        paddingLeft: 24,
+                        paddingRight: 24,
+                        paddingTop: 12,
+                      },
+                      dimensions.width
+                    )}
+                  >
+                    <Icon name={'SimpleLineIcons/energy'} size={24} />
+                    <Text
+                      style={StyleSheet.applyWidth(
+                        {
+                          color: theme.colors['Strong'],
+                          fontFamily: 'Roboto_400Regular',
+                          fontSize: 16,
+                          marginLeft: 8,
+                        },
+                        dimensions.width
+                      )}
+                    >
+                      {'Energy Tips'}
+                    </Text>
+                  </View>
+                </Touchable>
+                {/* Privacy Policy */}
+                <Touchable
+                  onPress={() => {
+                    try {
+                      navigation.navigate('PrivacyPolicyScreen');
+                    } catch (err) {
+                      console.error(err);
+                    }
+                  }}
+                >
+                  <View
+                    style={StyleSheet.applyWidth(
+                      {
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                        paddingBottom: 12,
+                        paddingLeft: 24,
+                        paddingRight: 24,
+                        paddingTop: 12,
+                      },
+                      dimensions.width
+                    )}
+                  >
+                    <Icon name={'MaterialCommunityIcons/security'} size={24} />
+                    <Text
+                      style={StyleSheet.applyWidth(
+                        {
+                          color: theme.colors['Strong'],
+                          fontFamily: 'Roboto_400Regular',
+                          fontSize: 16,
+                          marginLeft: 8,
+                        },
+                        dimensions.width
+                      )}
+                    >
+                      {'Privacy Policy'}
                     </Text>
                   </View>
                 </Touchable>
@@ -733,10 +836,10 @@ line two` ) and will not work with special characters inside of quotes ( example
             }}
             status={ShowNav}
             checkedIcon={'Feather/x'}
-            uncheckedIcon={'Feather/menu'}
-            size={32}
             color={theme.colors['Custom Color_22']}
+            size={32}
             uncheckedColor={theme.colors['Custom Color_22']}
+            uncheckedIcon={'Feather/menu'}
           />
           <View
             style={StyleSheet.applyWidth(
@@ -822,9 +925,9 @@ line two` ) and will not work with special characters inside of quotes ( example
               }}
             >
               <Icon
-                size={24}
-                name={'Ionicons/md-notifications-circle-outline'}
                 color={theme.colors['Community_Light_Black']}
+                name={'Ionicons/md-notifications-circle-outline'}
+                size={24}
               />
             </Touchable>
 
@@ -838,810 +941,878 @@ line two` ) and will not work with special characters inside of quotes ( example
               }}
             >
               <Icon
-                size={24}
-                name={'Ionicons/person-circle-outline'}
                 color={theme.colors['Community_Light_Black']}
+                name={'Ionicons/person-circle-outline'}
+                size={24}
               />
             </Touchable>
           </View>
         </View>
-        {/* Body */}
-        <View
-          style={StyleSheet.applyWidth(
-            { flex: 1, justifyContent: 'space-around' },
-            dimensions.width
-          )}
+
+        <ScrollView
+          bounces={true}
+          showsHorizontalScrollIndicator={true}
+          showsVerticalScrollIndicator={true}
         >
-          {/* amblock */}
+          {/* Body */}
           <View
             style={StyleSheet.applyWidth(
-              { flex: 1, paddingLeft: 20, paddingRight: 20 },
+              { flex: 1, justifyContent: 'space-around' },
               dimensions.width
             )}
           >
-            {/* Service connection number */}
+            {/* amblock */}
             <View
               style={StyleSheet.applyWidth(
-                StyleSheet.compose(GlobalStyles.ViewStyles(theme)['category'], {
-                  borderBottomWidth: 1,
-                  borderColor: theme.colors['Divider'],
-                  borderLeftWidth: 1,
-                  borderRadius: 16,
-                  borderRightWidth: 1,
-                  borderTopWidth: 1,
-                  height: 50,
-                  paddingLeft: 20,
-                  paddingRight: 20,
-                }),
+                { flex: 1, paddingLeft: 20, paddingRight: 20 },
                 dimensions.width
               )}
             >
-              <Icon
-                size={24}
-                name={'MaterialIcons/house'}
-                color={theme.colors['Medium']}
-              />
-              <Picker
-                onValueChange={newPickerValue => {
-                  const handler = async () => {
-                    try {
-                      setServiceConNumber(newPickerValue);
-                      const consumerDetailsJson = (
-                        await CISAPPApi.consumerDetailsPOST(Constants, {
-                          action: buildConsumerString(newPickerValue),
-                        })
-                      )?.json;
-                      console.log(consumerDetailsJson);
-                      buildConsumerString(newPickerValue);
-                      const prepaidFlag = (
-                        consumerDetailsJson && consumerDetailsJson[0]
-                      )?.data?.prepaidFlag;
-                      console.log(prepaidFlag);
-                      setPrepaidFlag(prepaidFlag);
-                      const meterNo = (
-                        consumerDetailsJson && consumerDetailsJson[0]
-                      )?.data?.meterNumber;
-                      console.log(meterNo);
-                      setMeterNumber(meterNo);
-                      const Billdetailsjson = await (async () => {
-                        if (prepaidFlag === 'N') {
-                          return (
-                            await CISAPPApi.viewBillDetailsPOST(Constants, {
-                              action: buildString(newPickerValue),
-                            })
-                          )?.json;
-                        }
-                      })();
-                      console.log(Billdetailsjson);
-                      buildString(newPickerValue);
-
-                      const value4uw27AOB =
-                        Billdetailsjson &&
-                        Billdetailsjson[0].data.BillDataJson[0];
-                      setViewBillDetails(value4uw27AOB);
-                      const Billdetailslog = value4uw27AOB;
-                      const BillingHistoryJson = (
-                        await CISAPPApi.billingHistoryPOST(Constants, {
-                          action: buildBillingString(newPickerValue),
-                        })
-                      )?.json;
-                      buildBillingString(newPickerValue);
-                      console.log(BillingHistoryJson);
-
-                      const valueKQgEfMtz =
-                        BillingHistoryJson &&
-                        BillingHistoryJson[0].data.BillDataJson;
-                      setBillingHistoryScreen(valueKQgEfMtz);
-                      const billHistory = valueKQgEfMtz;
-                      const prepaidJson = await (async () => {
-                        if (prepaidFlag === 'Y') {
-                          return (
-                            await CISAPPApi.prepaidApiPOST(Constants, {
-                              mtrno: meterNo,
-                            })
-                          )?.json;
-                        }
-                      })();
-                      console.log(prepaidJson);
-                      const availableBalance = (prepaidJson && prepaidJson[0])
-                        ?.data[0]?.avail_balance;
-                      console.log(availableBalance);
-                      setAvailableBalance(availableBalance);
-                      const prepaidBillingHistoryJson = await (async () => {
-                        if (prepaidFlag === 'Y') {
-                          return (
-                            await CISAPPApi.billingHistoryPrepaidPOST(
-                              Constants,
-                              { action: prepaidBillingString(meterNo) }
-                            )
-                          )?.json;
-                        }
-                      })();
-                      prepaidBillingString(meterNo);
-                      console.log(prepaidBillingHistoryJson);
-                      const prepaidBillingHistoryResult =
-                        prepaidBillingHistoryJson &&
-                        prepaidBillingHistoryJson[0].data.data;
-                      setPrepaidBillingHistory(prepaidBillingHistoryResult);
-                      console.log(prepaidBillingHistoryResult);
-                    } catch (err) {
-                      console.error(err);
-                    }
-                  };
-                  handler();
-                }}
+              {/* Service connection number */}
+              <View
                 style={StyleSheet.applyWidth(
-                  {
-                    borderColor: theme.colors['Background'],
-                    borderWidth: 1,
-                    fontFamily: 'Roboto_400Regular',
-                    marginTop: -5,
-                  },
+                  StyleSheet.compose(
+                    GlobalStyles.ViewStyles(theme)['category'],
+                    {
+                      borderBottomWidth: 1,
+                      borderColor: theme.colors['Divider'],
+                      borderLeftWidth: 1,
+                      borderRadius: 16,
+                      borderRightWidth: 1,
+                      borderTopWidth: 1,
+                      height: 50,
+                      paddingLeft: 20,
+                      paddingRight: 20,
+                    }
+                  ),
                   dimensions.width
                 )}
-                options={Constants['manageaccount_picker']}
-                leftIconMode={'inset'}
-                type={'solid'}
-                iconSize={24}
-                autoDismissKeyboard={true}
-                rightIconName={'Feather/chevron-down'}
-                placeholder={' '}
-                iconColor={theme.colors['Medium']}
-                placeholderTextColor={theme.colors['Medium']}
-                defaultValue={Constants['name']}
-              />
-            </View>
-            {/* postpaid */}
-            <>
-              {!(prepaidFlag === 'N') ? null : (
-                <View
+              >
+                <Icon
+                  color={theme.colors['Medium']}
+                  name={'MaterialIcons/house'}
+                  size={24}
+                />
+                <Picker
+                  onValueChange={newPickerValue => {
+                    const handler = async () => {
+                      try {
+                        setServiceConNumber(newPickerValue);
+                        const consumerDetailsJson = (
+                          await CISAPPApi.consumerDetailsPOST(Constants, {
+                            action: buildConsumerString(newPickerValue),
+                          })
+                        )?.json;
+                        console.log(consumerDetailsJson);
+                        buildConsumerString(newPickerValue);
+                        const prepaidFlag = (
+                          consumerDetailsJson && consumerDetailsJson[0]
+                        )?.data?.prepaidFlag;
+                        console.log(prepaidFlag);
+                        setPrepaidFlag(prepaidFlag);
+                        const meterNo = (
+                          consumerDetailsJson && consumerDetailsJson[0]
+                        )?.data?.meterNumber;
+                        console.log(meterNo);
+                        const Billdetailsjson = await (async () => {
+                          if (prepaidFlag === 'N') {
+                            return (
+                              await CISAPPApi.viewBillDetailsPOST(Constants, {
+                                action: buildString(newPickerValue),
+                              })
+                            )?.json;
+                          }
+                        })();
+                        setMeterNumber(meterNo);
+                        buildString(newPickerValue);
+                        console.log(Billdetailsjson);
+
+                        const valueXRLuuwU9 =
+                          Billdetailsjson &&
+                          Billdetailsjson[0].data.BillDataJson[0];
+                        setViewBillDetails(valueXRLuuwU9);
+                        const Billdetailslog = valueXRLuuwU9;
+                        const BillingHistoryJson = (
+                          await CISAPPApi.billingHistoryPOST(Constants, {
+                            action: buildBillingString(newPickerValue),
+                          })
+                        )?.json;
+                        buildBillingString(newPickerValue);
+                        console.log(BillingHistoryJson);
+
+                        const valueKQgEfMtz =
+                          BillingHistoryJson &&
+                          BillingHistoryJson[0].data.BillDataJson;
+                        setBillingHistoryScreen(valueKQgEfMtz);
+                        const billHistory = valueKQgEfMtz;
+                        const prepaidJson = await (async () => {
+                          if (prepaidFlag === 'Y') {
+                            return (
+                              await CISAPPApi.prepaidApiPOST(Constants, {
+                                mtrno: meterNo,
+                              })
+                            )?.json;
+                          }
+                        })();
+                        console.log(prepaidJson);
+                        const availableBalance = (prepaidJson && prepaidJson[0])
+                          ?.data[0]?.avail_balance;
+                        console.log(availableBalance);
+                        setAvailableBalance(availableBalance);
+                        const prepaidBillingHistoryJson = await (async () => {
+                          if (prepaidFlag === 'Y') {
+                            return (
+                              await CISAPPApi.billingHistoryPrepaidPOST(
+                                Constants,
+                                { action: prepaidBillingString(meterNo) }
+                              )
+                            )?.json;
+                          }
+                        })();
+                        prepaidBillingString(meterNo);
+                        console.log(prepaidBillingHistoryJson);
+                        const prepaidBillingHistoryResult =
+                          prepaidBillingHistoryJson &&
+                          prepaidBillingHistoryJson[0].data.data;
+                        setPrepaidBillingHistory(prepaidBillingHistoryResult);
+                        console.log(prepaidBillingHistoryResult);
+                      } catch (err) {
+                        console.error(err);
+                      }
+                    };
+                    handler();
+                  }}
                   style={StyleSheet.applyWidth(
-                    StyleSheet.compose(GlobalStyles.ViewStyles(theme)['card'], {
-                      borderColor: theme.colors['Community_Border'],
-                      borderRadius: 8,
+                    {
+                      borderColor: theme.colors['Background'],
                       borderWidth: 1,
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      marginBottom: 15,
-                      marginTop: 30,
-                      paddingBottom: 10,
-                      paddingLeft: 20,
-                      paddingTop: 10,
-                    }),
+                      fontFamily: 'Roboto_400Regular',
+                      marginTop: -5,
+                    },
                     dimensions.width
                   )}
-                >
+                  options={Constants['manageaccount_picker']}
+                  autoDismissKeyboard={true}
+                  defaultValue={Constants['name']}
+                  iconColor={theme.colors['Medium']}
+                  iconSize={24}
+                  leftIconMode={'inset'}
+                  rightIconName={'Feather/chevron-down'}
+                  type={'solid'}
+                />
+              </View>
+
+              <View
+                style={StyleSheet.applyWidth(
+                  { alignItems: 'stretch', marginBottom: 5, marginTop: 10 },
+                  dimensions.width
+                )}
+              >
+                {/* Prepaid */}
+                <>
+                  {!(prepaidFlag === 'Y') ? null : (
+                    <Text
+                      style={StyleSheet.applyWidth(
+                        StyleSheet.compose(
+                          GlobalStyles.TextStyles(theme)['Text'],
+                          {
+                            fontFamily: 'Roboto_400Regular',
+                            textAlign: 'right',
+                          }
+                        ),
+                        dimensions.width
+                      )}
+                    >
+                      {'Prepaid'}
+                    </Text>
+                  )}
+                </>
+                {/* Postpaid */}
+                <>
+                  {!(prepaidFlag === 'N') ? null : (
+                    <Text
+                      style={StyleSheet.applyWidth(
+                        StyleSheet.compose(
+                          GlobalStyles.TextStyles(theme)['Text'],
+                          {
+                            fontFamily: 'Roboto_400Regular',
+                            textAlign: 'right',
+                          }
+                        ),
+                        dimensions.width
+                      )}
+                    >
+                      {'Postpaid'}
+                    </Text>
+                  )}
+                </>
+              </View>
+              {/* postpaid */}
+              <>
+                {!(prepaidFlag === 'N') ? null : (
                   <View
                     style={StyleSheet.applyWidth(
-                      { alignSelf: 'auto' },
-                      dimensions.width
-                    )}
-                  >
-                    {/* Amount due */}
-                    <Text
-                      style={StyleSheet.applyWidth(
+                      StyleSheet.compose(
+                        GlobalStyles.ViewStyles(theme)['card'],
                         {
-                          color: theme.colors.strong,
-                          fontFamily: 'Roboto_400Regular',
-                          fontSize: 14,
-                          opacity: 1,
-                        },
-                        dimensions.width
-                      )}
-                    >
-                      {'Amount due'}
-                    </Text>
-                    {/* Amount  */}
-                    <Text
-                      style={StyleSheet.applyWidth(
-                        {
-                          color: theme.colors.strong,
-                          fontFamily: 'Roboto_700Bold',
-                          fontSize: 14,
-                          opacity: 1,
-                        },
-                        dimensions.width
-                      )}
-                    >
-                      {'₹'}
-                      {viewBillDetails?.BillAmount}
-                    </Text>
-                    {/* Sub title */}
-                    <Text
-                      style={StyleSheet.applyWidth(
-                        {
-                          color: theme.colors.strong,
-                          fontFamily: 'Roboto_400Regular',
-                          fontSize: 12,
+                          borderColor: theme.colors['Community_Border'],
+                          borderRadius: 8,
+                          borderWidth: 1,
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                          marginBottom: 15,
                           marginTop: 5,
-                          opacity: 1,
-                        },
-                        dimensions.width
-                      )}
-                    >
-                      {'Due Date: '}
-                      {viewBillDetails?.BillDueDate}
-                    </Text>
-                  </View>
-                  {/* View */}
-                  <Button
-                    onPress={() => {
-                      try {
-                        navigation.navigate('ViewBillScreen', {
-                          Name: viewBillDetails?.Name,
-                          Scno: viewBillDetails?.Scno,
-                          BillMonth: viewBillDetails?.BillMonth,
-                          BillDame: viewBillDetails?.BillIssueDate,
-                          BillNo: viewBillDetails?.BillNo,
-                          BillDueDate: viewBillDetails?.BillDueDate,
-                          BillAmount: viewBillDetails?.BillAmount,
-                          Arrear: viewBillDetails?.Arrear,
-                          RebateGiven: viewBillDetails?.RebateGiven,
-                          netcurrbill: viewBillDetails?.netcurrbill,
-                          BillIssueDate: viewBillDetails?.BillIssueDate,
-                        });
-                      } catch (err) {
-                        console.error(err);
-                      }
-                    }}
-                    style={StyleSheet.applyWidth(
-                      {
-                        backgroundColor: theme.colors['GetFit Orange'],
-                        borderRadius: 14,
-                        fontFamily: 'Roboto_400Regular',
-                        fontSize: 16,
-                        height: 36,
-                        marginTop: 5,
-                        textAlign: 'center',
-                        width: '23%',
-                      },
-                      dimensions.width
-                    )}
-                    title={'View'}
-                  />
-                  {/* Pay Now */}
-                  <Button
-                    onPress={() => {
-                      try {
-                        navigation.navigate('MakePaymentScreen', {
-                          Name: viewBillDetails?.Name,
-                          Scno: viewBillDetails?.Scno,
-                          BillMonth: viewBillDetails?.BillMonth,
-                          BillDame: viewBillDetails?.BillIssueDate,
-                          BillNo: viewBillDetails?.BillNo,
-                          BillDueDate: viewBillDetails?.BillDueDate,
-                          BillAmount: viewBillDetails?.BillAmount,
-                          Arrear: viewBillDetails?.Arrear,
-                          RebateGiven: viewBillDetails?.RebateGiven,
-                          netcurrbill: viewBillDetails?.netcurrbill,
-                          BillIssueDate: viewBillDetails?.BillIssueDate,
-                          Billid: viewBillDetails?.BillDetailsId,
-                          accno: viewBillDetails?.AccNo,
-                        });
-                      } catch (err) {
-                        console.error(err);
-                      }
-                    }}
-                    style={StyleSheet.applyWidth(
-                      {
-                        backgroundColor: theme.colors['GetFit Orange'],
-                        borderRadius: 14,
-                        fontFamily: 'Roboto_400Regular',
-                        fontSize: 16,
-                        height: 36,
-                        marginTop: 5,
-                        textAlign: 'center',
-                        width: '30%',
-                      },
-                      dimensions.width
-                    )}
-                    title={'Pay Now'}
-                  />
-                </View>
-              )}
-            </>
-            {/* prepaid */}
-            <>
-              {!(prepaidFlag === 'Y') ? null : (
-                <View
-                  style={StyleSheet.applyWidth(
-                    StyleSheet.compose(GlobalStyles.ViewStyles(theme)['card'], {
-                      borderColor: theme.colors['Community_Border'],
-                      borderRadius: 8,
-                      borderWidth: 1,
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      marginBottom: 15,
-                      marginTop: 30,
-                      paddingBottom: 10,
-                      paddingLeft: 20,
-                      paddingTop: 10,
-                    }),
-                    dimensions.width
-                  )}
-                >
-                  <View
-                    style={StyleSheet.applyWidth(
-                      { alignSelf: 'auto' },
+                          paddingBottom: 10,
+                          paddingLeft: 20,
+                          paddingTop: 10,
+                        }
+                      ),
                       dimensions.width
                     )}
                   >
-                    {/* Amount  */}
-                    <Text
+                    <View
                       style={StyleSheet.applyWidth(
-                        {
-                          color: theme.colors.strong,
-                          fontFamily: 'Roboto_700Bold',
-                          fontSize: 14,
-                          opacity: 1,
-                        },
+                        { alignSelf: 'auto' },
                         dimensions.width
                       )}
                     >
-                      {'Available balance: ₹'}
-                      {availableBalance}
-                    </Text>
-                  </View>
-                </View>
-              )}
-            </>
-            {/* Prepaid View */}
-            <>
-              {!(prepaidFlag === 'Y') ? null : (
-                <View>
-                  {/* Prepaid Section header */}
-                  <>
-                    {!(prepaidFlag === 'Y') ? null : (
-                      <View
-                        style={StyleSheet.applyWidth(
-                          StyleSheet.compose(
-                            GlobalStyles.ViewStyles(theme)['section header 2'],
-                            { justifyContent: 'center', paddingBottom: 12 }
-                          ),
-                          dimensions.width
-                        )}
-                      >
-                        {/* Heading */}
-                        <Text
-                          style={StyleSheet.applyWidth(
-                            {
-                              alignSelf: 'center',
-                              color: theme.colors['ShopAppBlue'],
-                              fontFamily: 'Roboto_400Regular',
-                              fontSize: 16,
-                              textAlign: 'center',
-                            },
-                            dimensions.width
-                          )}
-                        >
-                          {'Billing History'}
-                        </Text>
-                      </View>
-                    )}
-                  </>
-                  {/* prepaidtabs */}
-                  <>
-                    {!(prepaidFlag === 'Y') ? null : (
-                      <View
+                      {/* Amount due */}
+                      <Text
                         style={StyleSheet.applyWidth(
                           {
-                            alignItems: 'center',
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
+                            color: theme.colors.strong,
+                            fontFamily: 'Roboto_400Regular',
+                            fontSize: 14,
+                            opacity: 1,
                           },
                           dimensions.width
                         )}
                       >
-                        {/* chart */}
-                        <View
-                          style={StyleSheet.applyWidth(
-                            {
-                              alignItems: 'center',
-                              flex: 1,
-                              flexDirection: 'row',
-                              justifyContent: 'space-between',
-                            },
-                            dimensions.width
-                          )}
-                        >
-                          {/* prepaidchart */}
-                          <View
-                            style={StyleSheet.applyWidth(
-                              { flex: 1 },
-                              dimensions.width
-                            )}
-                          >
-                            {/* selected */}
-                            <>
-                              {!(selectedTab2 === 'prepaidchart') ? null : (
-                                <Touchable>
-                                  <View
-                                    style={StyleSheet.applyWidth(
-                                      {
-                                        alignItems: 'center',
-                                        borderBottomWidth: 3,
-                                        borderColor:
-                                          theme.colors['Custom Color'],
-                                        height: 25,
-                                      },
-                                      dimensions.width
-                                    )}
-                                  >
-                                    <Text
-                                      style={StyleSheet.applyWidth(
-                                        StyleSheet.compose(
-                                          GlobalStyles.TextStyles(theme)[
-                                            'Text'
-                                          ],
-                                          {
-                                            color: theme.colors['Custom Color'],
-                                            fontFamily: 'Roboto_400Regular',
-                                          }
-                                        ),
-                                        dimensions.width
-                                      )}
-                                    >
-                                      {'Chart'}
-                                    </Text>
-                                  </View>
-                                </Touchable>
-                              )}
-                            </>
-                            {/* unselected */}
-                            <>
-                              {!(selectedTab2 !== 'prepaidchart') ? null : (
-                                <Touchable
-                                  onPress={() => {
-                                    try {
-                                      setSelectedTab2('prepaidchart');
-                                    } catch (err) {
-                                      console.error(err);
-                                    }
-                                  }}
-                                >
-                                  <View
-                                    style={StyleSheet.applyWidth(
-                                      {
-                                        alignItems: 'center',
-                                        borderBottomWidth: 2,
-                                        borderColor: theme.colors['Light'],
-                                        height: 25,
-                                      },
-                                      dimensions.width
-                                    )}
-                                  >
-                                    <Text
-                                      style={StyleSheet.applyWidth(
-                                        StyleSheet.compose(
-                                          GlobalStyles.TextStyles(theme)[
-                                            'Text'
-                                          ],
-                                          {
-                                            color: theme.colors['Light'],
-                                            fontFamily: 'Roboto_400Regular',
-                                          }
-                                        ),
-                                        dimensions.width
-                                      )}
-                                    >
-                                      {'Chart'}
-                                    </Text>
-                                  </View>
-                                </Touchable>
-                              )}
-                            </>
-                          </View>
-                        </View>
-                        {/* table */}
-                        <View
-                          style={StyleSheet.applyWidth(
-                            {
-                              alignItems: 'center',
-                              flex: 1,
-                              flexDirection: 'row',
-                              justifyContent: 'space-between',
-                            },
-                            dimensions.width
-                          )}
-                        >
-                          {/* prepaidtable */}
-                          <View
-                            style={StyleSheet.applyWidth(
-                              { flex: 1 },
-                              dimensions.width
-                            )}
-                          >
-                            {/* selected */}
-                            <>
-                              {!(selectedTab2 === 'prepaidtable') ? null : (
-                                <Touchable>
-                                  <View
-                                    style={StyleSheet.applyWidth(
-                                      {
-                                        alignItems: 'center',
-                                        borderBottomWidth: 3,
-                                        borderColor:
-                                          theme.colors['Custom Color'],
-                                        height: 25,
-                                      },
-                                      dimensions.width
-                                    )}
-                                  >
-                                    <Text
-                                      style={StyleSheet.applyWidth(
-                                        StyleSheet.compose(
-                                          GlobalStyles.TextStyles(theme)[
-                                            'Text'
-                                          ],
-                                          {
-                                            color: theme.colors['Custom Color'],
-                                            fontFamily: 'Roboto_400Regular',
-                                          }
-                                        ),
-                                        dimensions.width
-                                      )}
-                                    >
-                                      {'Table'}
-                                    </Text>
-                                  </View>
-                                </Touchable>
-                              )}
-                            </>
-                            {/* unselected */}
-                            <>
-                              {!(selectedTab2 !== 'prepaidtable') ? null : (
-                                <Touchable
-                                  onPress={() => {
-                                    try {
-                                      setSelectedTab2('prepaidtable');
-                                    } catch (err) {
-                                      console.error(err);
-                                    }
-                                  }}
-                                >
-                                  <View
-                                    style={StyleSheet.applyWidth(
-                                      {
-                                        alignItems: 'center',
-                                        borderBottomWidth: 2,
-                                        borderColor: theme.colors['Light'],
-                                        height: 25,
-                                      },
-                                      dimensions.width
-                                    )}
-                                  >
-                                    <Text
-                                      style={StyleSheet.applyWidth(
-                                        StyleSheet.compose(
-                                          GlobalStyles.TextStyles(theme)[
-                                            'Text'
-                                          ],
-                                          {
-                                            color: theme.colors['Light'],
-                                            fontFamily: 'Roboto_400Regular',
-                                          }
-                                        ),
-                                        dimensions.width
-                                      )}
-                                    >
-                                      {'Table'}
-                                    </Text>
-                                  </View>
-                                </Touchable>
-                              )}
-                            </>
-                          </View>
-                        </View>
-                      </View>
-                    )}
-                  </>
-                  {/* prepaidchart */}
-                  <>
-                    {!(selectedTab2 === 'prepaidchart') ? null : (
-                      <View
+                        {'Amount due'}
+                      </Text>
+                      {/* Amount  */}
+                      <Text
                         style={StyleSheet.applyWidth(
-                          StyleSheet.compose(
-                            GlobalStyles.ViewStyles(theme)['Dashboard'],
-                            { paddingRight: 30 }
-                          ),
+                          {
+                            color: theme.colors.strong,
+                            fontFamily: 'Roboto_700Bold',
+                            fontSize: 14,
+                            opacity: 1,
+                          },
                           dimensions.width
                         )}
                       >
-                        <>
-                          {!prepaidBillingHistory?.length ? null : (
+                        {'₹'}
+                        {viewBillDetails?.LEDGERAMT}
+                      </Text>
+                      {/* Sub title */}
+                      <Text
+                        style={StyleSheet.applyWidth(
+                          {
+                            color: theme.colors.strong,
+                            fontFamily: 'Roboto_400Regular',
+                            fontSize: 12,
+                            marginTop: 5,
+                            opacity: 1,
+                          },
+                          dimensions.width
+                        )}
+                      >
+                        {'Due Date: '}
+                        {viewBillDetails?.BillDueDate}
+                      </Text>
+                    </View>
+                    {/* View */}
+                    <Button
+                      onPress={() => {
+                        try {
+                          navigation.navigate('ViewBillScreen', {
+                            ledgerAmt: viewBillDetails?.LEDGERAMT,
+                            Name: viewBillDetails?.Name,
+                            Scno: viewBillDetails?.Scno,
+                            BillMonth: viewBillDetails?.BillMonth,
+                            BillDame: viewBillDetails?.BillIssueDate,
+                            BillNo: viewBillDetails?.BillNo,
+                            BillDueDate: viewBillDetails?.BillDueDate,
+                            BillAmount: viewBillDetails?.BillAmount,
+                            Arrear: viewBillDetails?.Arrear,
+                            RebateGiven: viewBillDetails?.RebateGiven,
+                            netcurrbill: viewBillDetails?.netcurrbill,
+                            BillIssueDate: viewBillDetails?.BillIssueDate,
+                            billYear: viewBillDetails?.BillYear,
+                          });
+                        } catch (err) {
+                          console.error(err);
+                        }
+                      }}
+                      style={StyleSheet.applyWidth(
+                        {
+                          backgroundColor: theme.colors['GetFit Orange'],
+                          borderRadius: 14,
+                          fontFamily: 'Roboto_400Regular',
+                          fontSize: 16,
+                          height: 36,
+                          marginTop: 5,
+                          textAlign: 'center',
+                          width: '23%',
+                        },
+                        dimensions.width
+                      )}
+                      title={'View'}
+                    />
+                    {/* Pay Now */}
+                    <Button
+                      onPress={() => {
+                        try {
+                          navigation.navigate('MakePaymentScreen', {
+                            ledgerAmt: viewBillDetails?.LEDGERAMT,
+                            billYear: viewBillDetails?.BillYear,
+                            Name: viewBillDetails?.Name,
+                            Scno: viewBillDetails?.Scno,
+                            BillMonth: viewBillDetails?.BillMonth,
+                            BillDame: viewBillDetails?.BillIssueDate,
+                            BillNo: viewBillDetails?.BillNo,
+                            BillDueDate: viewBillDetails?.BillDueDate,
+                            BillAmount: viewBillDetails?.BillAmount,
+                            Arrear: viewBillDetails?.Arrear,
+                            RebateGiven: viewBillDetails?.RebateGiven,
+                            netcurrbill: viewBillDetails?.netcurrbill,
+                            BillIssueDate: viewBillDetails?.BillIssueDate,
+                            Billid: viewBillDetails?.BillDetailsId,
+                            accno: viewBillDetails?.AccNo,
+                          });
+                        } catch (err) {
+                          console.error(err);
+                        }
+                      }}
+                      style={StyleSheet.applyWidth(
+                        {
+                          backgroundColor: theme.colors['GetFit Orange'],
+                          borderRadius: 14,
+                          fontFamily: 'Roboto_400Regular',
+                          fontSize: 16,
+                          height: 36,
+                          marginTop: 5,
+                          textAlign: 'center',
+                          width: '30%',
+                        },
+                        dimensions.width
+                      )}
+                      title={'Pay Now'}
+                    />
+                  </View>
+                )}
+              </>
+              {/* prepaid */}
+              <>
+                {!(prepaidFlag === 'Y') ? null : (
+                  <View
+                    style={StyleSheet.applyWidth(
+                      StyleSheet.compose(
+                        GlobalStyles.ViewStyles(theme)['card'],
+                        {
+                          borderColor: theme.colors['Community_Border'],
+                          borderRadius: 8,
+                          borderWidth: 1,
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                          marginBottom: 15,
+                          marginTop: 5,
+                          paddingBottom: 10,
+                          paddingLeft: 20,
+                          paddingTop: 10,
+                        }
+                      ),
+                      dimensions.width
+                    )}
+                  >
+                    <View
+                      style={StyleSheet.applyWidth(
+                        { alignSelf: 'auto' },
+                        dimensions.width
+                      )}
+                    >
+                      {/* Amount  */}
+                      <Text
+                        style={StyleSheet.applyWidth(
+                          {
+                            color: theme.colors.strong,
+                            fontFamily: 'Roboto_700Bold',
+                            fontSize: 14,
+                            opacity: 1,
+                          },
+                          dimensions.width
+                        )}
+                      >
+                        {'Available balance: ₹'}
+                        {availableBalance}
+                      </Text>
+                    </View>
+                  </View>
+                )}
+              </>
+              {/* Prepaid View */}
+              <>
+                {!(prepaidFlag === 'Y') ? null : (
+                  <View>
+                    {/* Prepaid Section header */}
+                    <>
+                      {!(prepaidFlag === 'Y') ? null : (
+                        <View
+                          style={StyleSheet.applyWidth(
+                            StyleSheet.compose(
+                              GlobalStyles.ViewStyles(theme)[
+                                'section header 2'
+                              ],
+                              { justifyContent: 'center', paddingBottom: 12 }
+                            ),
+                            dimensions.width
+                          )}
+                        >
+                          {/* Heading */}
+                          <Text
+                            style={StyleSheet.applyWidth(
+                              {
+                                alignSelf: 'center',
+                                color: theme.colors['ShopAppBlue'],
+                                fontFamily: 'Roboto_400Regular',
+                                fontSize: 16,
+                                textAlign: 'center',
+                              },
+                              dimensions.width
+                            )}
+                          >
+                            {'Billing History'}
+                          </Text>
+                        </View>
+                      )}
+                    </>
+                    {/* prepaidtabs */}
+                    <>
+                      {!(prepaidFlag === 'Y') ? null : (
+                        <View
+                          style={StyleSheet.applyWidth(
+                            {
+                              alignItems: 'center',
+                              flexDirection: 'row',
+                              justifyContent: 'space-between',
+                            },
+                            dimensions.width
+                          )}
+                        >
+                          {/* chart */}
+                          <View
+                            style={StyleSheet.applyWidth(
+                              {
+                                alignItems: 'center',
+                                flex: 1,
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                              },
+                              dimensions.width
+                            )}
+                          >
+                            {/* prepaidchart */}
                             <View
                               style={StyleSheet.applyWidth(
-                                {
-                                  alignItems: 'center',
-                                  flex: 1,
-                                  justifyContent: 'center',
-                                  paddingRight: 30,
-                                  width: '100%',
-                                },
+                                { flex: 1 },
                                 dimensions.width
                               )}
                             >
+                              {/* selected */}
                               <>
-                                {!(prepaidFlag === 'Y') ? null : (
-                                  <Utils.CustomCodeErrorBoundary>
-                                    <CustomCode.LineChartComponent1
-                                      prepaidBillingHistory={
-                                        prepaidBillingHistory
+                                {!(selectedTab2 === 'prepaidchart') ? null : (
+                                  <Touchable>
+                                    <View
+                                      style={StyleSheet.applyWidth(
+                                        {
+                                          alignItems: 'center',
+                                          borderBottomWidth: 3,
+                                          borderColor:
+                                            theme.colors['Custom Color'],
+                                          height: 25,
+                                        },
+                                        dimensions.width
+                                      )}
+                                    >
+                                      <Text
+                                        style={StyleSheet.applyWidth(
+                                          StyleSheet.compose(
+                                            GlobalStyles.TextStyles(theme)[
+                                              'Text'
+                                            ],
+                                            {
+                                              color:
+                                                theme.colors['Custom Color'],
+                                              fontFamily: 'Roboto_400Regular',
+                                            }
+                                          ),
+                                          dimensions.width
+                                        )}
+                                      >
+                                        {'Chart'}
+                                      </Text>
+                                    </View>
+                                  </Touchable>
+                                )}
+                              </>
+                              {/* unselected */}
+                              <>
+                                {!(selectedTab2 !== 'prepaidchart') ? null : (
+                                  <Touchable
+                                    onPress={() => {
+                                      try {
+                                        setSelectedTab2('prepaidchart');
+                                      } catch (err) {
+                                        console.error(err);
                                       }
-                                    />
-                                  </Utils.CustomCodeErrorBoundary>
+                                    }}
+                                  >
+                                    <View
+                                      style={StyleSheet.applyWidth(
+                                        {
+                                          alignItems: 'center',
+                                          borderBottomWidth: 2,
+                                          borderColor: theme.colors['Light'],
+                                          height: 25,
+                                        },
+                                        dimensions.width
+                                      )}
+                                    >
+                                      <Text
+                                        style={StyleSheet.applyWidth(
+                                          StyleSheet.compose(
+                                            GlobalStyles.TextStyles(theme)[
+                                              'Text'
+                                            ],
+                                            {
+                                              color: theme.colors['Light'],
+                                              fontFamily: 'Roboto_400Regular',
+                                            }
+                                          ),
+                                          dimensions.width
+                                        )}
+                                      >
+                                        {'Chart'}
+                                      </Text>
+                                    </View>
+                                  </Touchable>
                                 )}
                               </>
                             </View>
-                          )}
-                        </>
-                      </View>
-                    )}
-                  </>
-                  {/* prepaidtable */}
-                  <>
-                    {!(selectedTab2 === 'prepaidtable') ? null : (
-                      <View
-                        style={StyleSheet.applyWidth(
-                          StyleSheet.compose(
-                            GlobalStyles.ViewStyles(theme)['Details'],
-                            {
-                              borderBottomWidth: 1,
-                              borderLeftWidth: 1,
-                              borderRightWidth: 1,
-                              borderTopWidth: 1,
-                            }
-                          ),
-                          dimensions.width
-                        )}
-                      >
-                        {/* Bill Issue Date */}
-                        <View
-                          style={StyleSheet.applyWidth(
-                            {
-                              borderLeftWidth: 1,
-                              borderRightWidth: 1,
-                              flex: 1,
-                              marginRight: 1,
-                            },
-                            dimensions.width
-                          )}
-                        >
+                          </View>
+                          {/* table */}
                           <View
                             style={StyleSheet.applyWidth(
                               {
-                                backgroundColor: theme.colors['ViewBG'],
-                                height: 40,
-                                justifyContent: 'center',
+                                alignItems: 'center',
+                                flex: 1,
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
                               },
                               dimensions.width
                             )}
                           >
-                            <Text
+                            {/* prepaidtable */}
+                            <View
                               style={StyleSheet.applyWidth(
-                                StyleSheet.compose(
-                                  GlobalStyles.TextStyles(theme)['Text'],
-                                  {
-                                    color: theme.colors['Strong'],
-                                    fontFamily: 'Roboto_700Bold',
-                                    textAlign: 'center',
-                                    textTransform: 'capitalize',
-                                  }
-                                ),
+                                { flex: 1 },
                                 dimensions.width
                               )}
                             >
-                              {'Bill Issue Date'}
-                            </Text>
+                              {/* selected */}
+                              <>
+                                {!(selectedTab2 === 'prepaidtable') ? null : (
+                                  <Touchable>
+                                    <View
+                                      style={StyleSheet.applyWidth(
+                                        {
+                                          alignItems: 'center',
+                                          borderBottomWidth: 3,
+                                          borderColor:
+                                            theme.colors['Custom Color'],
+                                          height: 25,
+                                        },
+                                        dimensions.width
+                                      )}
+                                    >
+                                      <Text
+                                        style={StyleSheet.applyWidth(
+                                          StyleSheet.compose(
+                                            GlobalStyles.TextStyles(theme)[
+                                              'Text'
+                                            ],
+                                            {
+                                              color:
+                                                theme.colors['Custom Color'],
+                                              fontFamily: 'Roboto_400Regular',
+                                            }
+                                          ),
+                                          dimensions.width
+                                        )}
+                                      >
+                                        {'Table'}
+                                      </Text>
+                                    </View>
+                                  </Touchable>
+                                )}
+                              </>
+                              {/* unselected */}
+                              <>
+                                {!(selectedTab2 !== 'prepaidtable') ? null : (
+                                  <Touchable
+                                    onPress={() => {
+                                      try {
+                                        setSelectedTab2('prepaidtable');
+                                      } catch (err) {
+                                        console.error(err);
+                                      }
+                                    }}
+                                  >
+                                    <View
+                                      style={StyleSheet.applyWidth(
+                                        {
+                                          alignItems: 'center',
+                                          borderBottomWidth: 2,
+                                          borderColor: theme.colors['Light'],
+                                          height: 25,
+                                        },
+                                        dimensions.width
+                                      )}
+                                    >
+                                      <Text
+                                        style={StyleSheet.applyWidth(
+                                          StyleSheet.compose(
+                                            GlobalStyles.TextStyles(theme)[
+                                              'Text'
+                                            ],
+                                            {
+                                              color: theme.colors['Light'],
+                                              fontFamily: 'Roboto_400Regular',
+                                            }
+                                          ),
+                                          dimensions.width
+                                        )}
+                                      >
+                                        {'Table'}
+                                      </Text>
+                                    </View>
+                                  </Touchable>
+                                )}
+                              </>
+                            </View>
                           </View>
                         </View>
-                        {/* Amount */}
+                      )}
+                    </>
+                    {/* prepaidchart */}
+                    <>
+                      {!(selectedTab2 === 'prepaidchart') ? null : (
                         <View
                           style={StyleSheet.applyWidth(
-                            { borderRightWidth: 1, flex: 1, marginRight: 1 },
+                            StyleSheet.compose(
+                              GlobalStyles.ViewStyles(theme)['Dashboard'],
+                              { paddingRight: 10 }
+                            ),
                             dimensions.width
                           )}
                         >
-                          <View
-                            style={StyleSheet.applyWidth(
-                              {
-                                backgroundColor: theme.colors['ViewBG'],
-                                height: 40,
-                                justifyContent: 'center',
-                              },
-                              dimensions.width
-                            )}
-                          >
-                            <Text
-                              style={StyleSheet.applyWidth(
-                                StyleSheet.compose(
-                                  GlobalStyles.TextStyles(theme)['Text'],
-                                  {
-                                    color: theme.colors['Strong'],
-                                    fontFamily: 'Roboto_700Bold',
-                                    textAlign: 'center',
-                                    textTransform: 'capitalize',
-                                  }
-                                ),
-                                dimensions.width
-                              )}
-                            >
-                              {'Amount'}
-                            </Text>
-                          </View>
-                        </View>
-                        {/* Download */}
-                        <View
-                          style={StyleSheet.applyWidth(
-                            { flex: 1 },
-                            dimensions.width
-                          )}
-                        >
-                          <View
-                            style={StyleSheet.applyWidth(
-                              {
-                                backgroundColor: theme.colors['ViewBG'],
-                                height: 40,
-                                justifyContent: 'center',
-                              },
-                              dimensions.width
-                            )}
-                          >
-                            <Text
-                              style={StyleSheet.applyWidth(
-                                StyleSheet.compose(
-                                  GlobalStyles.TextStyles(theme)['Text'],
-                                  {
-                                    color: theme.colors['Strong'],
-                                    fontFamily: 'Roboto_700Bold',
-                                    textAlign: 'center',
-                                    textTransform: 'capitalize',
-                                  }
-                                ),
-                                dimensions.width
-                              )}
-                            >
-                              {'Download'}
-                            </Text>
-                          </View>
-                        </View>
-                      </View>
-                    )}
-                  </>
-                  <FlatList
-                    renderItem={({ item }) => {
-                      const listData = item;
-                      return (
-                        <>
-                          {/* prepaidtable */}
                           <>
-                            {!(selectedTab2 === 'prepaidtable') ? null : (
+                            {!prepaidBillingHistory?.length ? null : (
                               <View
                                 style={StyleSheet.applyWidth(
                                   {
-                                    borderBottomWidth: 1,
-                                    borderLeftWidth: 1,
-                                    borderRightWidth: 1,
-                                    flexDirection: 'row',
-                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    flex: 1,
+                                    justifyContent: 'center',
+                                    paddingRight: 10,
                                     width: '100%',
                                   },
                                   dimensions.width
                                 )}
                               >
-                                {/* Bill Issue Date */}
+                                <>
+                                  {!(prepaidFlag === 'Y') ? null : (
+                                    <Utils.CustomCodeErrorBoundary>
+                                      <CustomCode.LineChartComponent1
+                                        prepaidBillingHistory={
+                                          prepaidBillingHistory
+                                        }
+                                      />
+                                    </Utils.CustomCodeErrorBoundary>
+                                  )}
+                                </>
+                              </View>
+                            )}
+                          </>
+                        </View>
+                      )}
+                    </>
+                    {/* prepaidtable */}
+                    <>
+                      {!(selectedTab2 === 'prepaidtable') ? null : (
+                        <View
+                          style={StyleSheet.applyWidth(
+                            StyleSheet.compose(
+                              GlobalStyles.ViewStyles(theme)['Details'],
+                              {
+                                backgroundColor: 'rgb(211, 211, 211)',
+                                borderBottomWidth: 1,
+                                borderColor: theme.colors['White'],
+                                borderLeftWidth: 1,
+                                borderRightWidth: 1,
+                                borderTopLeftRadius: 5,
+                                borderTopRightRadius: 5,
+                                borderTopWidth: 1,
+                              }
+                            ),
+                            dimensions.width
+                          )}
+                        >
+                          {/* Bill Month */}
+                          <View
+                            style={StyleSheet.applyWidth(
+                              {
+                                borderColor: theme.colors['White'],
+                                borderRightWidth: 1,
+                                flex: 1,
+                              },
+                              dimensions.width
+                            )}
+                          >
+                            <View
+                              style={StyleSheet.applyWidth(
+                                {
+                                  backgroundColor: theme.colors['ViewBG'],
+                                  height: 40,
+                                  justifyContent: 'center',
+                                },
+                                dimensions.width
+                              )}
+                            >
+                              <Text
+                                style={StyleSheet.applyWidth(
+                                  StyleSheet.compose(
+                                    GlobalStyles.TextStyles(theme)['Text'],
+                                    {
+                                      color: 'rgb(42, 42, 42)',
+                                      fontFamily: 'Roboto_700Bold',
+                                      textAlign: 'center',
+                                      textTransform: 'capitalize',
+                                    }
+                                  ),
+                                  dimensions.width
+                                )}
+                              >
+                                {'Bill Month'}
+                              </Text>
+                            </View>
+                          </View>
+                          {/* Bill Amount */}
+                          <View
+                            style={StyleSheet.applyWidth(
+                              {
+                                borderColor: theme.colors['White'],
+                                borderRightWidth: 1,
+                                flex: 1,
+                              },
+                              dimensions.width
+                            )}
+                          >
+                            <View
+                              style={StyleSheet.applyWidth(
+                                {
+                                  backgroundColor: theme.colors['ViewBG'],
+                                  height: 40,
+                                  justifyContent: 'center',
+                                },
+                                dimensions.width
+                              )}
+                            >
+                              <Text
+                                style={StyleSheet.applyWidth(
+                                  StyleSheet.compose(
+                                    GlobalStyles.TextStyles(theme)['Text'],
+                                    {
+                                      color: 'rgb(42, 42, 42)',
+                                      fontFamily: 'Roboto_700Bold',
+                                      textAlign: 'center',
+                                      textTransform: 'capitalize',
+                                    }
+                                  ),
+                                  dimensions.width
+                                )}
+                              >
+                                {'Bill Amount'}
+                              </Text>
+                            </View>
+                          </View>
+                          {/* Download */}
+                          <View
+                            style={StyleSheet.applyWidth(
+                              { flex: 1 },
+                              dimensions.width
+                            )}
+                          >
+                            <View
+                              style={StyleSheet.applyWidth(
+                                {
+                                  backgroundColor: theme.colors['ViewBG'],
+                                  height: 40,
+                                  justifyContent: 'center',
+                                },
+                                dimensions.width
+                              )}
+                            >
+                              <Text
+                                style={StyleSheet.applyWidth(
+                                  StyleSheet.compose(
+                                    GlobalStyles.TextStyles(theme)['Text'],
+                                    {
+                                      color: 'rgb(42, 42, 42)',
+                                      fontFamily: 'Roboto_700Bold',
+                                      textAlign: 'center',
+                                      textTransform: 'capitalize',
+                                    }
+                                  ),
+                                  dimensions.width
+                                )}
+                              >
+                                {'Download'}
+                              </Text>
+                            </View>
+                          </View>
+                        </View>
+                      )}
+                    </>
+                    {/* PrepaidList */}
+                    <FlatList
+                      renderItem={({ item }) => {
+                        const prepaidListData = item;
+                        return (
+                          <>
+                            {/* prepaidtable */}
+                            <>
+                              {!(selectedTab2 === 'prepaidtable') ? null : (
                                 <View
                                   style={StyleSheet.applyWidth(
-                                    { borderRightWidth: 1, flex: 1 },
+                                    {
+                                      alignItems: 'center',
+                                      borderBottomWidth: 1,
+                                      borderColor: 'rgb(211, 211, 211)',
+                                      flexDirection: 'row',
+                                      justifyContent: 'space-between',
+                                      paddingBottom: 10,
+                                      paddingLeft: 20,
+                                      paddingRight: 20,
+                                      paddingTop: 10,
+                                    },
                                     dimensions.width
                                   )}
                                 >
-                                  <View
-                                    style={StyleSheet.applyWidth(
-                                      { height: 40, justifyContent: 'center' },
-                                      dimensions.width
-                                    )}
-                                  >
+                                  {/* Bill Month */}
+                                  <View>
+                                    {/* text */}
                                     <Text
                                       style={StyleSheet.applyWidth(
                                         StyleSheet.compose(
@@ -1649,39 +1820,23 @@ line two` ) and will not work with special characters inside of quotes ( example
                                             'Text'
                                           ],
                                           {
+                                            color: 'rgb(42, 42, 42)',
                                             fontFamily: 'Roboto_400Regular',
-                                            textAlign: 'center',
-                                            textTransform: 'capitalize',
+                                            fontSize: 16,
                                           }
                                         ),
                                         dimensions.width
                                       )}
                                     >
-                                      {convertDateTimeToDate(
-                                        listData?.blissueDt
+                                      {convertMonthNoToMonthName(
+                                        prepaidListData?.billmonth
                                       )}
+                                      {' - '}
+                                      {prepaidListData?.billyear}
                                     </Text>
                                   </View>
-                                </View>
-                                {/* Amount */}
-                                <View
-                                  style={StyleSheet.applyWidth(
-                                    { borderRightWidth: 1, flex: 1 },
-                                    dimensions.width
-                                  )}
-                                >
-                                  <View
-                                    style={StyleSheet.applyWidth(
-                                      {
-                                        alignItems: 'flex-end',
-                                        alignSelf: 'flex-end',
-                                        height: 40,
-                                        justifyContent: 'center',
-                                        padding: 12,
-                                      },
-                                      dimensions.width
-                                    )}
-                                  >
+                                  {/* Bill Amount */}
+                                  <View>
                                     <Text
                                       style={StyleSheet.applyWidth(
                                         StyleSheet.compose(
@@ -1689,9 +1844,9 @@ line two` ) and will not work with special characters inside of quotes ( example
                                             'Text'
                                           ],
                                           {
+                                            color: 'rgb(42, 42, 42)',
                                             fontFamily: 'Roboto_400Regular',
-                                            textAlign: 'right',
-                                            textTransform: 'capitalize',
+                                            fontSize: 16,
                                           }
                                         ),
                                         dimensions.width
@@ -1699,25 +1854,18 @@ line two` ) and will not work with special characters inside of quotes ( example
                                     >
                                       {'₹'}
                                       {(() => {
-                                        const e = listData?.closingBalance;
+                                        const e =
+                                          prepaidListData?.closingBalance;
                                         console.log(e);
                                         return e;
                                       })()}
                                     </Text>
                                   </View>
-                                </View>
-                                {/* Download */}
-                                <View
-                                  style={StyleSheet.applyWidth(
-                                    { flex: 1, marginRight: 1 },
-                                    dimensions.width
-                                  )}
-                                >
+                                  {/* download */}
                                   <View
                                     style={StyleSheet.applyWidth(
                                       {
                                         alignSelf: 'center',
-                                        height: 40,
                                         justifyContent: 'center',
                                       },
                                       dimensions.width
@@ -1729,15 +1877,18 @@ line two` ) and will not work with special characters inside of quotes ( example
                                           try {
                                             await WebBrowser.openBrowserAsync(
                                               `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.plugin.DynamicServiceReportGenerator/service?name=JBVNL_PREPAID_BILL&month=${(() => {
-                                                const e = listData?.billmonth;
+                                                const e =
+                                                  prepaidListData?.billmonth;
                                                 console.log(e);
                                                 return e;
                                               })()}&year=${(() => {
-                                                const e = listData?.billyear;
+                                                const e =
+                                                  prepaidListData?.billyear;
                                                 console.log(e);
                                                 return e;
                                               })()}&accountno=${(() => {
-                                                const e = listData?.accountNo;
+                                                const e =
+                                                  prepaidListData?.accountNo;
                                                 console.log(e);
                                                 return e;
                                               })()}`
@@ -1750,530 +1901,513 @@ line two` ) and will not work with special characters inside of quotes ( example
                                       }}
                                     >
                                       <Icon
-                                        size={24}
                                         name={'Feather/arrow-down-circle'}
+                                        size={24}
                                       />
                                     </Touchable>
                                   </View>
                                 </View>
-                              </View>
-                            )}
+                              )}
+                            </>
                           </>
-                        </>
-                      );
-                    }}
-                    data={prepaidBillingHistory}
-                    listKey={'dD48TRyd'}
-                    keyExtractor={listData =>
-                      listData?.id || listData?.uuid || JSON.stringify(listData)
-                    }
-                    numColumns={1}
-                    onEndReachedThreshold={0.5}
-                    showsHorizontalScrollIndicator={true}
-                    showsVerticalScrollIndicator={true}
-                  />
-                </View>
-              )}
-            </>
-            {/* Postpaid View */}
-            <>
-              {!(prepaidFlag === 'N') ? null : (
-                <View>
-                  {/* section header */}
-                  <>
-                    {!(prepaidFlag === 'N') ? null : (
-                      <View
-                        style={StyleSheet.applyWidth(
-                          StyleSheet.compose(
-                            GlobalStyles.ViewStyles(theme)['section header 2'],
-                            { justifyContent: 'center', paddingBottom: 12 }
-                          ),
-                          dimensions.width
-                        )}
-                      >
-                        {/* Heading */}
-                        <Text
-                          style={StyleSheet.applyWidth(
-                            {
-                              alignSelf: 'center',
-                              color: theme.colors['ShopAppBlue'],
-                              fontFamily: 'Roboto_400Regular',
-                              fontSize: 16,
-                              textAlign: 'center',
-                            },
-                            dimensions.width
-                          )}
-                        >
-                          {'Billing History'}
-                        </Text>
-                      </View>
-                    )}
-                  </>
-                  {/* Tabs */}
-                  <>
-                    {!(prepaidFlag === 'N') ? null : (
-                      <View
-                        style={StyleSheet.applyWidth(
-                          GlobalStyles.ViewStyles(theme)['Tabs'],
-                          dimensions.width
-                        )}
-                      >
-                        {/* tab1 */}
+                        );
+                      }}
+                      data={prepaidBillingHistory}
+                      listKey={'F82OyDDI'}
+                      keyExtractor={prepaidListData =>
+                        prepaidListData?.id ||
+                        prepaidListData?.uuid ||
+                        JSON.stringify(prepaidListData)
+                      }
+                      numColumns={1}
+                      onEndReachedThreshold={0.5}
+                      showsHorizontalScrollIndicator={true}
+                      showsVerticalScrollIndicator={true}
+                    />
+                  </View>
+                )}
+              </>
+              {/* Postpaid View */}
+              <>
+                {!(prepaidFlag === 'N') ? null : (
+                  <View>
+                    {/* section header */}
+                    <>
+                      {!(prepaidFlag === 'N') ? null : (
                         <View
                           style={StyleSheet.applyWidth(
-                            {
-                              alignItems: 'center',
-                              flex: 1,
-                              flexDirection: 'row',
-                              justifyContent: 'space-between',
-                            },
+                            StyleSheet.compose(
+                              GlobalStyles.ViewStyles(theme)[
+                                'section header 2'
+                              ],
+                              { justifyContent: 'center', paddingBottom: 12 }
+                            ),
                             dimensions.width
                           )}
                         >
-                          {/* Dashboard */}
-                          <View
-                            style={StyleSheet.applyWidth(
-                              { flex: 1 },
-                              dimensions.width
-                            )}
-                          >
-                            {/* selected */}
-                            <>
-                              {!(selectedTab === 'Dashboard') ? null : (
-                                <Touchable>
-                                  <View
-                                    style={StyleSheet.applyWidth(
-                                      {
-                                        alignItems: 'center',
-                                        borderBottomWidth: 3,
-                                        borderColor:
-                                          theme.colors['Custom Color'],
-                                        height: 25,
-                                      },
-                                      dimensions.width
-                                    )}
-                                  >
-                                    <Text
-                                      style={StyleSheet.applyWidth(
-                                        {
-                                          color: theme.colors['Custom Color'],
-                                          fontFamily: 'Roboto_400Regular',
-                                          fontSize: 14,
-                                        },
-                                        dimensions.width
-                                      )}
-                                    >
-                                      {'Chart'}
-                                    </Text>
-                                  </View>
-                                </Touchable>
-                              )}
-                            </>
-                            {/* unselected */}
-                            <>
-                              {!(selectedTab !== 'Dashboard') ? null : (
-                                <Touchable
-                                  onPress={() => {
-                                    try {
-                                      setSelectedTab('Dashboard');
-                                    } catch (err) {
-                                      console.error(err);
-                                    }
-                                  }}
-                                >
-                                  <View
-                                    style={StyleSheet.applyWidth(
-                                      {
-                                        alignItems: 'center',
-                                        borderBottomWidth: 2,
-                                        borderColor: theme.colors['Light'],
-                                        height: 25,
-                                      },
-                                      dimensions.width
-                                    )}
-                                  >
-                                    <Text
-                                      style={StyleSheet.applyWidth(
-                                        {
-                                          color: theme.colors['Light'],
-                                          fontFamily: 'Roboto_400Regular',
-                                          fontSize: 14,
-                                        },
-                                        dimensions.width
-                                      )}
-                                    >
-                                      {'Chart'}
-                                    </Text>
-                                  </View>
-                                </Touchable>
-                              )}
-                            </>
-                          </View>
-                        </View>
-                        {/* tab2 */}
-                        <View
-                          style={StyleSheet.applyWidth(
-                            {
-                              alignItems: 'center',
-                              flex: 1,
-                              flexDirection: 'row',
-                              justifyContent: 'space-between',
-                            },
-                            dimensions.width
-                          )}
-                        >
-                          {/* Content */}
-                          <View
-                            style={StyleSheet.applyWidth(
-                              { flex: 1 },
-                              dimensions.width
-                            )}
-                          >
-                            {/* selected */}
-                            <>
-                              {!(selectedTab === 'content') ? null : (
-                                <Touchable>
-                                  <View
-                                    style={StyleSheet.applyWidth(
-                                      {
-                                        alignItems: 'center',
-                                        borderBottomWidth: 3,
-                                        borderColor:
-                                          theme.colors['Custom Color'],
-                                        height: 25,
-                                      },
-                                      dimensions.width
-                                    )}
-                                  >
-                                    <Text
-                                      style={StyleSheet.applyWidth(
-                                        {
-                                          color: theme.colors['Custom Color'],
-                                          fontFamily: 'Roboto_400Regular',
-                                          fontSize: 14,
-                                        },
-                                        dimensions.width
-                                      )}
-                                    >
-                                      {'Table'}
-                                    </Text>
-                                  </View>
-                                </Touchable>
-                              )}
-                            </>
-                            {/* unselected */}
-                            <>
-                              {!(selectedTab !== 'content') ? null : (
-                                <Touchable
-                                  onPress={() => {
-                                    try {
-                                      setSelectedTab('content');
-                                    } catch (err) {
-                                      console.error(err);
-                                    }
-                                  }}
-                                >
-                                  <View
-                                    style={StyleSheet.applyWidth(
-                                      {
-                                        alignItems: 'center',
-                                        borderBottomWidth: 2,
-                                        borderColor: theme.colors['Light'],
-                                        height: 25,
-                                      },
-                                      dimensions.width
-                                    )}
-                                  >
-                                    <Text
-                                      style={StyleSheet.applyWidth(
-                                        {
-                                          color: theme.colors['Light'],
-                                          fontFamily: 'Roboto_400Regular',
-                                          fontSize: 14,
-                                        },
-                                        dimensions.width
-                                      )}
-                                    >
-                                      {'Table'}
-                                    </Text>
-                                  </View>
-                                </Touchable>
-                              )}
-                            </>
-                          </View>
-                        </View>
-                      </View>
-                    )}
-                  </>
-                  {/* Dashboard */}
-                  <>
-                    {!(selectedTab === 'Dashboard') ? null : (
-                      <View
-                        style={StyleSheet.applyWidth(
-                          GlobalStyles.ViewStyles(theme)['Dashboard'],
-                          dimensions.width
-                        )}
-                      >
-                        <View
-                          style={StyleSheet.applyWidth(
-                            {
-                              alignItems: 'center',
-                              flex: 1,
-                              paddingTop: 50,
-                              width: '100%',
-                            },
-                            dimensions.width
-                          )}
-                        >
-                          {/* View 2 */}
-                          <>
-                            {!billingHistoryScreen?.length ? null : (
-                              <View>
-                                <>
-                                  {!(prepaidFlag === 'N') ? null : (
-                                    <Utils.CustomCodeErrorBoundary>
-                                      <BillingHistory.LineChartComponent1
-                                        billingHistoryScreen={
-                                          billingHistoryScreen
-                                        }
-                                      />
-                                    </Utils.CustomCodeErrorBoundary>
-                                  )}
-                                </>
-                              </View>
-                            )}
-                          </>
-                        </View>
-                      </View>
-                    )}
-                  </>
-                  {/* Details */}
-                  <>
-                    {!(selectedTab === 'content') ? null : (
-                      <View
-                        style={StyleSheet.applyWidth(
-                          StyleSheet.compose(
-                            GlobalStyles.ViewStyles(theme)['Details'],
-                            {
-                              borderBottomWidth: 1,
-                              borderLeftWidth: 1,
-                              borderRightWidth: 1,
-                              borderTopWidth: 1,
-                              flex: 0,
-                            }
-                          ),
-                          dimensions.width
-                        )}
-                      >
-                        {/* Bill Issue Date */}
-                        <View
-                          style={StyleSheet.applyWidth(
-                            { borderRightWidth: 1, flex: 1, marginRight: 1 },
-                            dimensions.width
-                          )}
-                        >
-                          <View
+                          {/* Heading */}
+                          <Text
                             style={StyleSheet.applyWidth(
                               {
-                                backgroundColor: theme.colors.viewBG,
-                                height: 40,
-                                justifyContent: 'center',
+                                alignSelf: 'center',
+                                color: theme.colors['ShopAppBlue'],
+                                fontFamily: 'Roboto_400Regular',
+                                fontSize: 16,
+                                textAlign: 'center',
                               },
                               dimensions.width
                             )}
                           >
-                            <Text
+                            {'Billing History'}
+                          </Text>
+                        </View>
+                      )}
+                    </>
+                    {/* Tabs */}
+                    <>
+                      {!(prepaidFlag === 'N') ? null : (
+                        <View
+                          style={StyleSheet.applyWidth(
+                            GlobalStyles.ViewStyles(theme)['Tabs'],
+                            dimensions.width
+                          )}
+                        >
+                          {/* tab1 */}
+                          <View
+                            style={StyleSheet.applyWidth(
+                              {
+                                alignItems: 'center',
+                                flex: 1,
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                              },
+                              dimensions.width
+                            )}
+                          >
+                            {/* Dashboard */}
+                            <View
                               style={StyleSheet.applyWidth(
-                                {
-                                  color: theme.colors.strong,
-                                  fontFamily: 'Roboto_700Bold',
-                                  fontSize: 14,
-                                  textAlign: 'center',
-                                  textTransform: 'capitalize',
-                                },
+                                { flex: 1 },
                                 dimensions.width
                               )}
                             >
-                              {'Bill Issue Date'}
-                            </Text>
+                              {/* selected */}
+                              <>
+                                {!(selectedTab === 'Dashboard') ? null : (
+                                  <Touchable>
+                                    <View
+                                      style={StyleSheet.applyWidth(
+                                        {
+                                          alignItems: 'center',
+                                          borderBottomWidth: 3,
+                                          borderColor:
+                                            theme.colors['Custom Color'],
+                                          height: 25,
+                                        },
+                                        dimensions.width
+                                      )}
+                                    >
+                                      <Text
+                                        style={StyleSheet.applyWidth(
+                                          {
+                                            color: theme.colors['Custom Color'],
+                                            fontFamily: 'Roboto_400Regular',
+                                            fontSize: 14,
+                                          },
+                                          dimensions.width
+                                        )}
+                                      >
+                                        {'Chart'}
+                                      </Text>
+                                    </View>
+                                  </Touchable>
+                                )}
+                              </>
+                              {/* unselected */}
+                              <>
+                                {!(selectedTab !== 'Dashboard') ? null : (
+                                  <Touchable
+                                    onPress={() => {
+                                      try {
+                                        setSelectedTab('Dashboard');
+                                      } catch (err) {
+                                        console.error(err);
+                                      }
+                                    }}
+                                  >
+                                    <View
+                                      style={StyleSheet.applyWidth(
+                                        {
+                                          alignItems: 'center',
+                                          borderBottomWidth: 2,
+                                          borderColor: theme.colors['Light'],
+                                          height: 25,
+                                        },
+                                        dimensions.width
+                                      )}
+                                    >
+                                      <Text
+                                        style={StyleSheet.applyWidth(
+                                          {
+                                            color: theme.colors['Light'],
+                                            fontFamily: 'Roboto_400Regular',
+                                            fontSize: 14,
+                                          },
+                                          dimensions.width
+                                        )}
+                                      >
+                                        {'Chart'}
+                                      </Text>
+                                    </View>
+                                  </Touchable>
+                                )}
+                              </>
+                            </View>
+                          </View>
+                          {/* tab2 */}
+                          <View
+                            style={StyleSheet.applyWidth(
+                              {
+                                alignItems: 'center',
+                                flex: 1,
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                              },
+                              dimensions.width
+                            )}
+                          >
+                            {/* Content */}
+                            <View
+                              style={StyleSheet.applyWidth(
+                                { flex: 1 },
+                                dimensions.width
+                              )}
+                            >
+                              {/* selected */}
+                              <>
+                                {!(selectedTab === 'content') ? null : (
+                                  <Touchable>
+                                    <View
+                                      style={StyleSheet.applyWidth(
+                                        {
+                                          alignItems: 'center',
+                                          borderBottomWidth: 3,
+                                          borderColor:
+                                            theme.colors['Custom Color'],
+                                          height: 25,
+                                        },
+                                        dimensions.width
+                                      )}
+                                    >
+                                      <Text
+                                        style={StyleSheet.applyWidth(
+                                          {
+                                            color: theme.colors['Custom Color'],
+                                            fontFamily: 'Roboto_400Regular',
+                                            fontSize: 14,
+                                          },
+                                          dimensions.width
+                                        )}
+                                      >
+                                        {'Table'}
+                                      </Text>
+                                    </View>
+                                  </Touchable>
+                                )}
+                              </>
+                              {/* unselected */}
+                              <>
+                                {!(selectedTab !== 'content') ? null : (
+                                  <Touchable
+                                    onPress={() => {
+                                      try {
+                                        setSelectedTab('content');
+                                      } catch (err) {
+                                        console.error(err);
+                                      }
+                                    }}
+                                  >
+                                    <View
+                                      style={StyleSheet.applyWidth(
+                                        {
+                                          alignItems: 'center',
+                                          borderBottomWidth: 2,
+                                          borderColor: theme.colors['Light'],
+                                          height: 25,
+                                        },
+                                        dimensions.width
+                                      )}
+                                    >
+                                      <Text
+                                        style={StyleSheet.applyWidth(
+                                          {
+                                            color: theme.colors['Light'],
+                                            fontFamily: 'Roboto_400Regular',
+                                            fontSize: 14,
+                                          },
+                                          dimensions.width
+                                        )}
+                                      >
+                                        {'Table'}
+                                      </Text>
+                                    </View>
+                                  </Touchable>
+                                )}
+                              </>
+                            </View>
                           </View>
                         </View>
-                        {/* Amount */}
+                      )}
+                    </>
+                    {/* Dashboard */}
+                    <>
+                      {!(selectedTab === 'Dashboard') ? null : (
                         <View
                           style={StyleSheet.applyWidth(
-                            { borderRightWidth: 1, flex: 1, marginRight: 1 },
+                            GlobalStyles.ViewStyles(theme)['Dashboard'],
                             dimensions.width
                           )}
                         >
                           <View
                             style={StyleSheet.applyWidth(
-                              {
-                                backgroundColor: theme.colors.viewBG,
-                                height: 40,
-                                justifyContent: 'center',
-                              },
+                              { alignItems: 'center', flex: 1, width: '100%' },
                               dimensions.width
                             )}
                           >
-                            <Text
-                              style={StyleSheet.applyWidth(
-                                {
-                                  color: theme.colors.strong,
-                                  fontFamily: 'Roboto_700Bold',
-                                  fontSize: 14,
-                                  textAlign: 'center',
-                                  textTransform: 'capitalize',
-                                },
-                                dimensions.width
+                            {/* View 2 */}
+                            <>
+                              {!billingHistoryScreen?.length ? null : (
+                                <View>
+                                  <>
+                                    {!(prepaidFlag === 'N') ? null : (
+                                      <Utils.CustomCodeErrorBoundary>
+                                        <BillingHistory.LineChartComponent1
+                                          billingHistoryScreen={
+                                            billingHistoryScreen
+                                          }
+                                        />
+                                      </Utils.CustomCodeErrorBoundary>
+                                    )}
+                                  </>
+                                </View>
                               )}
-                            >
-                              {'Amount'}
-                            </Text>
+                            </>
                           </View>
                         </View>
-                        {/* Download */}
+                      )}
+                    </>
+                    {/* Details */}
+                    <>
+                      {!(selectedTab === 'content') ? null : (
                         <View
                           style={StyleSheet.applyWidth(
-                            { flex: 1 },
+                            StyleSheet.compose(
+                              GlobalStyles.ViewStyles(theme)['Details'],
+                              {
+                                backgroundColor: 'rgb(211, 211, 211)',
+                                borderBottomWidth: 1,
+                                borderColor: theme.colors['White'],
+                                borderLeftWidth: 1,
+                                borderRightWidth: 1,
+                                borderTopLeftRadius: 5,
+                                borderTopRightRadius: 5,
+                                borderTopWidth: 1,
+                                flex: 0,
+                              }
+                            ),
                             dimensions.width
                           )}
                         >
+                          {/* Bill Month */}
                           <View
                             style={StyleSheet.applyWidth(
                               {
-                                backgroundColor: theme.colors.viewBG,
-                                height: 40,
-                                justifyContent: 'center',
+                                borderColor: theme.colors['White'],
+                                borderRightWidth: 1,
+                                flex: 1,
                               },
                               dimensions.width
                             )}
                           >
-                            <Text
+                            <View
                               style={StyleSheet.applyWidth(
                                 {
-                                  color: theme.colors.strong,
-                                  fontFamily: 'Roboto_700Bold',
-                                  fontSize: 14,
-                                  textAlign: 'center',
-                                  textTransform: 'capitalize',
+                                  backgroundColor: theme.colors.viewBG,
+                                  height: 40,
+                                  justifyContent: 'center',
                                 },
                                 dimensions.width
                               )}
                             >
-                              {'Download'}
-                            </Text>
-                          </View>
-                        </View>
-                      </View>
-                    )}
-                  </>
-                  <FlatList
-                    renderItem={({ item }) => {
-                      const listData = item;
-                      return (
-                        <>
-                          {/* Details */}
-                          <>
-                            {!(selectedTab === 'content') ? null : (
-                              <View
+                              <Text
                                 style={StyleSheet.applyWidth(
-                                  StyleSheet.compose(
-                                    GlobalStyles.ViewStyles(theme)['Details'],
-                                    {
-                                      borderBottomWidth: 1,
-                                      borderLeftWidth: 1,
-                                      borderRightWidth: 1,
-                                    }
-                                  ),
+                                  {
+                                    color: 'rgb(42, 42, 42)',
+                                    fontFamily: 'Roboto_700Bold',
+                                    fontSize: 14,
+                                    textAlign: 'center',
+                                    textTransform: 'capitalize',
+                                  },
                                   dimensions.width
                                 )}
                               >
-                                {/* Bill Issue Date */}
-                                <View
-                                  style={StyleSheet.applyWidth(
-                                    { borderRightWidth: 1, flex: 1 },
-                                    dimensions.width
-                                  )}
-                                >
-                                  <View
-                                    style={StyleSheet.applyWidth(
-                                      { height: 40, justifyContent: 'center' },
-                                      dimensions.width
-                                    )}
-                                  >
-                                    <Text
-                                      style={StyleSheet.applyWidth(
-                                        {
-                                          fontFamily: 'Roboto_400Regular',
-                                          fontSize: 14,
-                                          textAlign: 'center',
-                                          textTransform: 'capitalize',
-                                        },
-                                        dimensions.width
-                                      )}
-                                    >
-                                      {(() => {
-                                        const e = convertDateTimeToDate(
-                                          listData?.BillIssueDate
-                                        );
-                                        console.log(e);
-                                        return e;
-                                      })()}
-                                    </Text>
-                                  </View>
-                                </View>
-                                {/* Amount */}
+                                {'Bill Month'}
+                              </Text>
+                            </View>
+                          </View>
+                          {/* Bill Amount */}
+                          <View
+                            style={StyleSheet.applyWidth(
+                              {
+                                borderColor: theme.colors['White'],
+                                borderRightWidth: 1,
+                                flex: 1,
+                              },
+                              dimensions.width
+                            )}
+                          >
+                            <View
+                              style={StyleSheet.applyWidth(
+                                {
+                                  backgroundColor: theme.colors.viewBG,
+                                  height: 40,
+                                  justifyContent: 'center',
+                                },
+                                dimensions.width
+                              )}
+                            >
+                              <Text
+                                style={StyleSheet.applyWidth(
+                                  {
+                                    color: 'rgb(42, 42, 42)',
+                                    fontFamily: 'Roboto_700Bold',
+                                    fontSize: 14,
+                                    textAlign: 'center',
+                                    textTransform: 'capitalize',
+                                  },
+                                  dimensions.width
+                                )}
+                              >
+                                {'Bill Amount'}
+                              </Text>
+                            </View>
+                          </View>
+                          {/* Download */}
+                          <View
+                            style={StyleSheet.applyWidth(
+                              { flex: 1 },
+                              dimensions.width
+                            )}
+                          >
+                            <View
+                              style={StyleSheet.applyWidth(
+                                {
+                                  backgroundColor: theme.colors.viewBG,
+                                  height: 40,
+                                  justifyContent: 'center',
+                                },
+                                dimensions.width
+                              )}
+                            >
+                              <Text
+                                style={StyleSheet.applyWidth(
+                                  {
+                                    color: 'rgb(42, 42, 42)',
+                                    fontFamily: 'Roboto_700Bold',
+                                    fontSize: 14,
+                                    textAlign: 'center',
+                                    textTransform: 'capitalize',
+                                  },
+                                  dimensions.width
+                                )}
+                              >
+                                {'Download'}
+                              </Text>
+                            </View>
+                          </View>
+                        </View>
+                      )}
+                    </>
+                    {/* PostpaidList */}
+                    <FlatList
+                      renderItem={({ item }) => {
+                        const postpaidListData = item;
+                        return (
+                          <>
+                            {/* Details */}
+                            <>
+                              {!(selectedTab === 'content') ? null : (
                                 <View
                                   style={StyleSheet.applyWidth(
                                     {
-                                      alignItems: 'stretch',
-                                      borderRightWidth: 1,
-                                      flex: 1,
-                                      marginRight: 1,
+                                      alignItems: 'center',
+                                      borderBottomWidth: 1,
+                                      borderColor: 'rgb(211, 211, 211)',
+                                      flexDirection: 'row',
+                                      justifyContent: 'space-between',
+                                      paddingBottom: 10,
+                                      paddingLeft: 20,
+                                      paddingRight: 20,
+                                      paddingTop: 10,
                                     },
                                     dimensions.width
                                   )}
                                 >
-                                  <View
-                                    style={StyleSheet.applyWidth(
-                                      {
-                                        alignItems: 'flex-end',
-                                        alignSelf: 'flex-end',
-                                        height: 40,
-                                        justifyContent: 'center',
-                                        padding: 12,
-                                      },
-                                      dimensions.width
-                                    )}
-                                  >
+                                  {/* Bill Month */}
+                                  <View>
+                                    {/* text */}
                                     <Text
                                       style={StyleSheet.applyWidth(
-                                        {
-                                          fontFamily: 'Roboto_400Regular',
-                                          fontSize: 14,
-                                          textAlign: 'right',
-                                          textTransform: 'capitalize',
-                                        },
+                                        StyleSheet.compose(
+                                          GlobalStyles.TextStyles(theme)[
+                                            'Text'
+                                          ],
+                                          {
+                                            color: 'rgb(42, 42, 42)',
+                                            fontFamily: 'Roboto_400Regular',
+                                            fontSize: 16,
+                                          }
+                                        ),
+                                        dimensions.width
+                                      )}
+                                    >
+                                      {(() => {
+                                        const e = convertMonthNoToMonthName(
+                                          postpaidListData?.BillMonth
+                                        );
+                                        console.log(e);
+                                        return e;
+                                      })()}
+                                      {' - '}
+                                      {postpaidListData?.BillYear}
+                                    </Text>
+                                  </View>
+                                  {/* Bill Amount */}
+                                  <View>
+                                    <Text
+                                      style={StyleSheet.applyWidth(
+                                        StyleSheet.compose(
+                                          GlobalStyles.TextStyles(theme)[
+                                            'Text'
+                                          ],
+                                          {
+                                            color: 'rgb(42, 42, 42)',
+                                            fontFamily: 'Roboto_400Regular',
+                                            fontSize: 16,
+                                          }
+                                        ),
                                         dimensions.width
                                       )}
                                     >
                                       {'₹'}
-                                      {listData?.BillAmount}
+                                      {postpaidListData?.BillAmount}
                                     </Text>
                                   </View>
-                                </View>
-                                {/* Download */}
-                                <View
-                                  style={StyleSheet.applyWidth(
-                                    { flex: 1, marginRight: 1 },
-                                    dimensions.width
-                                  )}
-                                >
+                                  {/* download */}
                                   <View
                                     style={StyleSheet.applyWidth(
                                       {
                                         alignSelf: 'center',
-                                        height: 40,
                                         justifyContent: 'center',
                                       },
                                       dimensions.width
@@ -2284,7 +2418,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                                         const handler = async () => {
                                           try {
                                             await WebBrowser.openBrowserAsync(
-                                              `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.plugin.DynamicServiceReportGenerator/service?name=POSTPAID_BILL&month=${listData?.BillMonth}&year=${listData?.BillYear}&scno=${serviceConNumber}`
+                                              `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.plugin.DynamicServiceReportGenerator/service?name=POSTPAID_BILL&month=${postpaidListData?.BillMonth}&year=${postpaidListData?.BillYear}&scno=${serviceConNumber}`
                                             );
                                           } catch (err) {
                                             console.error(err);
@@ -2294,33 +2428,35 @@ line two` ) and will not work with special characters inside of quotes ( example
                                       }}
                                     >
                                       <Icon
-                                        size={24}
                                         name={'Feather/arrow-down-circle'}
+                                        size={24}
                                       />
                                     </Touchable>
                                   </View>
                                 </View>
-                              </View>
-                            )}
+                              )}
+                            </>
                           </>
-                        </>
-                      );
-                    }}
-                    data={billingHistoryScreen}
-                    listKey={'tRRSKtpT'}
-                    keyExtractor={listData =>
-                      listData?.id || listData?.uuid || JSON.stringify(listData)
-                    }
-                    numColumns={1}
-                    onEndReachedThreshold={0.5}
-                    showsHorizontalScrollIndicator={true}
-                    showsVerticalScrollIndicator={true}
-                  />
-                </View>
-              )}
-            </>
+                        );
+                      }}
+                      data={billingHistoryScreen}
+                      listKey={'5zILbKEZ'}
+                      keyExtractor={postpaidListData =>
+                        postpaidListData?.id ||
+                        postpaidListData?.uuid ||
+                        JSON.stringify(postpaidListData)
+                      }
+                      numColumns={1}
+                      onEndReachedThreshold={0.5}
+                      showsHorizontalScrollIndicator={true}
+                      showsVerticalScrollIndicator={true}
+                    />
+                  </View>
+                )}
+              </>
+            </View>
           </View>
-        </View>
+        </ScrollView>
       </View>
       {/* botem tab1 */}
       <View
@@ -2362,9 +2498,9 @@ line two` ) and will not work with special characters inside of quotes ( example
             )}
           >
             <Icon
-              size={24}
-              name={'Entypo/home'}
               color={theme.colors['Community_Light_Black']}
+              name={'Entypo/home'}
+              size={24}
             />
             <Text
               style={StyleSheet.applyWidth(
@@ -2404,9 +2540,9 @@ line two` ) and will not work with special characters inside of quotes ( example
             )}
           >
             <Icon
-              size={24}
-              name={'FontAwesome/bar-chart-o'}
               color={theme.colors['Community_Light_Black']}
+              name={'FontAwesome/bar-chart-o'}
+              size={24}
             />
             <Text
               style={StyleSheet.applyWidth(
@@ -2446,9 +2582,9 @@ line two` ) and will not work with special characters inside of quotes ( example
             )}
           >
             <Icon
-              size={24}
-              name={'Entypo/text-document-inverted'}
               color={theme.colors['Community_Dark_UI']}
+              name={'Entypo/text-document-inverted'}
+              size={24}
             />
             <Text
               style={StyleSheet.applyWidth(
@@ -2491,8 +2627,8 @@ line two` ) and will not work with special characters inside of quotes ( example
           >
             <Icon
               color={theme.colors['Community_Light_Black']}
-              size={24}
               name={'MaterialIcons/payments'}
+              size={24}
             />
             <Text
               style={StyleSheet.applyWidth(
@@ -2531,9 +2667,9 @@ line two` ) and will not work with special characters inside of quotes ( example
             )}
           >
             <Icon
-              size={24}
-              name={'MaterialIcons/support-agent'}
               color={theme.colors['Community_Light_Black']}
+              name={'MaterialIcons/support-agent'}
+              size={24}
             />
             <Text
               style={StyleSheet.applyWidth(

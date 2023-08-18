@@ -19,16 +19,17 @@ export function BarChartExample({ currentScreen }) {
         //data: [55,35,60,30,70,45,90,],
       },
     ],
+    legend: ['Current(I)'],
   };
 
   const chartConfig = {
     backgroundGradientFrom: 'white',
     backgroundGradientFromOpacity: 0,
-    backgroundGradientTo: 'grey',
+    backgroundGradientTo: 'white',
     backgroundGradientToOpacity: 0.5,
     color: (opacity = 1) => `rgba(26, 25, 46, ${opacity})`,
     strokeWidth: 2, // optional, default 3
-    barPercentage: 0.5,
+    barPercentage: 0.2,
     useShadowColorFromDataset: false, // optional
   };
   return (
@@ -36,7 +37,8 @@ export function BarChartExample({ currentScreen }) {
       <BarChart
         data={data}
         width={400}
-        height={220}
+        height={390}
+        verticalLabelRotation={60}
         //yAxisLabel="$"
         chartConfig={chartConfig}
       />

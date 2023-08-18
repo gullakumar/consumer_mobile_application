@@ -21,10 +21,9 @@ export const use5SampleRecordsGET = (
   { refetchInterval, handlers = {} } = {}
 ) => {
   const Constants = GlobalVariables.useValues();
-  const fetcher = $SampleRecordsGET;
   return useQuery(
     ['Examples', args],
-    () => fetcher(Constants, args, handlers),
+    () => $SampleRecordsGET(Constants, args, handlers),
     {
       refetchInterval,
     }
@@ -63,7 +62,6 @@ export const Fetch5SampleRecordsGET = ({
       console.error(error);
     }
   }, [error]);
-
   return children({ loading, data, error, refetch5SampleRecords: refetch });
 };
 
@@ -77,10 +75,9 @@ export const useGetSampleDataList10GET = (
   { refetchInterval, handlers = {} } = {}
 ) => {
   const Constants = GlobalVariables.useValues();
-  const fetcher = getSampleDataList10GET;
   return useQuery(
     ['Sample Data', args],
-    () => fetcher(Constants, args, handlers),
+    () => getSampleDataList10GET(Constants, args, handlers),
     {
       refetchInterval,
     }
@@ -119,7 +116,6 @@ export const FetchGetSampleDataList10GET = ({
       console.error(error);
     }
   }, [error]);
-
   return children({
     loading,
     data,

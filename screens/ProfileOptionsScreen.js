@@ -75,9 +75,9 @@ const ProfileOptionsScreen = props => {
             }}
           >
             <Icon
-              size={24}
-              name={'Ionicons/arrow-back-sharp'}
               color={theme.colors['Custom Color_2']}
+              name={'Ionicons/arrow-back-sharp'}
+              size={24}
             />
           </Touchable>
         </View>
@@ -210,8 +210,8 @@ const ProfileOptionsScreen = props => {
                   )}
                 >
                   <Icon
-                    name={'AntDesign/edit'}
                     color={theme.colors['Custom #ffffff']}
+                    name={'AntDesign/edit'}
                     size={15}
                   />
                   <Text
@@ -283,8 +283,8 @@ const ProfileOptionsScreen = props => {
                   )}
                 >
                   <Icon
-                    name={'AntDesign/edit'}
                     color={theme.colors['Custom #ffffff']}
+                    name={'AntDesign/edit'}
                     size={15}
                   />
                   <Text
@@ -301,6 +301,63 @@ const ProfileOptionsScreen = props => {
                     )}
                   >
                     {'Edit'}
+                  </Text>
+                </View>
+              </Touchable>
+            </View>
+            {/* Change password */}
+            <View
+              style={StyleSheet.applyWidth(
+                {
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  marginTop: 10,
+                  paddingLeft: 10,
+                },
+                dimensions.width
+              )}
+            >
+              {/* Change password */}
+              <Touchable
+                onPress={() => {
+                  try {
+                    navigation.navigate('ChangePasswordScreen');
+                  } catch (err) {
+                    console.error(err);
+                  }
+                }}
+              >
+                <View
+                  style={StyleSheet.applyWidth(
+                    {
+                      alignItems: 'center',
+                      backgroundColor: theme.colors['Primary'],
+                      borderRadius: 100,
+                      flexDirection: 'row',
+                      paddingLeft: 5,
+                    },
+                    dimensions.width
+                  )}
+                >
+                  <Icon
+                    color={theme.colors['Custom #ffffff']}
+                    name={'AntDesign/edit'}
+                    size={15}
+                  />
+                  <Text
+                    style={StyleSheet.applyWidth(
+                      {
+                        color: theme.colors['Custom #ffffff'],
+                        fontFamily: 'Inter_500Medium',
+                        paddingBottom: 8,
+                        paddingLeft: 10,
+                        paddingRight: 15,
+                        paddingTop: 8,
+                      },
+                      dimensions.width
+                    )}
+                  >
+                    {'Change password'}
                   </Text>
                 </View>
               </Touchable>

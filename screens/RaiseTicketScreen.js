@@ -95,7 +95,6 @@ line two` ) and will not work with special characters inside of quotes ( example
     };
     handler();
   }, [isFocused]);
-
   const [comid, setComid] = React.useState('');
   const [consumerNo, setConsumerNo] = React.useState('');
   const [pickerValue, setPickerValue] = React.useState('');
@@ -117,12 +116,13 @@ line two` ) and will not work with special characters inside of quotes ( example
   const [subCatJson, setSubCatJson] = React.useState([]);
   const [textAreaValue, setTextAreaValue] = React.useState('');
   const [textInputValue, setTextInputValue] = React.useState('');
+  const [textareacomplint, setTextareacomplint] = React.useState('');
 
   return (
     <ScreenContainer
+      hasBottomSafeArea={false}
       hasSafeArea={true}
       scrollable={true}
-      hasBottomSafeArea={false}
     >
       {/* Header */}
       <View
@@ -153,9 +153,9 @@ line two` ) and will not work with special characters inside of quotes ( example
             }}
           >
             <Icon
-              size={24}
-              name={'Ionicons/arrow-back-sharp'}
               color={theme.colors['Custom Color_2']}
+              name={'Ionicons/arrow-back-sharp'}
+              size={24}
             />
           </Touchable>
         </View>
@@ -173,45 +173,6 @@ line two` ) and will not work with special characters inside of quotes ( example
         >
           {'Raise Ticket'}
         </Text>
-      </View>
-
-      <View style={StyleSheet.applyWidth({ marginTop: 20 }, dimensions.width)}>
-        {/* Raiseticket Message */}
-        <>
-          {!raiseTicketMsg?.length ? null : (
-            <Text
-              style={StyleSheet.applyWidth(
-                StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
-                  alignSelf: 'center',
-                  color: theme.colors['Custom Color_9'],
-                  fontFamily: 'Roboto_400Regular',
-                  textAlign: 'center',
-                }),
-                dimensions.width
-              )}
-            >
-              {raiseTicketMsg}
-            </Text>
-          )}
-        </>
-        {/* Raiseticket Complaint Message */}
-        <>
-          {!raiseTicketCompMsg?.length ? null : (
-            <Text
-              style={StyleSheet.applyWidth(
-                StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
-                  alignSelf: 'center',
-                  color: theme.colors['Custom Color_9'],
-                  fontFamily: 'Roboto_400Regular',
-                  textAlign: 'center',
-                }),
-                dimensions.width
-              )}
-            >
-              {raiseTicketCompMsg}
-            </Text>
-          )}
-        </>
       </View>
       {/* tabs */}
       <View
@@ -375,8 +336,8 @@ line two` ) and will not work with special characters inside of quotes ( example
       <>
         {!(selectedTab === 'faq') ? null : (
           <KeyboardAwareScrollView
-            showsVerticalScrollIndicator={true}
             keyboardShouldPersistTaps={'never'}
+            showsVerticalScrollIndicator={true}
           >
             {/* FAQs */}
             <ScrollView
@@ -384,8 +345,8 @@ line two` ) and will not work with special characters inside of quotes ( example
                 { paddingLeft: 24, paddingRight: 24, paddingTop: 16 },
                 dimensions.width
               )}
-              showsVerticalScrollIndicator={true}
               bounces={true}
+              showsVerticalScrollIndicator={true}
             >
               {/* Service connection number */}
               <View
@@ -398,9 +359,9 @@ line two` ) and will not work with special characters inside of quotes ( example
                 )}
               >
                 <Icon
-                  size={24}
-                  name={'MaterialIcons/house'}
                   color={theme.colors['Medium']}
+                  name={'MaterialIcons/house'}
+                  size={24}
                 />
                 <View
                   style={StyleSheet.applyWidth(
@@ -431,7 +392,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                       dimensions.width
                     )}
                     value={Constants['name']}
-                    placeholder={'Enter service connection number'}
+                    placeholder={'Service connection number'}
                     editable={true}
                     placeholderTextColor={theme.colors['Medium']}
                   />
@@ -476,14 +437,14 @@ line two` ) and will not work with special characters inside of quotes ( example
                     dimensions.width
                   )}
                   options={Constants['picker_option1']}
-                  leftIconMode={'inset'}
-                  type={'solid'}
-                  iconSize={24}
                   autoDismissKeyboard={true}
-                  rightIconName={'Entypo/chevron-down'}
-                  placeholder={'Select Category'}
                   iconColor={theme.colors['Medium']}
+                  iconSize={24}
+                  leftIconMode={'inset'}
+                  placeholder={'Select Category'}
                   placeholderTextColor={theme.colors['Medium']}
+                  rightIconName={'Entypo/chevron-down'}
+                  type={'solid'}
                 />
               </View>
               {/* Sub category */}
@@ -515,14 +476,14 @@ line two` ) and will not work with special characters inside of quotes ( example
                     dimensions.width
                   )}
                   options={Constants['sub_category']}
-                  leftIconMode={'inset'}
-                  type={'solid'}
-                  iconSize={24}
                   autoDismissKeyboard={true}
-                  rightIconName={'Entypo/chevron-down'}
+                  iconColor={theme.colors['Medium']}
+                  iconSize={24}
+                  leftIconMode={'inset'}
                   placeholder={'Select Sub Category'}
                   placeholderTextColor={theme.colors['Medium']}
-                  iconColor={theme.colors['Medium']}
+                  rightIconName={'Entypo/chevron-down'}
+                  type={'solid'}
                 />
               </View>
               {/* Description */}
@@ -571,9 +532,21 @@ line two` ) and will not work with special characters inside of quotes ( example
                     try {
                       const servicerequestsave = (
                         await CISAPPApi.serviceRequestSavePOST(Constants, {
-                          requestDetails: requestDetails,
-                          requestnatureId: saveid,
-                          scNo: scNo,
+                          requestDetails: (() => {
+                            const e = textAreaValue;
+                            console.log(e);
+                            return e;
+                          })(),
+                          requestnatureId: (() => {
+                            const e = saveid;
+                            console.log(e);
+                            return e;
+                          })(),
+                          scNo: (() => {
+                            const e = Constants['name'];
+                            console.log(e);
+                            return e;
+                          })(),
                         })
                       )?.json;
                       console.log(servicerequestsave);
@@ -582,7 +555,9 @@ line two` ) and will not work with special characters inside of quotes ( example
                         servicerequestsave[0].data.RequestMJson[0].message;
                       setRaiseTicketMsg(raiseTicketMsg);
                       console.log(raiseTicketMsg);
-                      navigation.navigate('CheckTicketStatusScreen');
+                      navigation.navigate('RaiseTicketSuccessScreen', {
+                        raiseTicketMsg: raiseTicketMsg,
+                      });
                     } catch (err) {
                       console.error(err);
                     }
@@ -609,8 +584,8 @@ line two` ) and will not work with special characters inside of quotes ( example
       </>
       {/* contact */}
       <KeyboardAwareScrollView
-        showsVerticalScrollIndicator={true}
         keyboardShouldPersistTaps={'never'}
+        showsVerticalScrollIndicator={true}
       >
         {/* contact */}
         <>
@@ -632,9 +607,9 @@ line two` ) and will not work with special characters inside of quotes ( example
                 )}
               >
                 <Icon
-                  size={24}
-                  name={'MaterialIcons/house'}
                   color={theme.colors['Medium']}
+                  name={'MaterialIcons/house'}
+                  size={24}
                 />
                 <View
                   style={StyleSheet.applyWidth(
@@ -715,15 +690,15 @@ line two` ) and will not work with special characters inside of quotes ( example
                     dimensions.width
                   )}
                   options={Constants['picker_option2']}
-                  leftIconMode={'inset'}
-                  type={'solid'}
-                  iconSize={24}
                   autoDismissKeyboard={true}
-                  rightIconName={'Entypo/chevron-down'}
-                  placeholder={'Select Category'}
-                  value={pickerValue}
                   iconColor={theme.colors['Medium']}
+                  iconSize={24}
+                  leftIconMode={'inset'}
+                  placeholder={'Select Category'}
                   placeholderTextColor={theme.colors['Medium']}
+                  rightIconName={'Entypo/chevron-down'}
+                  type={'solid'}
+                  value={pickerValue}
                 />
               </View>
               {/* Sub category */}
@@ -756,15 +731,15 @@ line two` ) and will not work with special characters inside of quotes ( example
                     dimensions.width
                   )}
                   options={Constants['sub_category2']}
-                  leftIconMode={'inset'}
-                  type={'solid'}
-                  iconSize={24}
                   autoDismissKeyboard={true}
-                  value={pickerValue}
-                  rightIconName={'Entypo/chevron-down'}
-                  placeholder={'Select Sub Category'}
                   iconColor={theme.colors['Medium']}
+                  iconSize={24}
+                  leftIconMode={'inset'}
+                  placeholder={'Select Sub Category'}
                   placeholderTextColor={theme.colors['Medium']}
+                  rightIconName={'Entypo/chevron-down'}
+                  type={'solid'}
+                  value={pickerValue}
                 />
               </View>
               {/* Description */}
@@ -775,6 +750,13 @@ line two` ) and will not work with special characters inside of quotes ( example
                 )}
               >
                 <TextInput
+                  onChangeText={newTextAreaValue => {
+                    try {
+                      setTextareacomplint(newTextAreaValue);
+                    } catch (err) {
+                      console.error(err);
+                    }
+                  }}
                   style={StyleSheet.applyWidth(
                     {
                       borderBottomWidth: 1,
@@ -792,6 +774,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                     },
                     dimensions.width
                   )}
+                  value={textareacomplint}
                   placeholder={'Description'}
                   multiline={true}
                   numberOfLines={4}
@@ -805,8 +788,8 @@ line two` ) and will not work with special characters inside of quotes ( example
                     try {
                       const complaintsave = (
                         await CISAPPApi.complaintSavePOST(Constants, {
-                          consumerNo: consumerNo,
-                          requestDetails1: requestDetails1,
+                          consumerNo: Constants['name'],
+                          requestDetails1: textareacomplint,
                           requestnatureId1: comid,
                         })
                       )?.json;
@@ -816,7 +799,9 @@ line two` ) and will not work with special characters inside of quotes ( example
                         complaintsave[0].data.RequestMJson[0].message;
                       console.log(complaintMsg);
                       setRaiseTicketCompMsg(complaintMsg);
-                      navigation.navigate('CheckTicketStatusScreen');
+                      navigation.navigate('RaiseTicketSuccessScreen', {
+                        raiseTicketMsg: complaintMsg,
+                      });
                     } catch (err) {
                       console.error(err);
                     }

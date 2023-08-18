@@ -21,10 +21,13 @@ export const useDoctorsListGET = (
   { refetchInterval, handlers = {} } = {}
 ) => {
   const Constants = GlobalVariables.useValues();
-  const fetcher = doctorsListGET;
-  return useQuery(['doctors', args], () => fetcher(Constants, args, handlers), {
-    refetchInterval,
-  });
+  return useQuery(
+    ['doctors', args],
+    () => doctorsListGET(Constants, args, handlers),
+    {
+      refetchInterval,
+    }
+  );
 };
 
 export const FetchDoctorsListGET = ({
@@ -60,6 +63,5 @@ export const FetchDoctorsListGET = ({
       console.error(error);
     }
   }, [error]);
-
   return children({ loading, data, error, refetchDoctorsList: refetch });
 };

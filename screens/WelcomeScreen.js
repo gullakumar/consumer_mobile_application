@@ -22,6 +22,7 @@ import * as WebBrowser from 'expo-web-browser';
 import {
   ActivityIndicator,
   Image,
+  ScrollView,
   Text,
   View,
   useWindowDimensions,
@@ -144,10 +145,10 @@ const WelcomeScreen = props => {
                     )}
                   >
                     <Icon
-                      size={24}
                       name={
                         'MaterialCommunityIcons/contactless-payment-circle-outline'
                       }
+                      size={24}
                     />
                     <Text
                       style={StyleSheet.applyWidth(
@@ -161,49 +162,6 @@ const WelcomeScreen = props => {
                       )}
                     >
                       {'Quick Pay'}
-                    </Text>
-                  </View>
-                </Touchable>
-                {/* Raise Ticket */}
-                <Touchable
-                  onPress={() => {
-                    try {
-                      setShowNav(false);
-                      navigation.navigate('AddTicketProcessGuestScreen');
-                    } catch (err) {
-                      console.error(err);
-                    }
-                  }}
-                >
-                  <View
-                    style={StyleSheet.applyWidth(
-                      {
-                        alignItems: 'center',
-                        flexDirection: 'row',
-                        paddingBottom: 12,
-                        paddingLeft: 24,
-                        paddingRight: 24,
-                        paddingTop: 12,
-                      },
-                      dimensions.width
-                    )}
-                  >
-                    <Icon
-                      size={24}
-                      name={'MaterialCommunityIcons/sticker-check-outline'}
-                    />
-                    <Text
-                      style={StyleSheet.applyWidth(
-                        {
-                          color: theme.colors.strong,
-                          fontFamily: 'Roboto_400Regular',
-                          fontSize: 16,
-                          marginLeft: 8,
-                        },
-                        dimensions.width
-                      )}
-                    >
-                      {'Raise Ticket'}
                     </Text>
                   </View>
                 </Touchable>
@@ -235,7 +193,7 @@ const WelcomeScreen = props => {
                       dimensions.width
                     )}
                   >
-                    <Icon size={24} name={'Ionicons/person-add-outline'} />
+                    <Icon name={'Ionicons/person-add-outline'} size={24} />
                     <Text
                       style={StyleSheet.applyWidth(
                         {
@@ -248,6 +206,49 @@ const WelcomeScreen = props => {
                       )}
                     >
                       {'New Service Connection'}
+                    </Text>
+                  </View>
+                </Touchable>
+                {/* Raise Ticket */}
+                <Touchable
+                  onPress={() => {
+                    try {
+                      setShowNav(false);
+                      navigation.navigate('AddTicketProcessGuestScreen');
+                    } catch (err) {
+                      console.error(err);
+                    }
+                  }}
+                >
+                  <View
+                    style={StyleSheet.applyWidth(
+                      {
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                        paddingBottom: 12,
+                        paddingLeft: 24,
+                        paddingRight: 24,
+                        paddingTop: 12,
+                      },
+                      dimensions.width
+                    )}
+                  >
+                    <Icon
+                      name={'MaterialCommunityIcons/sticker-check-outline'}
+                      size={24}
+                    />
+                    <Text
+                      style={StyleSheet.applyWidth(
+                        {
+                          color: theme.colors.strong,
+                          fontFamily: 'Roboto_400Regular',
+                          fontSize: 16,
+                          marginLeft: 8,
+                        },
+                        dimensions.width
+                      )}
+                    >
+                      {'Raise Ticket'}
                     </Text>
                   </View>
                 </Touchable>
@@ -275,7 +276,7 @@ const WelcomeScreen = props => {
                       dimensions.width
                     )}
                   >
-                    <Icon size={24} name={'MaterialIcons/work-outline'} />
+                    <Icon name={'MaterialIcons/work-outline'} size={24} />
                     <Text
                       style={StyleSheet.applyWidth(
                         {
@@ -314,7 +315,7 @@ const WelcomeScreen = props => {
                       dimensions.width
                     )}
                   >
-                    <Icon size={24} name={'Feather/download'} />
+                    <Icon name={'Feather/download'} size={24} />
                     <Text
                       style={StyleSheet.applyWidth(
                         {
@@ -330,11 +331,11 @@ const WelcomeScreen = props => {
                     </Text>
                   </View>
                 </Touchable>
-                {/* FAQ */}
+                {/* Help */}
                 <Touchable
                   onPress={() => {
                     try {
-                      navigation.navigate('HelpCenterGuestScreen');
+                      navigation.navigate('HelpGuestScreen');
                     } catch (err) {
                       console.error(err);
                     }
@@ -353,7 +354,7 @@ const WelcomeScreen = props => {
                       dimensions.width
                     )}
                   >
-                    <Icon size={24} name={'Feather/help-circle'} />
+                    <Icon name={'Feather/help-circle'} size={24} />
                     <Text
                       style={StyleSheet.applyWidth(
                         {
@@ -365,7 +366,7 @@ const WelcomeScreen = props => {
                         dimensions.width
                       )}
                     >
-                      {'FAQ'}
+                      {'Help'}
                     </Text>
                   </View>
                 </Touchable>
@@ -392,7 +393,7 @@ const WelcomeScreen = props => {
                       dimensions.width
                     )}
                   >
-                    <Icon size={24} name={'MaterialIcons/feedback'} />
+                    <Icon name={'MaterialIcons/feedback'} size={24} />
                     <Text
                       style={StyleSheet.applyWidth(
                         {
@@ -408,11 +409,11 @@ const WelcomeScreen = props => {
                     </Text>
                   </View>
                 </Touchable>
-                {/* Help */}
+                {/* Contact Us */}
                 <Touchable
                   onPress={() => {
                     try {
-                      navigation.navigate('HelpCenterGuestScreen');
+                      navigation.navigate('ContactUsGuestScreen');
                     } catch (err) {
                       console.error(err);
                     }
@@ -431,7 +432,7 @@ const WelcomeScreen = props => {
                       dimensions.width
                     )}
                   >
-                    <Icon size={24} name={'Ionicons/md-help-buoy-outline'} />
+                    <Icon name={'Ionicons/md-help-buoy-outline'} size={24} />
                     <Text
                       style={StyleSheet.applyWidth(
                         {
@@ -443,7 +444,85 @@ const WelcomeScreen = props => {
                         dimensions.width
                       )}
                     >
-                      {'Help'}
+                      {'Contact Us'}
+                    </Text>
+                  </View>
+                </Touchable>
+                {/* Energy Tips */}
+                <Touchable
+                  onPress={() => {
+                    try {
+                      navigation.navigate('EnergyTipsGuestScreen');
+                    } catch (err) {
+                      console.error(err);
+                    }
+                  }}
+                >
+                  <View
+                    style={StyleSheet.applyWidth(
+                      {
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                        paddingBottom: 12,
+                        paddingLeft: 24,
+                        paddingRight: 24,
+                        paddingTop: 12,
+                      },
+                      dimensions.width
+                    )}
+                  >
+                    <Icon name={'SimpleLineIcons/energy'} size={24} />
+                    <Text
+                      style={StyleSheet.applyWidth(
+                        {
+                          color: theme.colors.strong,
+                          fontFamily: 'Roboto_400Regular',
+                          fontSize: 16,
+                          marginLeft: 8,
+                        },
+                        dimensions.width
+                      )}
+                    >
+                      {'Energy Tips'}
+                    </Text>
+                  </View>
+                </Touchable>
+                {/* Privacy Policy */}
+                <Touchable
+                  onPress={() => {
+                    try {
+                      navigation.navigate('PrivacyPolicyGuestScreen');
+                    } catch (err) {
+                      console.error(err);
+                    }
+                  }}
+                >
+                  <View
+                    style={StyleSheet.applyWidth(
+                      {
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                        paddingBottom: 12,
+                        paddingLeft: 24,
+                        paddingRight: 24,
+                        paddingTop: 12,
+                      },
+                      dimensions.width
+                    )}
+                  >
+                    <Icon name={'MaterialCommunityIcons/security'} size={24} />
+                    <Text
+                      style={StyleSheet.applyWidth(
+                        {
+                          color: theme.colors.strong,
+                          fontFamily: 'Roboto_400Regular',
+                          fontSize: 16,
+                          marginLeft: 8,
+                        },
+                        dimensions.width
+                      )}
+                    >
+                      {'Privacy Policy'}
                     </Text>
                   </View>
                 </Touchable>
@@ -522,16 +601,16 @@ const WelcomeScreen = props => {
             }}
             status={showNav}
             checkedIcon={'Feather/x'}
-            uncheckedIcon={'Feather/menu'}
             color={theme.colors['Custom Color_22']}
-            uncheckedColor={theme.colors['Custom Color_22']}
             size={30}
+            uncheckedColor={theme.colors['Custom Color_22']}
+            uncheckedIcon={'Feather/menu'}
           />
         </View>
         {/* Body */}
         <View
           style={StyleSheet.applyWidth(
-            { flex: 0, justifyContent: 'space-around' },
+            { justifyContent: 'space-around' },
             dimensions.width
           )}
         >
@@ -545,13 +624,44 @@ const WelcomeScreen = props => {
               style={StyleSheet.applyWidth(
                 StyleSheet.compose(
                   GlobalStyles.ImageStyles(theme)['banner 3'],
-                  { height: 128, width: 128 }
+                  { height: 110, width: 110 }
                 ),
                 dimensions.width
               )}
               resizeMode={'cover'}
               source={Images.JBNL}
             />
+            <View
+              style={StyleSheet.applyWidth(
+                { alignItems: 'center', marginTop: 10 },
+                dimensions.width
+              )}
+            >
+              <Text
+                style={StyleSheet.applyWidth(
+                  StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+                    fontFamily: 'Roboto_700Bold',
+                    fontSize: 18,
+                  }),
+                  dimensions.width
+                )}
+              >
+                {'Jharkhand Bijli Vitran Nigam Limited'}
+              </Text>
+
+              <Text
+                style={StyleSheet.applyWidth(
+                  StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+                    fontFamily: 'Roboto_400Regular',
+                    fontSize: 16,
+                    marginTop: 10,
+                  }),
+                  dimensions.width
+                )}
+              >
+                {'Consumer Mobile App'}
+              </Text>
+            </View>
           </View>
           {/* Home buttons */}
           <View
@@ -581,8 +691,8 @@ const WelcomeScreen = props => {
                 },
                 dimensions.width
               )}
-              type={'solid'}
               title={'Login'}
+              type={'solid'}
             >
               {'Sign up'}
             </Button>
@@ -605,8 +715,8 @@ const WelcomeScreen = props => {
                 },
                 dimensions.width
               )}
-              type={'solid'}
               title={'Quick Pay'}
+              type={'solid'}
             >
               {'Sign up'}
             </Button>
@@ -623,12 +733,12 @@ const WelcomeScreen = props => {
           >
             <CISAPPApi.FetchANNOUNCEMENTSPOST>
               {({ loading, error, data, refetchANNOUNCEMENTS }) => {
-                const fetchData = data;
+                const fetchData = data?.json;
                 if (loading) {
                   return <ActivityIndicator />;
                 }
 
-                if (error) {
+                if (error || data?.status < 200 || data?.status >= 300) {
                   return <ActivityIndicator />;
                 }
 
@@ -649,41 +759,52 @@ const WelcomeScreen = props => {
                                 dimensions.width
                               )}
                             >
-                              <Text
-                                style={StyleSheet.applyWidth(
-                                  {
-                                    alignSelf: 'stretch',
-                                    fontFamily: 'Roboto_700Bold',
-                                    fontSize: 15,
-                                    paddingBottom: 2,
-                                    paddingLeft: 5,
-                                    paddingRight: 5,
-                                    paddingTop: 8,
-                                    textAlign: 'center',
-                                  },
+                              <ScrollView
+                                contentContainerStyle={StyleSheet.applyWidth(
+                                  { paddingBottom: 5, paddingTop: 5 },
                                   dimensions.width
                                 )}
+                                bounces={true}
+                                showsHorizontalScrollIndicator={true}
+                                showsVerticalScrollIndicator={true}
                               >
-                                {swiperData?.news_source}
-                              </Text>
+                                <Text
+                                  style={StyleSheet.applyWidth(
+                                    {
+                                      alignSelf: 'stretch',
+                                      fontFamily: 'Roboto_700Bold',
+                                      fontSize: 15,
+                                      paddingBottom: 2,
+                                      paddingLeft: 5,
+                                      paddingRight: 5,
+                                      paddingTop: 8,
+                                      textAlign: 'center',
+                                    },
+                                    dimensions.width
+                                  )}
+                                >
+                                  {swiperData?.news_source}
+                                </Text>
 
-                              <Text
-                                style={StyleSheet.applyWidth(
-                                  {
-                                    alignSelf: 'stretch',
-                                    fontFamily: 'Roboto_400Regular',
-                                    fontSize: 13,
-                                    paddingBottom: 2,
-                                    paddingLeft: 5,
-                                    paddingRight: 5,
-                                    paddingTop: 8,
-                                    textAlign: 'center',
-                                  },
-                                  dimensions.width
-                                )}
-                              >
-                                {swiperData?.description}
-                              </Text>
+                                <Text
+                                  style={StyleSheet.applyWidth(
+                                    {
+                                      alignSelf: 'stretch',
+                                      fontFamily: 'Roboto_400Regular',
+                                      fontSize: 13,
+                                      paddingBottom: 8,
+                                      paddingLeft: 8,
+                                      paddingRight: 8,
+                                      paddingTop: 8,
+                                      textAlign: 'justify',
+                                      whiteSpace: 'pre-line',
+                                    },
+                                    dimensions.width
+                                  )}
+                                >
+                                  {swiperData?.description}
+                                </Text>
+                              </ScrollView>
                             </SwiperItem>
                           )}
                         </>
@@ -711,8 +832,8 @@ const WelcomeScreen = props => {
                       ),
                       dimensions.width
                     )}
-                    dotColor={theme.colors.light}
                     dotActiveColor={theme.colors.primary}
+                    dotColor={theme.colors.light}
                     dotsTouchable={true}
                   />
                 );
@@ -730,12 +851,12 @@ const WelcomeScreen = props => {
           >
             <CISAPPApi.FetchBANNERSPOST>
               {({ loading, error, data, refetchBANNERS }) => {
-                const fetchData = data;
+                const fetchData = data?.json;
                 if (loading) {
                   return <ActivityIndicator />;
                 }
 
-                if (error) {
+                if (error || data?.status < 200 || data?.status >= 300) {
                   return <ActivityIndicator />;
                 }
 
@@ -789,22 +910,46 @@ const WelcomeScreen = props => {
                           alignSelf: 'auto',
                           backgroundColor: 'rgb(255, 255, 255)',
                           borderColor: 'rgb(222, 221, 221)',
-                          borderRadius: 5,
-                          borderWidth: 1,
                           height: 108,
                           position: 'relative',
                         }
                       ),
                       dimensions.width
                     )}
-                    dotColor={theme.colors.light}
                     dotActiveColor={theme.colors.primary}
+                    dotColor={theme.colors.light}
                     dotsTouchable={true}
                   />
                 );
               }}
             </CISAPPApi.FetchBANNERSPOST>
           </View>
+        </View>
+        {/* Bottom line */}
+        <View
+          style={StyleSheet.applyWidth(
+            StyleSheet.compose(GlobalStyles.ViewStyles(theme)['bottom'], {
+              alignItems: 'flex-end',
+              borderColor: theme.colors['Custom #d8d8d8'],
+              borderTopWidth: 1,
+              justifyContent: 'center',
+              paddingTop: 20,
+            }),
+            dimensions.width
+          )}
+        >
+          <Text
+            style={StyleSheet.applyWidth(
+              StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+                color: 'rgb(0,0,0)',
+                fontFamily: 'Roboto_400Regular',
+                fontSize: 16,
+              }),
+              dimensions.width
+            )}
+          >
+            {'Powered by Fluentgrid '}
+          </Text>
         </View>
       </View>
     </ScreenContainer>

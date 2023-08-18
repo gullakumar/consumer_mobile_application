@@ -21,8 +21,7 @@ export const usePostsGET = (
   { refetchInterval, handlers = {} } = {}
 ) => {
   const Constants = GlobalVariables.useValues();
-  const fetcher = postsGET;
-  return useQuery(['Posts', args], () => fetcher(Constants, args, handlers), {
+  return useQuery(['Posts', args], () => postsGET(Constants, args, handlers), {
     refetchInterval,
   });
 };
@@ -60,6 +59,5 @@ export const FetchPostsGET = ({
       console.error(error);
     }
   }, [error]);
-
   return children({ loading, data, error, refetchPosts: refetch });
 };

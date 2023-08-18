@@ -5,12 +5,50 @@ import { LineChart } from 'react-native-chart-kit';
 export function LineChartComponent1({ prepaidBillingHistory }) {
   let newData = [];
   let newBillDates = [];
+  let billMonth = [];
+  let billYear = [];
+  let result = [];
+  let resultArray = [];
+
+  console.log('from custom code', prepaidBillingHistory);
 
   if (prepaidBillingHistory.length) {
     newData = prepaidBillingHistory.map(item => item.closingBalance);
-    newBillDates = prepaidBillingHistory.map(item => item.billmonth);
+    //newBillDates = prepaidBillingHistory.map( item => item.billmonth )
+    billMonth = prepaidBillingHistory.map(item => item.billmonth);
+    billYear = prepaidBillingHistory.map(item => item.billyear);
+    convertMonthNoToMonthName(billMonth);
+    function convertMonthNoToMonthName(billMonth) {
+      const monthNames = [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
+      ];
+
+      for (const monthNumber of billMonth) {
+        if (monthNumber >= 1 && monthNumber <= 12) {
+          result.push(monthNames[monthNumber - 1]);
+        }
+      }
+    }
+    appendWithHyphen(result, billYear);
+    function appendWithHyphen(result, billYear) {
+      return result.map((element, index) => element + '-' + billYear[index]);
+    }
+    resultArray = appendWithHyphen(result, billYear);
+    console.log(resultArray);
   }
-  console.log('from custom code', prepaidBillingHistory);
+  newBillDates = resultArray;
+  //console.log("from custom code",prepaidBillingHistory)
 
   const data = {
     //labels: prepaidBillingHistory.BillIssueDate,
@@ -20,17 +58,19 @@ export function LineChartComponent1({ prepaidBillingHistory }) {
       {
         data: newData,
         //data: [20, 45, 28, 80, 99, 43],
-        color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
+        color: (opacity = 1) => `rgba(255, 0, 0, ${opacity})`,
       },
     ],
+    legend: ['Bill Amount(₹)'],
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View>
       <LineChart
         data={data}
-        width={400}
-        height={220}
+        width={430}
+        height={350}
+        verticalLabelRotation={60}
         chartConfig={{
           backgroundGradientFrom: 'white',
           backgroundGradientTo: 'white',
@@ -40,7 +80,7 @@ export function LineChartComponent1({ prepaidBillingHistory }) {
         bezier
         style={{
           margin: 8,
-          borderRadius: 16,
+          //borderRadius: 8,
         }}
       />
     </View>

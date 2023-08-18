@@ -2,6 +2,7 @@ import React from 'react';
 import * as GlobalStyles from '../GlobalStyles.js';
 import * as CISAPPApi from '../apis/CISAPPApi.js';
 import * as GlobalVariables from '../config/GlobalVariableContext';
+import Images from '../config/Images';
 import * as CustomCode from '../custom-files/CustomCode';
 import Breakpoints from '../utils/Breakpoints';
 import * as StyleSheet from '../utils/StyleSheet';
@@ -13,7 +14,7 @@ import {
   Touchable,
   withTheme,
 } from '@draftbit/ui';
-import { Text, View, useWindowDimensions } from 'react-native';
+import { Image, Text, View, useWindowDimensions } from 'react-native';
 
 const ForgotpasswordScreen = props => {
   const dimensions = useWindowDimensions();
@@ -65,17 +66,26 @@ const ForgotpasswordScreen = props => {
     return scheme[msg];
   };
 
+  const validatescNo = scNo => {
+    var errorMessage = null;
+    if (!scNo.trim()) {
+      errorMessage = 'Service connection number is required';
+    }
+    return errorMessage;
+  };
+
   const { theme } = props;
   const { navigation } = props;
 
   const [ERROR_MESSAGE, setERROR_MESSAGE] = React.useState('');
   const [afterotpvalue, setAfterotpvalue] = React.useState('');
+  const [scnoErrorMsg, setScnoErrorMsg] = React.useState('');
   const [serviceconnectionnumber, setServiceconnectionnumber] =
     React.useState('');
   const [textInputValue, setTextInputValue] = React.useState('');
 
   return (
-    <ScreenContainer scrollable={false} hasSafeArea={true}>
+    <ScreenContainer hasSafeArea={true} scrollable={false}>
       {/* Header */}
       <View
         style={StyleSheet.applyWidth(
@@ -112,9 +122,9 @@ const ForgotpasswordScreen = props => {
             }}
           >
             <Icon
-              size={24}
-              name={'Ionicons/arrow-back-sharp'}
               color={theme.colors['Custom Color_2']}
+              name={'Ionicons/arrow-back-sharp'}
+              size={24}
             />
           </Touchable>
         </View>
@@ -134,31 +144,66 @@ const ForgotpasswordScreen = props => {
           {'Forgot Password'}
         </Text>
       </View>
-      {/* OTP Mobile and email */}
-      <Text
+
+      <View
         style={StyleSheet.applyWidth(
-          {
-            color: theme.colors['Strong'],
-            fontFamily: 'Roboto_400Regular',
-            fontSize: 14,
-            letterSpacing: 0.3,
-            lineHeight: 21,
-            marginLeft: 20,
-            marginRight: 20,
-            marginTop: 75,
-            opacity: 1,
-            textAlign: 'center',
-          },
+          StyleSheet.compose(GlobalStyles.ViewStyles(theme)['VIEW'], {
+            marginTop: 10,
+          }),
           dimensions.width
         )}
       >
-        {'Enter your service connection number'}
-      </Text>
+        <Image
+          style={StyleSheet.applyWidth(
+            StyleSheet.compose(GlobalStyles.ImageStyles(theme)['banner 3'], {
+              height: 110,
+              width: 110,
+            }),
+            dimensions.width
+          )}
+          resizeMode={'cover'}
+          source={Images.JBNL}
+        />
+        <View
+          style={StyleSheet.applyWidth(
+            { alignItems: 'center', marginTop: 10 },
+            dimensions.width
+          )}
+        >
+          <Text
+            style={StyleSheet.applyWidth(
+              StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+                fontFamily: 'Roboto_700Bold',
+                fontSize: 18,
+              }),
+              dimensions.width
+            )}
+          >
+            {'Jharkhand Bijli Vitran Nigam Limited'}
+          </Text>
+
+          <Text
+            style={StyleSheet.applyWidth(
+              StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+                fontFamily: 'Roboto_400Regular',
+                fontSize: 16,
+                marginTop: 10,
+              }),
+              dimensions.width
+            )}
+          >
+            {'Consumer Mobile App'}
+          </Text>
+        </View>
+      </View>
       {/* error message */}
       <Text
         style={StyleSheet.applyWidth(
           StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+            alignSelf: 'flex-start',
+            color: theme.colors['Error'],
             fontFamily: 'Roboto_400Regular',
+            paddingLeft: 20,
             paddingTop: 5,
             textAlign: 'center',
           }),
@@ -174,7 +219,6 @@ const ForgotpasswordScreen = props => {
             alignItems: 'center',
             flexDirection: 'column',
             justifyContent: 'space-evenly',
-            marginTop: 40,
             paddingLeft: 20,
             paddingRight: 20,
           },
@@ -189,9 +233,9 @@ const ForgotpasswordScreen = props => {
           )}
         >
           <Icon
-            size={24}
-            name={'Ionicons/person'}
             color={theme.colors['Medium']}
+            name={'MaterialIcons/house'}
+            size={24}
           />
           <View
             style={StyleSheet.applyWidth(
@@ -219,13 +263,28 @@ const ForgotpasswordScreen = props => {
                 dimensions.width
               )}
               value={serviceconnectionnumber}
-              placeholder={'Enter service connection no'}
+              placeholder={'Service connection number'}
               editable={true}
               placeholderTextColor={theme.colors['Medium']}
             />
           </View>
         </View>
       </View>
+      {/* service connection error message */}
+      <Text
+        style={StyleSheet.applyWidth(
+          StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+            color: theme.colors['Error'],
+            fontFamily: 'Roboto_400Regular',
+            paddingLeft: 20,
+            paddingTop: 5,
+            textAlign: 'left',
+          }),
+          dimensions.width
+        )}
+      >
+        {scnoErrorMsg}
+      </Text>
 
       <View
         style={StyleSheet.applyWidth(
@@ -238,6 +297,11 @@ const ForgotpasswordScreen = props => {
           onPress={() => {
             const handler = async () => {
               try {
+                const scnoErrorMsg = validatescNo(serviceconnectionnumber);
+                setScnoErrorMsg(scnoErrorMsg);
+                if (scnoErrorMsg?.length) {
+                  return;
+                }
                 const otpvalue = (
                   await CISAPPApi.forgotpasswordPOST(Constants, {
                     accno: serviceconnectionnumber,
@@ -258,7 +322,9 @@ const ForgotpasswordScreen = props => {
                 if (messagejson?.length) {
                   return;
                 }
-                navigation.navigate('ConfirmOTPForgotpasswordScreen');
+                navigation.navigate('ConfirmOTPForgotpasswordScreen', {
+                  userenterscno: serviceconnectionnumber,
+                });
               } catch (err) {
                 console.error(err);
               }

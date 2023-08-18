@@ -73,7 +73,7 @@ const AdvancePayemntScreen = props => {
   const [updatedAmount, setUpdatedAmount] = React.useState('');
 
   return (
-    <ScreenContainer scrollable={false} hasSafeArea={true}>
+    <ScreenContainer hasSafeArea={true} scrollable={false}>
       {/* Header */}
       <View
         style={StyleSheet.applyWidth(
@@ -108,7 +108,7 @@ const AdvancePayemntScreen = props => {
               dimensions.width
             )}
           >
-            <Icon size={24} name={'AntDesign/arrowleft'} />
+            <Icon name={'AntDesign/arrowleft'} size={24} />
           </View>
         </Touchable>
         {/* View bill and make payment */}
@@ -132,8 +132,8 @@ const AdvancePayemntScreen = props => {
           { marginTop: 40, paddingBottom: 20, paddingTop: 20 },
           dimensions.width
         )}
-        showsVerticalScrollIndicator={true}
         bounces={true}
+        showsVerticalScrollIndicator={true}
       >
         {/* Payment summary */}
         <View>
@@ -168,9 +168,9 @@ const AdvancePayemntScreen = props => {
                 )}
               >
                 <Icon
-                  size={24}
-                  name={'MaterialIcons/house'}
                   color={theme.colors['Medium']}
+                  name={'MaterialIcons/house'}
+                  size={24}
                 />
                 <View
                   style={StyleSheet.applyWidth(
@@ -191,9 +191,9 @@ const AdvancePayemntScreen = props => {
                       dimensions.width
                     )}
                     placeholder={'Service Connection No'}
+                    defaultValue={props.route?.params?.serviceConNo ?? ''}
                     editable={true}
                     placeholderTextColor={theme.colors['Medium']}
-                    defaultValue={props.route?.params?.serviceConNo ?? ''}
                   />
                 </View>
               </View>
@@ -219,9 +219,9 @@ const AdvancePayemntScreen = props => {
                 )}
               >
                 <Icon
-                  size={24}
-                  name={'FontAwesome/rupee'}
                   color={theme.colors['Medium']}
+                  name={'FontAwesome/rupee'}
+                  size={24}
                 />
                 <View
                   style={StyleSheet.applyWidth(
@@ -247,8 +247,8 @@ const AdvancePayemntScreen = props => {
                     value={updatedAmount}
                     changeTextDelay={500}
                     editable={true}
+                    placeholder={'Amount'}
                     placeholderTextColor={theme.colors['Medium']}
-                    placeholder={'Enter amount'}
                   />
                 </View>
               </View>
@@ -421,12 +421,12 @@ const AdvancePayemntScreen = props => {
                   {/* Payment Methods */}
                   <CISAPPApi.FetchPaymentGatewayPOST>
                     {({ loading, error, data, refetchPaymentGateway }) => {
-                      const paymentMethodsData = data;
+                      const paymentMethodsData = data?.json;
                       if (loading) {
                         return <ActivityIndicator />;
                       }
 
-                      if (error) {
+                      if (error || data?.status < 200 || data?.status >= 300) {
                         return <ActivityIndicator />;
                       }
 

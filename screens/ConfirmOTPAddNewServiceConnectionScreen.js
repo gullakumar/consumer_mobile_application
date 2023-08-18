@@ -14,6 +14,7 @@ import {
   Touchable,
   withTheme,
 } from '@draftbit/ui';
+import { useIsFocused } from '@react-navigation/native';
 import { Text, View, useWindowDimensions } from 'react-native';
 
 const ConfirmOTPAddNewServiceConnectionScreen = props => {
@@ -95,17 +96,45 @@ const ConfirmOTPAddNewServiceConnectionScreen = props => {
     return scheme[msg];
   };
 
+  const startTimer = () => {
+    const intervalId = setInterval(() => {
+      if (seconds) {
+        setSeconds(prev =>
+          prev > 0 ? prev - 1 : (setSeconds(21), clearInterval(intervalId))
+        );
+      }
+    }, 1000);
+
+    return seconds;
+  };
+
   const { theme } = props;
   const { navigation } = props;
 
+  const isFocused = useIsFocused();
+  React.useEffect(() => {
+    try {
+      if (!isFocused) {
+        return;
+      }
+      const seconds = startTimer();
+    } catch (err) {
+      console.error(err);
+    }
+  }, [isFocused]);
   const [otpValue1, setOtpValue1] = React.useState('');
   const [otpValue2, setOtpValue2] = React.useState('');
   const [otpValue3, setOtpValue3] = React.useState('');
   const [otpValue4, setOtpValue4] = React.useState('');
+  const [seconds, setSeconds] = React.useState(21);
   const [textInputValue, setTextInputValue] = React.useState(0);
 
+  const oTPInputD1cEfax3Ref = React.useRef();
+  const oTPInput4xUFMDOlRef = React.useRef();
+  const oTPInputrrE3ClGTRef = React.useRef();
+
   return (
-    <ScreenContainer scrollable={false} hasSafeArea={true}>
+    <ScreenContainer hasSafeArea={true} scrollable={false}>
       {/* Header */}
       <View
         style={StyleSheet.applyWidth(
@@ -142,9 +171,9 @@ const ConfirmOTPAddNewServiceConnectionScreen = props => {
             }}
           >
             <Icon
-              size={24}
-              name={'Ionicons/arrow-back-sharp'}
               color={theme.colors['Custom Color_2']}
+              name={'Ionicons/arrow-back-sharp'}
+              size={24}
             />
           </Touchable>
         </View>
@@ -188,9 +217,11 @@ const ConfirmOTPAddNewServiceConnectionScreen = props => {
       <Text
         style={StyleSheet.applyWidth(
           StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
-            color: theme.colors['Community_Dark_Red'],
+            alignSelf: 'flex-start',
+            color: theme.colors['Error'],
             fontFamily: 'Roboto_400Regular',
-            paddingTop: 5,
+            marginTop: 50,
+            paddingLeft: 30,
             textAlign: 'center',
           }),
           dimensions.width
@@ -205,7 +236,6 @@ const ConfirmOTPAddNewServiceConnectionScreen = props => {
             alignItems: 'center',
             flexDirection: 'row',
             justifyContent: 'space-evenly',
-            marginTop: 50,
             paddingLeft: 20,
             paddingRight: 20,
           },
@@ -217,6 +247,7 @@ const ConfirmOTPAddNewServiceConnectionScreen = props => {
           onChangeText={newOTPInputValue => {
             try {
               setOtpValue1(newOTPInputValue);
+              oTPInputD1cEfax3Ref.current.focus();
             } catch (err) {
               console.error(err);
             }
@@ -255,6 +286,7 @@ const ConfirmOTPAddNewServiceConnectionScreen = props => {
           onChangeText={newOTPInputValue => {
             try {
               setOtpValue2(newOTPInputValue);
+              oTPInput4xUFMDOlRef.current.focus();
             } catch (err) {
               console.error(err);
             }
@@ -287,12 +319,14 @@ const ConfirmOTPAddNewServiceConnectionScreen = props => {
           keyboardType={'numeric'}
           maxLength={1}
           placeholderTextColor={theme.colors['Medium']}
+          ref={oTPInputD1cEfax3Ref}
         />
         {/* OTP Input */}
         <TextInput
           onChangeText={newOTPInputValue => {
             try {
               setOtpValue3(newOTPInputValue);
+              oTPInputrrE3ClGTRef.current.focus();
             } catch (err) {
               console.error(err);
             }
@@ -325,6 +359,7 @@ const ConfirmOTPAddNewServiceConnectionScreen = props => {
           keyboardType={'numeric'}
           maxLength={1}
           placeholderTextColor={theme.colors['Medium']}
+          ref={oTPInput4xUFMDOlRef}
         />
         {/* OTP Input */}
         <TextInput
@@ -363,21 +398,83 @@ const ConfirmOTPAddNewServiceConnectionScreen = props => {
           keyboardType={'numeric'}
           maxLength={1}
           placeholderTextColor={theme.colors['Medium']}
+          ref={oTPInputrrE3ClGTRef}
         />
       </View>
-
-      <Touchable>
-        <Link
-          style={StyleSheet.applyWidth(
-            StyleSheet.compose(GlobalStyles.LinkStyles(theme)['Link'], {
-              marginTop: 45,
-              textAlign: 'center',
-            }),
-            dimensions.width
-          )}
-          title={'Resend OTP'}
-        />
-      </Touchable>
+      {/* Resend otp */}
+      <View
+        style={StyleSheet.applyWidth(
+          { alignSelf: 'center', marginTop: 45 },
+          dimensions.width
+        )}
+      >
+        <Touchable
+          onPress={() => {
+            const handler = async () => {
+              try {
+                const seconds = startTimer();
+                setSeconds(seconds);
+                const adsercondetresult = (
+                  await CISAPPApi.addServiceConnectionAccountPOST(Constants, {
+                    existAcct: props.route?.params?.userenterscno ?? '',
+                  })
+                )?.json;
+                const test = setGlobalVariableValue({
+                  key: 'OTP_ACK_NUMBER',
+                  value: JSON.parse(
+                    (adsercondetresult && adsercondetresult[0])?.data[0]
+                  )?.id,
+                });
+                setGlobalVariableValue({
+                  key: 'name',
+                  value: props.route?.params?.userenterscno ?? '',
+                });
+              } catch (err) {
+                console.error(err);
+              }
+            };
+            handler();
+          }}
+          style={StyleSheet.applyWidth({ width: '100%' }, dimensions.width)}
+        >
+          {/* Resend code */}
+          <Text
+            style={StyleSheet.applyWidth(
+              {
+                color: theme.colors['Strong'],
+                fontFamily: 'Roboto_400Regular',
+                fontSize: 14,
+                opacity: 1,
+                textAlign: 'center',
+              },
+              dimensions.width
+            )}
+          >
+            {'Resend OTP'}
+            {/* timer */}
+            <>
+              {!(seconds !== 21) ? null : (
+                <Text
+                  style={StyleSheet.applyWidth(
+                    {
+                      color: theme.colors['Custom Color'],
+                      fontFamily: 'System',
+                      fontSize: 15,
+                      fontWeight: '600',
+                      opacity: 1,
+                      textAlign: 'center',
+                    },
+                    dimensions.width
+                  )}
+                >
+                  {seconds}
+                  {' sec'}
+                </Text>
+              )}
+            </>
+          </Text>
+        </Touchable>
+      </View>
 
       <View
         style={StyleSheet.applyWidth(

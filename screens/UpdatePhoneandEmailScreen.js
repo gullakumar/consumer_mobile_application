@@ -79,6 +79,26 @@ const UpdatePhoneandEmailScreen = props => {
           ?.data?.prepaidFlag;
         setPrepaidFlag(valuezsIVXeGE);
         const prepaidFlagData = valuezsIVXeGE;
+        const loadType = setGlobalVariableValue({
+          key: 'loadType',
+          value: (consumerDetailsJson && consumerDetailsJson[0])?.data
+            ?.loadType,
+        });
+        const connectedLoad = setGlobalVariableValue({
+          key: 'connectedLoad',
+          value: (consumerDetailsJson && consumerDetailsJson[0])?.data
+            ?.connectedLoad,
+        });
+        const contractedLoad = setGlobalVariableValue({
+          key: 'contractedLoad',
+          value: (consumerDetailsJson && consumerDetailsJson[0])?.data
+            ?.contractedLoad,
+        });
+        const category = setGlobalVariableValue({
+          key: 'category',
+          value: (consumerDetailsJson && consumerDetailsJson[0])?.data
+            ?.category,
+        });
         const ManageAccountDetails = (
           await CISAPPApi.manageAccountsPOST(Constants, {
             accountNumber: Constants['name'],
@@ -98,7 +118,6 @@ const UpdatePhoneandEmailScreen = props => {
     };
     handler();
   }, [isFocused]);
-
   const [ShowNav, setShowNav] = React.useState(false);
   const [consumerAddress, setConsumerAddress] = React.useState('');
   const [consumerDetails, setConsumerDetails] = React.useState({});
@@ -146,7 +165,7 @@ const UpdatePhoneandEmailScreen = props => {
               dimensions.width
             )}
           >
-            <Icon size={24} name={'AntDesign/arrowleft'} />
+            <Icon name={'AntDesign/arrowleft'} size={24} />
           </View>
         </Touchable>
         {/* View bill and make payment */}
@@ -204,9 +223,9 @@ const UpdatePhoneandEmailScreen = props => {
               )}
             >
               <Icon
-                size={24}
-                name={'MaterialIcons/house'}
                 color={theme.colors['Medium']}
+                name={'MaterialIcons/house'}
+                size={24}
               />
               <Picker
                 onValueChange={newPickerValue => {
@@ -246,6 +265,26 @@ const UpdatePhoneandEmailScreen = props => {
                       )?.data?.prepaidFlag;
                       setPrepaidFlag(value87VfVq4A);
                       const prepaidFlagData = value87VfVq4A;
+                      const loadType = setGlobalVariableValue({
+                        key: 'loadType',
+                        value: (consumerDetailsJson && consumerDetailsJson[0])
+                          ?.data?.loadType,
+                      });
+                      const connectedLoad = setGlobalVariableValue({
+                        key: 'connectedLoad',
+                        value: (consumerDetailsJson && consumerDetailsJson[0])
+                          ?.data?.connectedLoad,
+                      });
+                      const contractedLoad = setGlobalVariableValue({
+                        key: 'contractedLoad',
+                        value: (consumerDetailsJson && consumerDetailsJson[0])
+                          ?.data?.contractedLoad,
+                      });
+                      const category = setGlobalVariableValue({
+                        key: 'category',
+                        value: (consumerDetailsJson && consumerDetailsJson[0])
+                          ?.data?.category,
+                      });
                     } catch (err) {
                       console.error(err);
                     }
@@ -262,15 +301,15 @@ const UpdatePhoneandEmailScreen = props => {
                   dimensions.width
                 )}
                 options={Constants['manageaccount_picker']}
-                leftIconMode={'inset'}
-                type={'solid'}
-                iconSize={24}
                 autoDismissKeyboard={true}
-                rightIconName={'Feather/chevron-down'}
-                placeholder={' '}
-                iconColor={theme.colors['Medium']}
-                placeholderTextColor={theme.colors['Medium']}
                 defaultValue={Constants['name']}
+                iconColor={theme.colors['Medium']}
+                iconSize={24}
+                leftIconMode={'inset'}
+                placeholder={' '}
+                placeholderTextColor={theme.colors['Medium']}
+                rightIconName={'Feather/chevron-down'}
+                type={'solid'}
               />
             </View>
             {/* Name */}
@@ -327,7 +366,7 @@ const UpdatePhoneandEmailScreen = props => {
                   dimensions.width
                 )}
               >
-                {'Service connection no: '}
+                {'Service connection number: '}
                 {serviceConNo}
               </Text>
             </View>
@@ -416,7 +455,119 @@ const UpdatePhoneandEmailScreen = props => {
                 {Constants['emailValue']}
               </Text>
             </View>
-
+            {/* Load Type */}
+            <View
+              style={StyleSheet.applyWidth(
+                {
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  paddingLeft: 20,
+                },
+                dimensions.width
+              )}
+            >
+              {/* Name */}
+              <Text
+                style={StyleSheet.applyWidth(
+                  {
+                    alignSelf: 'auto',
+                    color: theme.colors.strong,
+                    fontFamily: 'Roboto_400Regular',
+                    fontSize: 14,
+                    paddingTop: 8,
+                  },
+                  dimensions.width
+                )}
+              >
+                {'Load type: '}
+                {Constants['loadType']}
+              </Text>
+            </View>
+            {/* Connected Load */}
+            <View
+              style={StyleSheet.applyWidth(
+                {
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  paddingLeft: 20,
+                },
+                dimensions.width
+              )}
+            >
+              {/* Name */}
+              <Text
+                style={StyleSheet.applyWidth(
+                  {
+                    alignSelf: 'auto',
+                    color: theme.colors.strong,
+                    fontFamily: 'Roboto_400Regular',
+                    fontSize: 14,
+                    paddingTop: 8,
+                  },
+                  dimensions.width
+                )}
+              >
+                {'Connected load: '}
+                {Constants['connectedLoad']}
+              </Text>
+            </View>
+            {/* Contracted Load */}
+            <View
+              style={StyleSheet.applyWidth(
+                {
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  paddingLeft: 20,
+                },
+                dimensions.width
+              )}
+            >
+              {/* Name */}
+              <Text
+                style={StyleSheet.applyWidth(
+                  {
+                    alignSelf: 'auto',
+                    color: theme.colors.strong,
+                    fontFamily: 'Roboto_400Regular',
+                    fontSize: 14,
+                    paddingTop: 8,
+                  },
+                  dimensions.width
+                )}
+              >
+                {'Contracted load: '}
+                {Constants['contractedLoad']}
+              </Text>
+            </View>
+            {/* Category */}
+            <View
+              style={StyleSheet.applyWidth(
+                {
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  paddingLeft: 20,
+                },
+                dimensions.width
+              )}
+            >
+              {/* Name */}
+              <Text
+                style={StyleSheet.applyWidth(
+                  {
+                    alignSelf: 'auto',
+                    color: theme.colors.strong,
+                    fontFamily: 'Roboto_400Regular',
+                    fontSize: 14,
+                    paddingTop: 8,
+                  },
+                  dimensions.width
+                )}
+              >
+                {'Category: '}
+                {Constants['category']}
+              </Text>
+            </View>
+            {/* Account type */}
             <View
               style={StyleSheet.applyWidth(
                 {
@@ -524,9 +675,9 @@ const UpdatePhoneandEmailScreen = props => {
             )}
           >
             <Icon
-              size={24}
-              name={'Entypo/home'}
               color={theme.colors['Community_Light_Black']}
+              name={'Entypo/home'}
+              size={24}
             />
             <Text
               style={StyleSheet.applyWidth(
@@ -565,9 +716,9 @@ const UpdatePhoneandEmailScreen = props => {
             )}
           >
             <Icon
-              size={24}
-              name={'FontAwesome/bar-chart-o'}
               color={theme.colors['Community_Light_Black']}
+              name={'FontAwesome/bar-chart-o'}
+              size={24}
             />
             <Text
               style={StyleSheet.applyWidth(
@@ -606,9 +757,9 @@ const UpdatePhoneandEmailScreen = props => {
             )}
           >
             <Icon
-              size={24}
               color={theme.colors['Community_Light_Black']}
               name={'Entypo/text-document-inverted'}
+              size={24}
             />
             <Text
               style={StyleSheet.applyWidth(
@@ -648,8 +799,8 @@ const UpdatePhoneandEmailScreen = props => {
           >
             <Icon
               color={theme.colors['Community_Light_Black']}
-              size={24}
               name={'MaterialIcons/payments'}
+              size={24}
             />
             <Text
               style={StyleSheet.applyWidth(
@@ -688,9 +839,9 @@ const UpdatePhoneandEmailScreen = props => {
             )}
           >
             <Icon
-              size={24}
-              name={'MaterialIcons/support-agent'}
               color={theme.colors['Community_Light_Black']}
+              name={'MaterialIcons/support-agent'}
+              size={24}
             />
             <Text
               style={StyleSheet.applyWidth(

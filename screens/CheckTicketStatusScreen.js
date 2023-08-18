@@ -9,15 +9,18 @@ import * as StyleSheet from '../utils/StyleSheet';
 import {
   Circle,
   Icon,
+  Picker,
   ScreenContainer,
   Surface,
   TextInput,
   Touchable,
   withTheme,
 } from '@draftbit/ui';
+import { useIsFocused } from '@react-navigation/native';
 import {
   FlatList,
   Image,
+  RefreshControl,
   ScrollView,
   Text,
   View,
@@ -29,9 +32,51 @@ const CheckTicketStatusScreen = props => {
   const Constants = GlobalVariables.useValues();
   const Variables = Constants;
 
+  const getticketstatusGuestFun = regNo => {
+    console.log(`csc/rest/RequestTWhr/${regNo}`);
+    return `csc/rest/RequestTWhr/${regNo}`;
+  };
+
   const getticketdeatils = consId => {
     console.log(`${consId}`);
     return `${consId}`;
+  };
+
+  const colorBasedOnStatus = item => {
+    const status = item.RequestStatus;
+
+    switch (status) {
+      case 'Rectified':
+      case 'Verification':
+        return 'red';
+      case 'Inspection Pending':
+      case 'Pending For Approval AAO':
+      case 'Pending':
+        return 'green';
+      // Add more cases as required
+      default:
+        return 'black'; // Default color
+    }
+  };
+
+  const checkticketColorChange = requestStatus => {
+    let color = 'black';
+    let textStatus = null;
+    if (requestStatus === 'Rectified' || requestStatus === 'Verification') {
+      textStatus = requestStatus;
+      color = 'orange';
+    } else if (
+      requestStatus === 'Inspection Pending' ||
+      requestStatus === 'Pending For Approval AAO' ||
+      requestStatus === 'Pending'
+    ) {
+      textStatus = requestStatus;
+      color = 'red';
+    } else if (requestStatus === 'Closed') {
+      textStatus = requestStatus;
+      color = 'green';
+    }
+    return color;
   };
 
   const buildConsumerString = Scno => {
@@ -42,21 +87,64 @@ const CheckTicketStatusScreen = props => {
   const { theme } = props;
   const { navigation } = props;
 
+  const isFocused = useIsFocused();
+  React.useEffect(() => {
+    const handler = async () => {
+      try {
+        if (!isFocused) {
+          return;
+        }
+        const consumerDetailsJson = (
+          await CISAPPApi.consumerDetailsPOST(Constants, {
+            action: buildConsumerString(Constants['name']),
+          })
+        )?.json;
+        console.log(consumerDetailsJson);
+        buildConsumerString(Constants['name']);
+        const consumerId = (consumerDetailsJson && consumerDetailsJson[0])?.data
+          ?.consumerId;
+        setConsumerId(consumerId);
+        const getticketdata = (
+          await CISAPPApi.getticketdeatilsPOST(Constants, {
+            consId: consumerId,
+          })
+        )?.json;
+        console.log(getticketdata);
+        setTableData(
+          (
+            (getticketdata && getticketdata[0])?.data &&
+            ((getticketdata && getticketdata[0])?.data)[0]
+          )?.data
+        );
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    handler();
+  }, [isFocused]);
+  const [checkticketRegisterNo, setCheckticketRegisterNo] = React.useState('');
   const [consId, setConsId] = React.useState('');
   const [consumerId, setConsumerId] = React.useState('');
+  const [consumerName, setConsumerName] = React.useState('');
+  const [consumerScNo, setConsumerScNo] = React.useState('');
   const [listExists, setListExists] = React.useState(true);
   const [listMissing, setListMissing] = React.useState(false);
   const [menuTab1, setMenuTab1] = React.useState(true);
   const [menuTab2, setMenuTab2] = React.useState(false);
   const [menuTab3, setMenuTab3] = React.useState(false);
+  const [meterNumber, setMeterNumber] = React.useState('');
   const [noContent, setNoContent] = React.useState(false);
+  const [pickerValue, setPickerValue] = React.useState('');
+  const [prepaidFlag, setPrepaidFlag] = React.useState('');
+  const [refreshingLaj3UIhC, setRefreshingLaj3UIhC] = React.useState(false);
+  const [remarks, setRemarks] = React.useState('');
   const [tableData, setTableData] = React.useState([]);
 
   return (
     <ScreenContainer
       hasSafeArea={false}
-      scrollable={false}
       hasTopSafeArea={true}
+      scrollable={false}
     >
       {/* header */}
       <View
@@ -87,9 +175,9 @@ const CheckTicketStatusScreen = props => {
             }}
           >
             <Icon
-              size={24}
-              name={'Ionicons/arrow-back-sharp'}
               color={theme.colors['Custom Color_2']}
+              name={'Ionicons/arrow-back-sharp'}
+              size={24}
             />
           </Touchable>
         </View>
@@ -118,95 +206,76 @@ const CheckTicketStatusScreen = props => {
         <View
           style={StyleSheet.applyWidth(
             {
+              alignItems: 'center',
+              borderBottomWidth: 1,
+              borderColor: theme.colors['Divider'],
+              borderLeftWidth: 1,
+              borderRadius: 16,
+              borderRightWidth: 1,
+              borderTopWidth: 1,
               flex: 1,
-              justifyContent: 'center',
-              marginLeft: 3,
-              marginRight: 3,
+              flexDirection: 'row',
+              height: 50,
+              justifyContent: 'space-between',
+              paddingLeft: 20,
+              paddingRight: 25,
             },
             dimensions.width
           )}
         >
-          <Surface
-            style={StyleSheet.applyWidth(
-              {
-                alignContent: 'center',
-                alignItems: 'center',
-                borderRadius: 8,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                paddingRight: 16,
-              },
-              dimensions.width
-            )}
-            elevation={3}
-          >
-            <TextInput
-              onChangeText={newTextInputValue => {
+          <Icon name={'MaterialIcons/house'} size={24} />
+          <Picker
+            onValueChange={newPickerValue => {
+              const handler = async () => {
+                const pickerValue = newPickerValue;
                 try {
-                  setConsId(newTextInputValue);
+                  const consumerDetailsJson = (
+                    await CISAPPApi.consumerDetailsPOST(Constants, {
+                      action: buildConsumerString(newPickerValue),
+                    })
+                  )?.json;
+                  console.log(consumerDetailsJson);
+                  buildConsumerString(newPickerValue);
+                  const consumerId = (
+                    consumerDetailsJson && consumerDetailsJson[0]
+                  )?.data?.consumerId;
+                  setConsumerId(consumerId);
+                  const getticketdata = (
+                    await CISAPPApi.getticketdeatilsPOST(Constants, {
+                      consId: consumerId,
+                    })
+                  )?.json;
+                  console.log(getticketdata);
+                  setTableData(
+                    (
+                      (getticketdata && getticketdata[0])?.data &&
+                      ((getticketdata && getticketdata[0])?.data)[0]
+                    )?.data
+                  );
                 } catch (err) {
                   console.error(err);
                 }
-              }}
-              style={StyleSheet.applyWidth(
-                {
-                  borderRadius: 8,
-                  color: theme.colors.strong,
-                  fontFamily: 'Roboto_400Regular',
-                  fontSize: 15,
-                  height: 48,
-                  paddingBottom: 5,
-                  paddingLeft: 24,
-                  paddingRight: 8,
-                  paddingTop: 5,
-                  width: '90%',
-                },
-                dimensions.width
-              )}
-              value={consId}
-              placeholder={'Enter service connection no'}
-              placeholderTextColor={theme.colors['Medium']}
-            />
-            <Touchable
-              onPress={() => {
-                const handler = async () => {
-                  try {
-                    const consumerDetailsJson = (
-                      await CISAPPApi.consumerDetailsPOST(Constants, {
-                        action: buildConsumerString(consId),
-                      })
-                    )?.json;
-                    buildConsumerString(consId);
-                    const consumerId = (
-                      consumerDetailsJson && consumerDetailsJson[0]
-                    )?.data?.consumerId;
-                    setConsumerId(consumerId);
-                    const gettickerdata = (
-                      await CISAPPApi.getticketdeatilsPOST(Constants, {
-                        consId: consumerId,
-                      })
-                    )?.json;
-                    console.log(gettickerdata);
-                    setTableData(
-                      (
-                        (gettickerdata && gettickerdata[0])?.data &&
-                        ((gettickerdata && gettickerdata[0])?.data)[0]
-                      )?.data
-                    );
-                  } catch (err) {
-                    console.error(err);
-                  }
-                };
-                handler();
-              }}
-            >
-              <Icon
-                color={theme.colors['Medium']}
-                name={'Feather/search'}
-                size={24}
-              />
-            </Touchable>
-          </Surface>
+              };
+              handler();
+            }}
+            style={StyleSheet.applyWidth(
+              {
+                borderColor: theme.colors['Background'],
+                borderWidth: 1,
+                fontFamily: 'Roboto_400Regular',
+                height: 48,
+              },
+              dimensions.width
+            )}
+            options={Constants['manageaccount_picker']}
+            autoDismissKeyboard={true}
+            defaultValue={Constants['name']}
+            iconSize={24}
+            leftIconMode={'inset'}
+            placeholder={'Select an option'}
+            rightIconName={'Ionicons/chevron-down-outline'}
+            type={'solid'}
+          />
         </View>
 
         <View
@@ -222,9 +291,9 @@ const CheckTicketStatusScreen = props => {
             }}
           >
             <Icon
-              size={30}
-              name={'Ionicons/add-circle-outline'}
               color={theme.colors['Medium']}
+              name={'Ionicons/add-circle-outline'}
+              size={30}
             />
           </Touchable>
         </View>
@@ -540,8 +609,8 @@ const CheckTicketStatusScreen = props => {
               { flexShrink: 0 },
               dimensions.width
             )}
-            showsVerticalScrollIndicator={true}
             bounces={true}
+            showsVerticalScrollIndicator={true}
           >
             {/* Content Frame Tab 1 */}
             <>
@@ -559,7 +628,7 @@ const CheckTicketStatusScreen = props => {
                         <>
                           {/* List View Frame */}
                           <>
-                            {!(listData?.RequestStatus === 'Pending') ? null : (
+                            {!(listData?.RequestStatus !== 'Closed') ? null : (
                               <View
                                 style={StyleSheet.applyWidth(
                                   {
@@ -626,10 +695,24 @@ const CheckTicketStatusScreen = props => {
                                           <Text
                                             style={StyleSheet.applyWidth(
                                               {
-                                                color:
-                                                  theme.colors[
-                                                    'Community_Dark_UI'
-                                                  ],
+                                                color: [
+                                                  {
+                                                    minWidth:
+                                                      Breakpoints.Mobile,
+                                                    value:
+                                                      theme.colors[
+                                                        'Community_Dark_UI'
+                                                      ],
+                                                  },
+                                                  {
+                                                    minWidth:
+                                                      Breakpoints.Mobile,
+                                                    value:
+                                                      checkticketColorChange(
+                                                        listData?.RequestStatus
+                                                      ),
+                                                  },
+                                                ],
                                                 fontFamily: 'Roboto_400Regular',
                                                 fontSize: 12,
                                                 lineHeight: 18,
@@ -643,7 +726,11 @@ const CheckTicketStatusScreen = props => {
                                             {' | '}
                                             {listData?.type}
                                             {' | '}
-                                            {listData?.RequestStatus}
+                                            {(() => {
+                                              const e = listData?.RequestStatus;
+                                              console.log(e);
+                                              return e;
+                                            })()}
                                           </Text>
                                         </View>
                                         {/* Text Frame */}
@@ -676,11 +763,74 @@ const CheckTicketStatusScreen = props => {
                                               },
                                               dimensions.width
                                             )}
-                                            numberOfLines={3}
                                             ellipsizeMode={'tail'}
+                                            numberOfLines={3}
                                           >
                                             {listData?.RequestNature}
                                           </Text>
+                                        </View>
+                                        {/* Remarks */}
+                                        <View>
+                                          <Touchable
+                                            onPress={() => {
+                                              const handler = async () => {
+                                                try {
+                                                  const valuepryUV7Ys =
+                                                    listData?.RegistrationNo;
+                                                  setCheckticketRegisterNo(
+                                                    valuepryUV7Ys
+                                                  );
+                                                  const registerNo =
+                                                    valuepryUV7Ys;
+                                                  const getTicketstatusJson = (
+                                                    await CISAPPApi.getticketstatusPOST(
+                                                      Constants,
+                                                      {
+                                                        ticketNumber:
+                                                          registerNo,
+                                                      }
+                                                    )
+                                                  )?.json;
+                                                  console.log(
+                                                    getTicketstatusJson
+                                                  );
+                                                  const remarks = (
+                                                    getTicketstatusJson &&
+                                                    getTicketstatusJson[0]
+                                                      .data[0]
+                                                  )?.data[0]?.Remarks;
+                                                  console.log(remarks);
+                                                  setRemarks(remarks);
+                                                  navigation.navigate(
+                                                    'RemarksSuccessScreen',
+                                                    { remarksMsg: remarks }
+                                                  );
+                                                } catch (err) {
+                                                  console.error(err);
+                                                }
+                                              };
+                                              handler();
+                                            }}
+                                          >
+                                            <Text
+                                              style={StyleSheet.applyWidth(
+                                                StyleSheet.compose(
+                                                  GlobalStyles.TextStyles(
+                                                    theme
+                                                  )['Text'],
+                                                  {
+                                                    fontFamily:
+                                                      'Roboto_400Regular',
+                                                    textDecorationLine:
+                                                      'underline',
+                                                  }
+                                                ),
+                                                dimensions.width
+                                              )}
+                                            >
+                                              {'Remarks'}
+                                            </Text>
+                                          </Touchable>
                                         </View>
                                       </View>
                                     </View>
@@ -786,8 +936,21 @@ const CheckTicketStatusScreen = props => {
                                       <Text
                                         style={StyleSheet.applyWidth(
                                           {
-                                            color:
-                                              theme.colors['Community_Dark_UI'],
+                                            color: [
+                                              {
+                                                minWidth: Breakpoints.Mobile,
+                                                value:
+                                                  theme.colors[
+                                                    'Community_Dark_UI'
+                                                  ],
+                                              },
+                                              {
+                                                minWidth: Breakpoints.Mobile,
+                                                value: checkticketColorChange(
+                                                  listData?.RequestStatus
+                                                ),
+                                              },
+                                            ],
                                             fontFamily: 'Roboto_400Regular',
                                             fontSize: 13,
                                             lineHeight: 18,
@@ -832,11 +995,65 @@ const CheckTicketStatusScreen = props => {
                                           },
                                           dimensions.width
                                         )}
-                                        numberOfLines={3}
                                         ellipsizeMode={'tail'}
+                                        numberOfLines={3}
                                       >
                                         {listData?.RequestNature}
                                       </Text>
+                                    </View>
+                                    {/* Remarks */}
+                                    <View>
+                                      <Touchable
+                                        onPress={() => {
+                                          const handler = async () => {
+                                            try {
+                                              const valueHVMuFhVH =
+                                                listData?.RegistrationNo;
+                                              setCheckticketRegisterNo(
+                                                valueHVMuFhVH
+                                              );
+                                              const registerNo = valueHVMuFhVH;
+                                              const getTicketstatusJson = (
+                                                await CISAPPApi.getticketstatusPOST(
+                                                  Constants,
+                                                  { ticketNumber: registerNo }
+                                                )
+                                              )?.json;
+                                              console.log(getTicketstatusJson);
+                                              const remarks = (
+                                                getTicketstatusJson &&
+                                                getTicketstatusJson[0].data[0]
+                                              )?.data[0]?.Remarks;
+                                              console.log(remarks);
+                                              setRemarks(remarks);
+                                              navigation.navigate(
+                                                'RemarksSuccessScreen',
+                                                { remarksMsg: remarks }
+                                              );
+                                            } catch (err) {
+                                              console.error(err);
+                                            }
+                                          };
+                                          handler();
+                                        }}
+                                      >
+                                        <Text
+                                          style={StyleSheet.applyWidth(
+                                            StyleSheet.compose(
+                                              GlobalStyles.TextStyles(theme)[
+                                                'Text'
+                                              ],
+                                              {
+                                                fontFamily: 'Roboto_400Regular',
+                                                textDecorationLine: 'underline',
+                                              }
+                                            ),
+                                            dimensions.width
+                                          )}
+                                        >
+                                          {'Remarks'}
+                                        </Text>
+                                      </Touchable>
                                     </View>
                                   </View>
                                 </View>
@@ -850,6 +1067,20 @@ const CheckTicketStatusScreen = props => {
                     listKey={'Laj3UIhC'}
                     keyExtractor={listData =>
                       listData?.id || listData?.uuid || JSON.stringify(listData)
+                    }
+                    refreshControl={
+                      <RefreshControl
+                        refreshing={refreshingLaj3UIhC}
+                        onRefresh={() => {
+                          try {
+                            setRefreshingLaj3UIhC(true);
+                            setRefreshingLaj3UIhC(false);
+                          } catch (err) {
+                            console.error(err);
+                            setRefreshingLaj3UIhC(false);
+                          }
+                        }}
+                      />
                     }
                     contentContainerStyle={StyleSheet.applyWidth(
                       { flex: 1 },
@@ -889,9 +1120,9 @@ const CheckTicketStatusScreen = props => {
                   {/* Flex Frame for Icons */}
                   <View>
                     <Icon
+                      color={theme.colors.communityIconFill}
                       name={'MaterialIcons/event-busy'}
                       size={48}
-                      color={theme.colors.communityIconFill}
                     />
                   </View>
                   {/* Headline Frame */}

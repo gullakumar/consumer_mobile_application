@@ -26,15 +26,24 @@ const QuickPayScreen = props => {
     return `billing/rest/getBillDataWss/${Scno}`;
   };
 
+  const validateScno = scNo => {
+    var errorMessage = null;
+    if (!scNo.trim()) {
+      errorMessage = 'Service connection number is required';
+    }
+    return errorMessage;
+  };
+
   const { theme } = props;
   const { navigation } = props;
 
   const [checkboxRowValue, setCheckboxRowValue] = React.useState('');
+  const [scnoErrorMsg, setScnoErrorMsg] = React.useState('');
   const [textInputValue, setTextInputValue] = React.useState('');
   const [viewbilldetails, setViewbilldetails] = React.useState({});
 
   return (
-    <ScreenContainer scrollable={false} hasSafeArea={true}>
+    <ScreenContainer hasSafeArea={true} scrollable={false}>
       {/* Header */}
       <View
         style={StyleSheet.applyWidth(
@@ -64,9 +73,9 @@ const QuickPayScreen = props => {
             }}
           >
             <Icon
-              size={24}
-              name={'Ionicons/arrow-back-sharp'}
               color={theme.colors['Custom Color_2']}
+              name={'Ionicons/arrow-back-sharp'}
+              size={24}
             />
           </Touchable>
         </View>
@@ -114,8 +123,8 @@ const QuickPayScreen = props => {
         >
           <Icon
             color={theme.colors['Medium']}
-            size={24}
             name={'MaterialIcons/house'}
+            size={24}
           />
           <View
             style={StyleSheet.applyWidth(
@@ -143,17 +152,35 @@ const QuickPayScreen = props => {
                 dimensions.width
               )}
               value={textInputValue}
-              placeholder={'Enter service connection number'}
-              placeholderTextColor={theme.colors['Medium']}
+              placeholder={'Service connection number'}
               editable={true}
+              placeholderTextColor={theme.colors['Medium']}
             />
           </View>
         </View>
+        {/* Service connection error message */}
+        <Text
+          style={StyleSheet.applyWidth(
+            StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+              color: theme.colors['Error'],
+              fontFamily: 'Roboto_400Regular',
+              textAlign: 'left',
+            }),
+            dimensions.width
+          )}
+        >
+          {scnoErrorMsg}
+        </Text>
         {/* Send OTP  Submit */}
         <Button
           onPress={() => {
             const handler = async () => {
               try {
+                const scnoErrorMsg = validateScno(textInputValue);
+                setScnoErrorMsg(scnoErrorMsg);
+                if (scnoErrorMsg?.length) {
+                  return;
+                }
                 const Viewbilldetailsjson = (
                   await CISAPPApi.viewBillDetailsPOST(Constants, {
                     action: buildString(textInputValue),
@@ -292,7 +319,7 @@ const QuickPayScreen = props => {
                     dimensions.width
                   )}
                 >
-                  {viewbilldetails?.BillAmount}
+                  {viewbilldetails?.LEDGERAMT}
                 </Text>
                 {/* Sub title */}
                 <Text
@@ -316,6 +343,7 @@ const QuickPayScreen = props => {
                 onPress={() => {
                   try {
                     navigation.navigate('MakePaymentGuestScreen', {
+                      ledgerAmt: viewbilldetails?.LEDGERAMT,
                       Name: viewbilldetails?.Name,
                       Scno: viewbilldetails?.Scno,
                       BillMonth: viewbilldetails?.BillMonth,
@@ -327,6 +355,7 @@ const QuickPayScreen = props => {
                       RebateGiven: viewbilldetails?.RebateGiven,
                       netcurrbill: viewbilldetails?.netcurrbill,
                       BillIssueDate: viewbilldetails?.BillIssueDate,
+                      billYear: viewbilldetails?.BillYear,
                       Billid: viewbilldetails?.BillDetailsId,
                       accno: viewbilldetails?.AccNo,
                     });

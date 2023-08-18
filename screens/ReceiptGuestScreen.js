@@ -27,8 +27,8 @@ const ReceiptGuestScreen = props => {
         },
         dimensions.width
       )}
-      scrollable={false}
       hasSafeArea={false}
+      scrollable={false}
     >
       <View
         style={StyleSheet.applyWidth(
@@ -209,7 +209,7 @@ const ReceiptGuestScreen = props => {
                 dimensions.width
               )}
             >
-              {'Service connection no'}
+              {'Service connection number'}
             </Text>
 
             <Text
@@ -256,8 +256,8 @@ const ReceiptGuestScreen = props => {
             )}
             label={'Payment details'}
             caretSize={24}
-            iconSize={24}
             expanded={true}
+            iconSize={24}
           >
             <View
               style={StyleSheet.applyWidth(

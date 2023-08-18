@@ -14,6 +14,7 @@ import {
   Touchable,
   withTheme,
 } from '@draftbit/ui';
+import { useIsFocused } from '@react-navigation/native';
 import { Text, View, useWindowDimensions } from 'react-native';
 
 const ConfirmOTPEmailUpdateScreen = props => {
@@ -21,6 +22,18 @@ const ConfirmOTPEmailUpdateScreen = props => {
   const Constants = GlobalVariables.useValues();
   const Variables = Constants;
   const setGlobalVariableValue = GlobalVariables.useSetValue();
+
+  const startTimer = () => {
+    const intervalId = setInterval(() => {
+      if (seconds) {
+        setSeconds(prev =>
+          prev > 0 ? prev - 1 : (setSeconds(21), clearInterval(intervalId))
+        );
+      }
+    }, 1000);
+
+    return seconds;
+  };
 
   const otpVerify = (otpResult, otp) => {
     if (otpResult === otp) {
@@ -98,14 +111,31 @@ const ConfirmOTPEmailUpdateScreen = props => {
   const { theme } = props;
   const { navigation } = props;
 
+  const isFocused = useIsFocused();
+  React.useEffect(() => {
+    try {
+      if (!isFocused) {
+        return;
+      }
+      const seconds = startTimer();
+      setSeconds(seconds);
+    } catch (err) {
+      console.error(err);
+    }
+  }, [isFocused]);
   const [otpValue1, setOtpValue1] = React.useState('');
   const [otpValue2, setOtpValue2] = React.useState('');
   const [otpValue3, setOtpValue3] = React.useState('');
   const [otpValue4, setOtpValue4] = React.useState('');
+  const [seconds, setSeconds] = React.useState(21);
   const [textInputValue, setTextInputValue] = React.useState(0);
 
+  const oTPInputSclbgD9TRef = React.useRef();
+  const oTPInputNT0msyJuRef = React.useRef();
+  const oTPInputFGZTagzORef = React.useRef();
+
   return (
-    <ScreenContainer scrollable={false} hasSafeArea={true}>
+    <ScreenContainer hasSafeArea={true} scrollable={false}>
       {/* Header */}
       <View
         style={StyleSheet.applyWidth(
@@ -142,9 +172,9 @@ const ConfirmOTPEmailUpdateScreen = props => {
             }}
           >
             <Icon
-              size={24}
-              name={'Ionicons/arrow-back-sharp'}
               color={theme.colors['Custom Color_2']}
+              name={'Ionicons/arrow-back-sharp'}
+              size={24}
             />
           </Touchable>
         </View>
@@ -188,8 +218,11 @@ const ConfirmOTPEmailUpdateScreen = props => {
       <Text
         style={StyleSheet.applyWidth(
           StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
-            color: theme.colors['Community_Dark_Red'],
+            alignSelf: 'flex-start',
+            color: theme.colors['Error'],
             fontFamily: 'Roboto_400Regular',
+            marginTop: 50,
+            paddingLeft: 30,
             paddingTop: 5,
             textAlign: 'center',
           }),
@@ -205,7 +238,6 @@ const ConfirmOTPEmailUpdateScreen = props => {
             alignItems: 'center',
             flexDirection: 'row',
             justifyContent: 'space-evenly',
-            marginTop: 50,
             paddingLeft: 20,
             paddingRight: 20,
           },
@@ -217,6 +249,7 @@ const ConfirmOTPEmailUpdateScreen = props => {
           onChangeText={newOTPInputValue => {
             try {
               setOtpValue1(newOTPInputValue);
+              oTPInputSclbgD9TRef.current.focus();
             } catch (err) {
               console.error(err);
             }
@@ -255,6 +288,7 @@ const ConfirmOTPEmailUpdateScreen = props => {
           onChangeText={newOTPInputValue => {
             try {
               setOtpValue2(newOTPInputValue);
+              oTPInputNT0msyJuRef.current.focus();
             } catch (err) {
               console.error(err);
             }
@@ -287,12 +321,14 @@ const ConfirmOTPEmailUpdateScreen = props => {
           keyboardType={'numeric'}
           maxLength={1}
           placeholderTextColor={theme.colors['Medium']}
+          ref={oTPInputSclbgD9TRef}
         />
         {/* OTP Input */}
         <TextInput
           onChangeText={newOTPInputValue => {
             try {
               setOtpValue3(newOTPInputValue);
+              oTPInputFGZTagzORef.current.focus();
             } catch (err) {
               console.error(err);
             }
@@ -325,6 +361,7 @@ const ConfirmOTPEmailUpdateScreen = props => {
           keyboardType={'numeric'}
           maxLength={1}
           placeholderTextColor={theme.colors['Medium']}
+          ref={oTPInputNT0msyJuRef}
         />
         {/* OTP Input */}
         <TextInput
@@ -363,21 +400,86 @@ const ConfirmOTPEmailUpdateScreen = props => {
           keyboardType={'numeric'}
           maxLength={1}
           placeholderTextColor={theme.colors['Medium']}
+          ref={oTPInputFGZTagzORef}
         />
       </View>
-
-      <Touchable>
-        <Link
-          style={StyleSheet.applyWidth(
-            StyleSheet.compose(GlobalStyles.LinkStyles(theme)['Link'], {
-              marginTop: 45,
-              textAlign: 'center',
-            }),
-            dimensions.width
-          )}
-          title={'Resend OTP'}
-        />
-      </Touchable>
+      {/* Resend otp */}
+      <View
+        style={StyleSheet.applyWidth(
+          { alignSelf: 'center', marginTop: 45 },
+          dimensions.width
+        )}
+      >
+        <Touchable
+          onPress={() => {
+            const handler = async () => {
+              try {
+                const seconds = startTimer();
+                setSeconds(seconds);
+                const adsercondetresult = (
+                  await CISAPPApi.updateEmailPOST(Constants, {
+                    accno: Constants['name'],
+                    newEmail: props.route?.params?.newEmail ?? '',
+                    oldEmail: props.route?.params?.oldEmail ?? '',
+                    userId: Constants['userId'],
+                  })
+                )?.json;
+                console.log(adsercondetresult);
+                const test = setGlobalVariableValue({
+                  key: 'OTP_ACK_NUMBER',
+                  value: JSON.parse(
+                    (adsercondetresult && adsercondetresult[0])?.data[0]?.data
+                  )?.id,
+                });
+              } catch (err) {
+                console.error(err);
+              }
+            };
+            handler();
+          }}
+          style={StyleSheet.applyWidth({ width: '100%' }, dimensions.width)}
+        >
+          {/* Resend code */}
+          <Text
+            style={StyleSheet.applyWidth(
+              {
+                alignSelf: 'stretch',
+                color: theme.colors['Strong'],
+                fontFamily: 'Roboto_400Regular',
+                fontSize: 14,
+                opacity: 1,
+                textAlign: 'center',
+              },
+              dimensions.width
+            )}
+          >
+            {'Resend OTP'}
+            {/* timer */}
+            <>
+              {!(seconds !== 21) ? null : (
+                <Text
+                  style={StyleSheet.applyWidth(
+                    {
+                      color: theme.colors['Custom Color'],
+                      fontFamily: 'System',
+                      fontSize: 15,
+                      fontWeight: '600',
+                      letterSpacing: 0.3,
+                      lineHeight: 21,
+                      opacity: 1,
+                      textAlign: 'center',
+                    },
+                    dimensions.width
+                  )}
+                >
+                  {seconds}
+                  {' sec'}
+                </Text>
+              )}
+            </>
+          </Text>
+        </Touchable>
+      </View>
 
       <View
         style={StyleSheet.applyWidth(

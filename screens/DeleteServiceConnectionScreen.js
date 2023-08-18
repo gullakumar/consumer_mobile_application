@@ -118,7 +118,7 @@ const DeleteServiceConnectionScreen = props => {
               dimensions.width
             )}
           >
-            <Icon size={24} name={'AntDesign/arrowleft'} />
+            <Icon name={'AntDesign/arrowleft'} size={24} />
           </View>
         </Touchable>
         {/* View bill and make payment */}
@@ -159,10 +159,9 @@ const DeleteServiceConnectionScreen = props => {
           <Text
             style={StyleSheet.applyWidth(
               StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
-                alignSelf: 'center',
-                color: theme.colors['Community_Dark_Red'],
+                alignSelf: 'flex-start',
+                color: theme.colors['Error'],
                 fontFamily: 'Roboto_400Regular',
-                paddingBottom: 20,
               }),
               dimensions.width
             )}
@@ -179,9 +178,9 @@ const DeleteServiceConnectionScreen = props => {
             )}
           >
             <Icon
-              size={24}
-              name={'MaterialIcons/house'}
               color={theme.colors['Medium']}
+              name={'MaterialIcons/house'}
+              size={24}
             />
             <View
               style={StyleSheet.applyWidth(
@@ -202,9 +201,9 @@ const DeleteServiceConnectionScreen = props => {
                   dimensions.width
                 )}
                 placeholder={'Enter service connection number'}
+                defaultValue={props.route?.params?.serviceConnectionNo ?? ''}
                 editable={true}
                 placeholderTextColor={theme.colors['Medium']}
-                defaultValue={props.route?.params?.serviceConnectionNo ?? ''}
               />
             </View>
           </View>

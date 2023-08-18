@@ -65,16 +65,25 @@ const AddTicketProcessGuestScreen = props => {
     return scheme[msg];
   };
 
+  const validateScno = scNo => {
+    var errorMessage = null;
+    if (!scNo.trim()) {
+      errorMessage = 'Service connection number is required';
+    }
+    return errorMessage;
+  };
+
   const { theme } = props;
   const { navigation } = props;
 
   const [afterotpvalue, setAfterotpvalue] = React.useState('');
+  const [scnoErrorMsg, setScnoErrorMsg] = React.useState('');
   const [serviceconnectionnumber, setServiceconnectionnumber] =
     React.useState('');
   const [textInputValue, setTextInputValue] = React.useState('');
 
   return (
-    <ScreenContainer scrollable={false} hasSafeArea={true}>
+    <ScreenContainer hasSafeArea={true} scrollable={false}>
       {/* Header */}
       <View
         style={StyleSheet.applyWidth(
@@ -111,9 +120,9 @@ const AddTicketProcessGuestScreen = props => {
             }}
           >
             <Icon
-              size={24}
-              name={'Ionicons/arrow-back-sharp'}
               color={theme.colors['Custom Color_2']}
+              name={'Ionicons/arrow-back-sharp'}
+              size={24}
             />
           </Touchable>
         </View>
@@ -133,31 +142,14 @@ const AddTicketProcessGuestScreen = props => {
           {'Add Ticket\n'}
         </Text>
       </View>
-      {/* OTP Mobile and email */}
-      <Text
-        style={StyleSheet.applyWidth(
-          {
-            color: theme.colors['Strong'],
-            fontFamily: 'Roboto_400Regular',
-            fontSize: 14,
-            letterSpacing: 0.3,
-            lineHeight: 21,
-            marginLeft: 20,
-            marginRight: 20,
-            marginTop: 75,
-            opacity: 1,
-            textAlign: 'center',
-          },
-          dimensions.width
-        )}
-      >
-        {'Enter your service connection number'}
-      </Text>
       {/* error message */}
       <Text
         style={StyleSheet.applyWidth(
           StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+            alignSelf: 'flex-start',
+            color: theme.colors['Error'],
             fontFamily: 'Roboto_400Regular',
+            marginTop: 40,
             paddingTop: 5,
             textAlign: 'center',
           }),
@@ -173,7 +165,6 @@ const AddTicketProcessGuestScreen = props => {
             alignItems: 'center',
             flexDirection: 'column',
             justifyContent: 'space-evenly',
-            marginTop: 40,
             paddingLeft: 20,
             paddingRight: 20,
           },
@@ -188,9 +179,9 @@ const AddTicketProcessGuestScreen = props => {
           )}
         >
           <Icon
-            size={24}
-            name={'Ionicons/person'}
             color={theme.colors['Medium']}
+            name={'MaterialIcons/house'}
+            size={24}
           />
           <View
             style={StyleSheet.applyWidth(
@@ -218,13 +209,26 @@ const AddTicketProcessGuestScreen = props => {
                 dimensions.width
               )}
               value={serviceconnectionnumber}
-              placeholder={'Enter service connection no'}
+              placeholder={'Service connection number'}
               editable={true}
               placeholderTextColor={theme.colors['Medium']}
             />
           </View>
         </View>
       </View>
+
+      <Text
+        style={StyleSheet.applyWidth(
+          StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+            color: theme.colors['Error'],
+            fontFamily: 'Roboto_400Regular',
+            paddingLeft: 20,
+          }),
+          dimensions.width
+        )}
+      >
+        {scnoErrorMsg}
+      </Text>
 
       <View
         style={StyleSheet.applyWidth(
@@ -237,6 +241,11 @@ const AddTicketProcessGuestScreen = props => {
           onPress={() => {
             const handler = async () => {
               try {
+                const scnoErrorMsg = validateScno(serviceconnectionnumber);
+                setScnoErrorMsg(scnoErrorMsg);
+                if (scnoErrorMsg?.length) {
+                  return;
+                }
                 const otpvalue = (
                   await CISAPPApi.guestRaiseTicketSendOTPPOST(Constants, {
                     accno: serviceconnectionnumber,
@@ -260,7 +269,9 @@ const AddTicketProcessGuestScreen = props => {
                 if (messagejson?.length) {
                   return;
                 }
-                navigation.navigate('ConfirmOTPAddTicketprocessScreen');
+                navigation.navigate('ConfirmOTPAddTicketprocessScreen', {
+                  userenterscno: serviceconnectionnumber,
+                });
               } catch (err) {
                 console.error(err);
               }

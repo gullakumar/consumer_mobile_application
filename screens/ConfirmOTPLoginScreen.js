@@ -14,12 +14,26 @@ import {
   Touchable,
   withTheme,
 } from '@draftbit/ui';
+import { useIsFocused } from '@react-navigation/native';
 import { Text, View, useWindowDimensions } from 'react-native';
 
 const ConfirmOTPLoginScreen = props => {
   const dimensions = useWindowDimensions();
   const Constants = GlobalVariables.useValues();
   const Variables = Constants;
+  const setGlobalVariableValue = GlobalVariables.useSetValue();
+
+  const startTimer = () => {
+    const intervalId = setInterval(() => {
+      if (seconds) {
+        setSeconds(prev =>
+          prev > 0 ? prev - 1 : (setSeconds(21), clearInterval(intervalId))
+        );
+      }
+    }, 1000);
+
+    return seconds;
+  };
 
   const createOTP = () => {
     return `${otpValue1}${otpValue2}${otpValue3}${otpValue4}`;
@@ -92,15 +106,31 @@ const ConfirmOTPLoginScreen = props => {
   const { theme } = props;
   const { navigation } = props;
 
+  const isFocused = useIsFocused();
+  React.useEffect(() => {
+    try {
+      if (!isFocused) {
+        return;
+      }
+      const seconds = startTimer();
+    } catch (err) {
+      console.error(err);
+    }
+  }, [isFocused]);
   const [ERROR_MESSAGE, setERROR_MESSAGE] = React.useState('');
   const [otpValue1, setOtpValue1] = React.useState('');
   const [otpValue2, setOtpValue2] = React.useState('');
   const [otpValue3, setOtpValue3] = React.useState('');
   const [otpValue4, setOtpValue4] = React.useState('');
+  const [seconds, setSeconds] = React.useState(21);
   const [textInputValue, setTextInputValue] = React.useState(0);
 
+  const oTPInputanyfIJEYRef = React.useRef();
+  const oTPInputNYln2zeNRef = React.useRef();
+  const oTPInputXiJmbFXJRef = React.useRef();
+
   return (
-    <ScreenContainer scrollable={false} hasSafeArea={true}>
+    <ScreenContainer hasSafeArea={true} scrollable={false}>
       {/* Header */}
       <View
         style={StyleSheet.applyWidth(
@@ -137,9 +167,9 @@ const ConfirmOTPLoginScreen = props => {
             }}
           >
             <Icon
-              size={24}
-              name={'Ionicons/arrow-back-sharp'}
               color={theme.colors['Custom Color_2']}
+              name={'Ionicons/arrow-back-sharp'}
+              size={24}
             />
           </Touchable>
         </View>
@@ -183,8 +213,11 @@ const ConfirmOTPLoginScreen = props => {
       <Text
         style={StyleSheet.applyWidth(
           StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+            alignSelf: 'flex-start',
             color: theme.colors['Community_Dark_Red'],
             fontFamily: 'Roboto_400Regular',
+            marginTop: 50,
+            paddingLeft: 30,
             paddingTop: 5,
             textAlign: 'center',
           }),
@@ -200,7 +233,6 @@ const ConfirmOTPLoginScreen = props => {
             alignItems: 'center',
             flexDirection: 'row',
             justifyContent: 'space-evenly',
-            marginTop: 50,
             paddingLeft: 20,
             paddingRight: 20,
           },
@@ -212,6 +244,7 @@ const ConfirmOTPLoginScreen = props => {
           onChangeText={newOTPInputValue => {
             try {
               setOtpValue1(newOTPInputValue);
+              oTPInputanyfIJEYRef.current.focus();
             } catch (err) {
               console.error(err);
             }
@@ -250,6 +283,7 @@ const ConfirmOTPLoginScreen = props => {
           onChangeText={newOTPInputValue => {
             try {
               setOtpValue2(newOTPInputValue);
+              oTPInputNYln2zeNRef.current.focus();
             } catch (err) {
               console.error(err);
             }
@@ -282,12 +316,14 @@ const ConfirmOTPLoginScreen = props => {
           keyboardType={'numeric'}
           maxLength={1}
           placeholderTextColor={theme.colors['Medium']}
+          ref={oTPInputanyfIJEYRef}
         />
         {/* OTP Input */}
         <TextInput
           onChangeText={newOTPInputValue => {
             try {
               setOtpValue3(newOTPInputValue);
+              oTPInputXiJmbFXJRef.current.focus();
             } catch (err) {
               console.error(err);
             }
@@ -320,6 +356,7 @@ const ConfirmOTPLoginScreen = props => {
           keyboardType={'numeric'}
           maxLength={1}
           placeholderTextColor={theme.colors['Medium']}
+          ref={oTPInputNYln2zeNRef}
         />
         {/* OTP Input */}
         <TextInput
@@ -358,21 +395,85 @@ const ConfirmOTPLoginScreen = props => {
           keyboardType={'numeric'}
           maxLength={1}
           placeholderTextColor={theme.colors['Medium']}
+          ref={oTPInputXiJmbFXJRef}
         />
       </View>
-
-      <Touchable>
-        <Link
-          style={StyleSheet.applyWidth(
-            StyleSheet.compose(GlobalStyles.LinkStyles(theme)['Link'], {
-              marginTop: 45,
-              textAlign: 'center',
-            }),
-            dimensions.width
-          )}
-          title={'Resend OTP'}
-        />
-      </Touchable>
+      {/* Resend otp */}
+      <View
+        style={StyleSheet.applyWidth(
+          { alignSelf: 'center', marginTop: 45 },
+          dimensions.width
+        )}
+      >
+        <Touchable
+          onPress={() => {
+            const handler = async () => {
+              try {
+                const seconds = startTimer();
+                setSeconds(seconds);
+                const otpvalue = (
+                  await CISAPPApi.loginWithOTPPOST(Constants, {
+                    accno: props.route?.params?.userenterscno ?? '',
+                  })
+                )?.json;
+                const test = setGlobalVariableValue({
+                  key: 'OTP_ACK_NUMBER',
+                  value: JSON.parse((otpvalue && otpvalue[0])?.data[0]?.data)
+                    ?.id,
+                });
+                setGlobalVariableValue({
+                  key: 'name',
+                  value: props.route?.params?.userenterscno ?? '',
+                });
+              } catch (err) {
+                console.error(err);
+              }
+            };
+            handler();
+          }}
+          style={StyleSheet.applyWidth({ width: '100%' }, dimensions.width)}
+        >
+          {/* Resend code */}
+          <Text
+            style={StyleSheet.applyWidth(
+              {
+                color: theme.colors['Strong'],
+                fontFamily: 'Roboto_400Regular',
+                fontSize: 14,
+                opacity: 1,
+                textAlign: 'center',
+              },
+              dimensions.width
+            )}
+          >
+            {'Resend OTP'}
+            {/* timer */}
+            <>
+              {!(seconds !== 21) ? null : (
+                <Text
+                  style={StyleSheet.applyWidth(
+                    {
+                      color: theme.colors['Custom Color'],
+                      fontFamily: 'System',
+                      fontSize: 15,
+                      fontWeight: '600',
+                      letterSpacing: 0.3,
+                      lineHeight: 21,
+                      opacity: 1,
+                      textAlign: 'center',
+                    },
+                    dimensions.width
+                  )}
+                >
+                  {' '}
+                  {seconds}
+                  {' sec'}
+                </Text>
+              )}
+            </>
+          </Text>
+        </Touchable>
+      </View>
 
       <View
         style={StyleSheet.applyWidth(

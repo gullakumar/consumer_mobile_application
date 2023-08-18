@@ -29,6 +29,31 @@ const CheckTicketStatusforGuestScreen = props => {
   const Constants = GlobalVariables.useValues();
   const Variables = Constants;
 
+  const getticketstatusGuestFun = regNo => {
+    console.log(`csc/rest/RequestTWhr/${regNo}`);
+    return `csc/rest/RequestTWhr/${regNo}`;
+  };
+
+  const checkticketColorChange = requestStatus => {
+    let color = 'black';
+    let textStatus = null;
+    if (requestStatus === 'Rectified' || requestStatus === 'Verification') {
+      textStatus = requestStatus;
+      color = 'orange';
+    } else if (
+      requestStatus === 'Inspection Pending' ||
+      requestStatus === 'Pending For Approval AAO' ||
+      requestStatus === 'Pending'
+    ) {
+      textStatus = requestStatus;
+      color = 'red';
+    } else if (requestStatus === 'Closed') {
+      textStatus = requestStatus;
+      color = 'green';
+    }
+    return color;
+  };
+
   const getticketdeatils = consId => {
     console.log(`${consId}`);
     return `${consId}`;
@@ -42,6 +67,7 @@ const CheckTicketStatusforGuestScreen = props => {
   const { theme } = props;
   const { navigation } = props;
 
+  const [checkticketRegisterNo, setCheckticketRegisterNo] = React.useState('');
   const [consId, setConsId] = React.useState('');
   const [consumerId, setConsumerId] = React.useState('');
   const [listExists, setListExists] = React.useState(true);
@@ -50,13 +76,16 @@ const CheckTicketStatusforGuestScreen = props => {
   const [menuTab2, setMenuTab2] = React.useState(false);
   const [menuTab3, setMenuTab3] = React.useState(false);
   const [noContent, setNoContent] = React.useState(false);
+  const [remarksCheckticketGuest, setRemarksCheckticketGuest] =
+    React.useState('');
+  const [remarksGuest, setRemarksGuest] = React.useState('');
   const [tableData, setTableData] = React.useState([]);
 
   return (
     <ScreenContainer
       hasSafeArea={false}
-      scrollable={false}
       hasTopSafeArea={true}
+      scrollable={false}
     >
       {/* header */}
       <View
@@ -87,9 +116,9 @@ const CheckTicketStatusforGuestScreen = props => {
             }}
           >
             <Icon
-              size={24}
-              name={'Ionicons/arrow-back-sharp'}
               color={theme.colors['Custom Color_2']}
+              name={'Ionicons/arrow-back-sharp'}
+              size={24}
             />
           </Touchable>
         </View>
@@ -164,7 +193,7 @@ const CheckTicketStatusforGuestScreen = props => {
                 dimensions.width
               )}
               value={consId}
-              placeholder={'Enter service connection no'}
+              placeholder={'Service connection number'}
               placeholderTextColor={theme.colors['Medium']}
             />
             <Touchable
@@ -181,16 +210,16 @@ const CheckTicketStatusforGuestScreen = props => {
                       consumerDetailsJson && consumerDetailsJson[0]
                     )?.data?.consumerId;
                     setConsumerId(consumerId);
-                    const gettickerdata = (
+                    const getticketdata = (
                       await CISAPPApi.getticketdeatilsPOST(Constants, {
                         consId: consumerId,
                       })
                     )?.json;
-                    console.log(gettickerdata);
+                    console.log(getticketdata);
                     setTableData(
                       (
-                        (gettickerdata && gettickerdata[0])?.data &&
-                        ((gettickerdata && gettickerdata[0])?.data)[0]
+                        (getticketdata && getticketdata[0])?.data &&
+                        ((getticketdata && getticketdata[0])?.data)[0]
                       )?.data
                     );
                   } catch (err) {
@@ -201,9 +230,9 @@ const CheckTicketStatusforGuestScreen = props => {
               }}
             >
               <Icon
+                color={theme.colors['Medium']}
                 name={'Feather/search'}
                 size={24}
-                color={theme.colors['Medium']}
               />
             </Touchable>
           </Surface>
@@ -222,9 +251,9 @@ const CheckTicketStatusforGuestScreen = props => {
             }}
           >
             <Icon
-              size={30}
-              name={'Ionicons/add-circle-outline'}
               color={theme.colors['Medium']}
+              name={'Ionicons/add-circle-outline'}
+              size={30}
             />
           </Touchable>
         </View>
@@ -540,8 +569,8 @@ const CheckTicketStatusforGuestScreen = props => {
               { flexShrink: 0 },
               dimensions.width
             )}
-            showsVerticalScrollIndicator={true}
             bounces={true}
+            showsVerticalScrollIndicator={true}
           >
             {/* Content Frame Tab 1 */}
             <>
@@ -559,7 +588,7 @@ const CheckTicketStatusforGuestScreen = props => {
                         <>
                           {/* List View Frame */}
                           <>
-                            {!(listData?.RequestStatus === 'Pending') ? null : (
+                            {!(listData?.RequestStatus !== 'Closed') ? null : (
                               <View
                                 style={StyleSheet.applyWidth(
                                   {
@@ -626,10 +655,24 @@ const CheckTicketStatusforGuestScreen = props => {
                                           <Text
                                             style={StyleSheet.applyWidth(
                                               {
-                                                color:
-                                                  theme.colors[
-                                                    'Community_Dark_UI'
-                                                  ],
+                                                color: [
+                                                  {
+                                                    minWidth:
+                                                      Breakpoints.Mobile,
+                                                    value:
+                                                      theme.colors[
+                                                        'Community_Dark_UI'
+                                                      ],
+                                                  },
+                                                  {
+                                                    minWidth:
+                                                      Breakpoints.Mobile,
+                                                    value:
+                                                      checkticketColorChange(
+                                                        listData?.RequestStatus
+                                                      ),
+                                                  },
+                                                ],
                                                 fontFamily: 'Roboto_400Regular',
                                                 fontSize: 12,
                                                 lineHeight: 18,
@@ -676,11 +719,77 @@ const CheckTicketStatusforGuestScreen = props => {
                                               },
                                               dimensions.width
                                             )}
-                                            numberOfLines={3}
                                             ellipsizeMode={'tail'}
+                                            numberOfLines={3}
                                           >
                                             {listData?.RequestNature}
                                           </Text>
+                                        </View>
+                                        {/* Remarks */}
+                                        <View>
+                                          <Touchable
+                                            onPress={() => {
+                                              const handler = async () => {
+                                                try {
+                                                  const valueHaXpXZAb =
+                                                    listData?.RegistrationNo;
+                                                  setCheckticketRegisterNo(
+                                                    valueHaXpXZAb
+                                                  );
+                                                  const registerNo =
+                                                    valueHaXpXZAb;
+                                                  const getTicketstatusJson = (
+                                                    await CISAPPApi.getticketstatusPOST(
+                                                      Constants,
+                                                      {
+                                                        ticketNumber:
+                                                          registerNo,
+                                                      }
+                                                    )
+                                                  )?.json;
+                                                  console.log(
+                                                    getTicketstatusJson
+                                                  );
+                                                  const remarksGuest = (
+                                                    getTicketstatusJson &&
+                                                    getTicketstatusJson[0]
+                                                      .data[0]
+                                                  )?.data[0]?.Remarks;
+                                                  console.log(remarksGuest);
+                                                  setRemarksGuest(remarksGuest);
+                                                  navigation.navigate(
+                                                    'RemarksGuestSuccessScreen',
+                                                    {
+                                                      remarksGuestMsg:
+                                                        remarksGuest,
+                                                    }
+                                                  );
+                                                } catch (err) {
+                                                  console.error(err);
+                                                }
+                                              };
+                                              handler();
+                                            }}
+                                          >
+                                            <Text
+                                              style={StyleSheet.applyWidth(
+                                                StyleSheet.compose(
+                                                  GlobalStyles.TextStyles(
+                                                    theme
+                                                  )['Text'],
+                                                  {
+                                                    fontFamily:
+                                                      'Roboto_400Regular',
+                                                    textDecorationLine:
+                                                      'underline',
+                                                  }
+                                                ),
+                                                dimensions.width
+                                              )}
+                                            >
+                                              {'Remarks'}
+                                            </Text>
+                                          </Touchable>
                                         </View>
                                       </View>
                                     </View>
@@ -786,8 +895,21 @@ const CheckTicketStatusforGuestScreen = props => {
                                       <Text
                                         style={StyleSheet.applyWidth(
                                           {
-                                            color:
-                                              theme.colors['Community_Dark_UI'],
+                                            color: [
+                                              {
+                                                minWidth: Breakpoints.Mobile,
+                                                value:
+                                                  theme.colors[
+                                                    'Community_Dark_UI'
+                                                  ],
+                                              },
+                                              {
+                                                minWidth: Breakpoints.Mobile,
+                                                value: checkticketColorChange(
+                                                  listData?.RequestStatus
+                                                ),
+                                              },
+                                            ],
                                             fontFamily: 'Roboto_400Regular',
                                             fontSize: 13,
                                             lineHeight: 18,
@@ -832,11 +954,67 @@ const CheckTicketStatusforGuestScreen = props => {
                                           },
                                           dimensions.width
                                         )}
-                                        numberOfLines={3}
                                         ellipsizeMode={'tail'}
+                                        numberOfLines={3}
                                       >
                                         {listData?.RequestNature}
                                       </Text>
+                                    </View>
+                                    {/* Remarks */}
+                                    <View>
+                                      <Touchable
+                                        onPress={() => {
+                                          const handler = async () => {
+                                            try {
+                                              const valueXdrGUen2 =
+                                                listData?.RegistrationNo;
+                                              setCheckticketRegisterNo(
+                                                valueXdrGUen2
+                                              );
+                                              const registerNo = valueXdrGUen2;
+                                              const getTicketstatusJson = (
+                                                await CISAPPApi.getticketstatusPOST(
+                                                  Constants,
+                                                  { ticketNumber: registerNo }
+                                                )
+                                              )?.json;
+                                              console.log(getTicketstatusJson);
+                                              const remarksGuest = (
+                                                getTicketstatusJson &&
+                                                getTicketstatusJson[0].data[0]
+                                              )?.data[0]?.Remarks;
+                                              console.log(remarksGuest);
+                                              setRemarksGuest(remarksGuest);
+                                              navigation.navigate(
+                                                'RemarksGuestSuccessScreen',
+                                                {
+                                                  remarksGuestMsg: remarksGuest,
+                                                }
+                                              );
+                                            } catch (err) {
+                                              console.error(err);
+                                            }
+                                          };
+                                          handler();
+                                        }}
+                                      >
+                                        <Text
+                                          style={StyleSheet.applyWidth(
+                                            StyleSheet.compose(
+                                              GlobalStyles.TextStyles(theme)[
+                                                'Text'
+                                              ],
+                                              {
+                                                fontFamily: 'Roboto_400Regular',
+                                                textDecorationLine: 'underline',
+                                              }
+                                            ),
+                                            dimensions.width
+                                          )}
+                                        >
+                                          {'Remarks'}
+                                        </Text>
+                                      </Touchable>
                                     </View>
                                   </View>
                                 </View>
@@ -889,9 +1067,9 @@ const CheckTicketStatusforGuestScreen = props => {
                   {/* Flex Frame for Icons */}
                   <View>
                     <Icon
+                      color={theme.colors.communityIconFill}
                       name={'MaterialIcons/event-busy'}
                       size={48}
-                      color={theme.colors.communityIconFill}
                     />
                   </View>
                   {/* Headline Frame */}

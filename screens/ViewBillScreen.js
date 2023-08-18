@@ -1,7 +1,9 @@
 import React from 'react';
 import * as GlobalStyles from '../GlobalStyles.js';
 import * as DraftbitExampleApi from '../apis/DraftbitExampleApi.js';
+import * as GlobalVariables from '../config/GlobalVariableContext';
 import Images from '../config/Images';
+import * as CustomCode from '../custom-files/CustomCode';
 import Breakpoints from '../utils/Breakpoints';
 import * as StyleSheet from '../utils/StyleSheet';
 import {
@@ -28,6 +30,28 @@ import { Fetch } from 'react-request';
 
 const ViewBillScreen = props => {
   const dimensions = useWindowDimensions();
+  const Constants = GlobalVariables.useValues();
+  const Variables = Constants;
+
+  const convertMonthNoToMonthNumber = monthNo => {
+    const monthNames = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sept',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+    const monthName = monthNames[monthNo - 1];
+    console.log(monthName);
+    return monthName;
+  };
 
   const { theme } = props;
   const { navigation } = props;
@@ -41,7 +65,7 @@ const ViewBillScreen = props => {
   const [textInputValue, setTextInputValue] = React.useState('');
 
   return (
-    <ScreenContainer scrollable={false} hasSafeArea={true}>
+    <ScreenContainer hasSafeArea={true} scrollable={false}>
       {/* Header */}
       <View
         style={StyleSheet.applyWidth(
@@ -76,7 +100,7 @@ const ViewBillScreen = props => {
               dimensions.width
             )}
           >
-            <Icon size={24} name={'AntDesign/arrowleft'} />
+            <Icon name={'AntDesign/arrowleft'} size={24} />
           </View>
         </Touchable>
         {/* View bill and make payment */}
@@ -100,8 +124,8 @@ const ViewBillScreen = props => {
           { paddingBottom: 20, paddingTop: 20 },
           dimensions.width
         )}
-        showsVerticalScrollIndicator={true}
         bounces={true}
+        showsVerticalScrollIndicator={true}
       >
         {/* Payment summary */}
         <View>
@@ -194,7 +218,7 @@ const ViewBillScreen = props => {
                   dimensions.width
                 )}
               >
-                {'Service connection no.'}
+                {'Service connection number'}
               </Text>
 
               <Text
@@ -242,8 +266,8 @@ const ViewBillScreen = props => {
               )}
               label={'Bill details'}
               caretSize={24}
-              iconSize={24}
               expanded={true}
+              iconSize={24}
             >
               <View
                 style={StyleSheet.applyWidth(
@@ -284,7 +308,11 @@ const ViewBillScreen = props => {
                     dimensions.width
                   )}
                 >
-                  {props.route?.params?.BillMonth ?? ''}
+                  {convertMonthNoToMonthNumber(
+                    props.route?.params?.BillMonth ?? ''
+                  )}
+                  {' - '}
+                  {props.route?.params?.billYear ?? ''}
                 </Text>
               </View>
               {/* view */}
@@ -589,7 +617,7 @@ const ViewBillScreen = props => {
                   )}
                 >
                   {'₹'}
-                  {props.route?.params?.netcurrbill ?? ''}
+                  {props.route?.params?.ledgerAmt ?? ''}
                 </Text>
               </View>
             </AccordionGroup>

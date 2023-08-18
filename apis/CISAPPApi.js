@@ -28,20 +28,19 @@ export const serviceRequestSubCategoryPOST = (
     }
   ).then(res => handleResponse(res, handlers));
 
-export const useServiceRequestSubCategoryPOST = ({ action }) => {
+export const useServiceRequestSubCategoryPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPServiceRequestSubCategoryPOST', args],
+    () => serviceRequestSubCategoryPOST(Constants, args, handlers),
     {
-      body: JSON.stringify({ action: action, method: 'GET', auth: 'NO' }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () =>
+        queryClient.invalidateQueries(['cISAPPServiceRequestSubCategoryPOSTS']),
     }
   );
 };
@@ -57,22 +56,14 @@ export const FetchServiceRequestSubCategoryPOST = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
-    {
-      body: JSON.stringify({ action: action, method: 'GET', auth: 'NO' }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = useServiceRequestSubCategoryPOST(
+    { action },
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -87,13 +78,6 @@ export const FetchServiceRequestSubCategoryPOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({
     loading,
     data,
@@ -120,25 +104,19 @@ export const aNNOUNCEMENTSPOST = (Constants, _args, handlers = {}) =>
     }
   ).then(res => handleResponse(res, handlers));
 
-export const useANNOUNCEMENTSPOST = () => {
+export const useANNOUNCEMENTSPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPANNOUNCEMENTSPOST', args],
+    () => aNNOUNCEMENTSPOST(Constants, args, handlers),
     {
-      body: JSON.stringify({
-        action: 'ANNOUNCEMENTS',
-        method: 'POST',
-        req: { action: 'ANNOUNCEMENTS' },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () =>
+        queryClient.invalidateQueries(['cISAPPANNOUNCEMENTSPOSTS']),
     }
   );
 };
@@ -153,27 +131,14 @@ export const FetchANNOUNCEMENTSPOST = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
-    {
-      body: JSON.stringify({
-        action: 'ANNOUNCEMENTS',
-        method: 'POST',
-        req: { action: 'ANNOUNCEMENTS' },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = useANNOUNCEMENTSPOST(
+    {},
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -188,13 +153,6 @@ export const FetchANNOUNCEMENTSPOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({ loading, data, error, refetchANNOUNCEMENTS: refetch });
 };
 
@@ -227,37 +185,21 @@ export const aftersentOTPforgorpasswordPOST = (
     }
   ).then(res => handleResponse(res, handlers));
 
-export const useAftersentOTPforgorpasswordPOST = ({
-  accno,
-  newPassword,
-  otp,
-  transid,
-}) => {
+export const useAftersentOTPforgorpasswordPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPAftersentOTPforgorpasswordPOST', args],
+    () => aftersentOTPforgorpasswordPOST(Constants, args, handlers),
     {
-      body: JSON.stringify({
-        action: 'forgotPassword',
-        method: 'POST',
-        req: {
-          accno: accno,
-          otp: otp,
-          type: 'EMAIL',
-          action: 'forgotPassword',
-          transid: transid,
-          newPassword: newPassword,
-        },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () =>
+        queryClient.invalidateQueries([
+          'cISAPPAftersentOTPforgorpasswordPOSTS',
+        ]),
     }
   );
 };
@@ -276,34 +218,14 @@ export const FetchAftersentOTPforgorpasswordPOST = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
-    {
-      body: JSON.stringify({
-        action: 'forgotPassword',
-        method: 'POST',
-        req: {
-          accno: accno,
-          otp: otp,
-          type: 'EMAIL',
-          action: 'forgotPassword',
-          transid: transid,
-          newPassword: newPassword,
-        },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = useAftersentOTPforgorpasswordPOST(
+    { accno, newPassword, otp, transid },
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -318,13 +240,6 @@ export const FetchAftersentOTPforgorpasswordPOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({
     loading,
     data,
@@ -351,25 +266,18 @@ export const bANNERSPOST = (Constants, _args, handlers = {}) =>
     }
   ).then(res => handleResponse(res, handlers));
 
-export const useBANNERSPOST = () => {
+export const useBANNERSPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPBANNERSPOST', args],
+    () => bANNERSPOST(Constants, args, handlers),
     {
-      body: JSON.stringify({
-        action: 'BANNERS',
-        method: 'POST',
-        req: { action: 'BANNERS' },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () => queryClient.invalidateQueries(['cISAPPBANNERSPOSTS']),
     }
   );
 };
@@ -384,27 +292,14 @@ export const FetchBANNERSPOST = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
-    {
-      body: JSON.stringify({
-        action: 'BANNERS',
-        method: 'POST',
-        req: { action: 'BANNERS' },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = useBANNERSPOST(
+    {},
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -419,13 +314,6 @@ export const FetchBANNERSPOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({ loading, data, error, refetchBANNERS: refetch });
 };
 
@@ -452,26 +340,19 @@ export const billingHistoryPrepaidPOST = (
     }
   ).then(res => handleResponse(res, handlers));
 
-export const useBillingHistoryPrepaidPOST = ({ action }) => {
+export const useBillingHistoryPrepaidPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPBillingHistoryPrepaidPOST', args],
+    () => billingHistoryPrepaidPOST(Constants, args, handlers),
     {
-      body: JSON.stringify({
-        action: action,
-        method: 'GET',
-        auth: 'TOKEN',
-        baseUrlName: '',
-        environmentName: 'SPM_ADANI',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () =>
+        queryClient.invalidateQueries(['cISAPPBillingHistoryPrepaidPOSTS']),
     }
   );
 };
@@ -487,28 +368,14 @@ export const FetchBillingHistoryPrepaidPOST = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
-    {
-      body: JSON.stringify({
-        action: action,
-        method: 'GET',
-        auth: 'TOKEN',
-        baseUrlName: '',
-        environmentName: 'SPM_ADANI',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = useBillingHistoryPrepaidPOST(
+    { action },
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -523,13 +390,6 @@ export const FetchBillingHistoryPrepaidPOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({
     loading,
     data,
@@ -551,20 +411,19 @@ export const billingHistoryPOST = (Constants, { action }, handlers = {}) =>
     }
   ).then(res => handleResponse(res, handlers));
 
-export const useBillingHistoryPOST = ({ action }) => {
+export const useBillingHistoryPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPBillingHistoryPOST', args],
+    () => billingHistoryPOST(Constants, args, handlers),
     {
-      body: JSON.stringify({ action: action, method: 'GET', auth: 'NO' }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () =>
+        queryClient.invalidateQueries(['cISAPPBillingHistoryPOSTS']),
     }
   );
 };
@@ -580,22 +439,14 @@ export const FetchBillingHistoryPOST = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
-    {
-      body: JSON.stringify({ action: action, method: 'GET', auth: 'NO' }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = useBillingHistoryPOST(
+    { action },
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -610,14 +461,89 @@ export const FetchBillingHistoryPOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({ loading, data, error, refetchBillingHistory: refetch });
+};
+
+export const changePasswordPOST = (
+  Constants,
+  { accno, newPwd, oldPwd },
+  handlers = {}
+) =>
+  fetch(
+    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+    {
+      body: JSON.stringify({
+        action: 'ChangePassword',
+        method: 'POST',
+        req: {
+          action: 'ChangePassword',
+          newPwd: newPwd,
+          accno: accno,
+          oldPwd: oldPwd,
+        },
+        auth: 'NO',
+      }),
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+    }
+  ).then(res => handleResponse(res, handlers));
+
+export const useChangePasswordPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
+  const Constants = GlobalVariables.useValues();
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPChangePasswordPOST', args],
+    () => changePasswordPOST(Constants, args, handlers),
+    {
+      refetchInterval,
+      onSuccess: () =>
+        queryClient.invalidateQueries(['cISAPPChangePasswordPOSTS']),
+    }
+  );
+};
+
+export const FetchChangePasswordPOST = ({
+  children,
+  onData = () => {},
+  handlers = {},
+  refetchInterval,
+  accno,
+  newPwd,
+  oldPwd,
+}) => {
+  const Constants = GlobalVariables.useValues();
+  const isFocused = useIsFocused();
+  const prevIsFocused = usePrevious(isFocused);
+
+  const {
+    isLoading: loading,
+    data,
+    error,
+    refetch,
+  } = useChangePasswordPOST(
+    { accno, newPwd, oldPwd },
+    { refetchInterval, handlers: { onData, ...handlers } }
+  );
+
+  React.useEffect(() => {
+    if (!prevIsFocused && isFocused) {
+      refetch();
+    }
+  }, [isFocused, prevIsFocused]);
+
+  React.useEffect(() => {
+    if (error) {
+      console.error('Fetch error: ' + error.status + ' ' + error.statusText);
+      console.error(error);
+    }
+  }, [error]);
+  return children({ loading, data, error, refetchChangePassword: refetch });
 };
 
 export const complaintCategoryPOST = (Constants, _args, handlers = {}) =>
@@ -637,24 +563,19 @@ export const complaintCategoryPOST = (Constants, _args, handlers = {}) =>
     }
   ).then(res => handleResponse(res, handlers));
 
-export const useComplaintCategoryPOST = () => {
+export const useComplaintCategoryPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPComplaintCategoryPOST', args],
+    () => complaintCategoryPOST(Constants, args, handlers),
     {
-      body: JSON.stringify({
-        action: 'csc/rest/RequestTypeFocc/',
-        method: 'GET',
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () =>
+        queryClient.invalidateQueries(['cISAPPComplaintCategoryPOSTS']),
     }
   );
 };
@@ -669,26 +590,14 @@ export const FetchComplaintCategoryPOST = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
-    {
-      body: JSON.stringify({
-        action: 'csc/rest/RequestTypeFocc/',
-        method: 'GET',
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = useComplaintCategoryPOST(
+    {},
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -703,13 +612,6 @@ export const FetchComplaintCategoryPOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({ loading, data, error, refetchComplaintCategory: refetch });
 };
 
@@ -730,20 +632,19 @@ export const complaintSubCategoryPOST = (
     }
   ).then(res => handleResponse(res, handlers));
 
-export const useComplaintSubCategoryPOST = ({ action }) => {
+export const useComplaintSubCategoryPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPComplaintSubCategoryPOST', args],
+    () => complaintSubCategoryPOST(Constants, args, handlers),
     {
-      body: JSON.stringify({ action: action, method: 'GET', auth: 'NO' }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () =>
+        queryClient.invalidateQueries(['cISAPPComplaintSubCategoryPOSTS']),
     }
   );
 };
@@ -759,22 +660,14 @@ export const FetchComplaintSubCategoryPOST = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
-    {
-      body: JSON.stringify({ action: action, method: 'GET', auth: 'NO' }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = useComplaintSubCategoryPOST(
+    { action },
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -789,13 +682,6 @@ export const FetchComplaintSubCategoryPOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({
     loading,
     data,
@@ -830,33 +716,19 @@ export const complaintSavePOST = (
     }
   ).then(res => handleResponse(res, handlers));
 
-export const useComplaintSavePOST = ({
-  consumerNo,
-  requestDetails1,
-  requestnatureId1,
-}) => {
+export const useComplaintSavePOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPComplaintSavePOST', args],
+    () => complaintSavePOST(Constants, args, handlers),
     {
-      body: JSON.stringify({
-        action: 'csc/rest/RequestTsave',
-        method: 'POST',
-        req: {
-          requestnatureId1: requestnatureId1,
-          consumerNo: consumerNo,
-          requestDetails1: requestDetails1,
-        },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () =>
+        queryClient.invalidateQueries(['cISAPPComplaintSavePOSTS']),
     }
   );
 };
@@ -874,31 +746,14 @@ export const FetchComplaintSavePOST = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
-    {
-      body: JSON.stringify({
-        action: 'csc/rest/RequestTsave',
-        method: 'POST',
-        req: {
-          requestnatureId1: requestnatureId1,
-          consumerNo: consumerNo,
-          requestDetails1: requestDetails1,
-        },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = useComplaintSavePOST(
+    { consumerNo, requestDetails1, requestnatureId1 },
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -913,13 +768,6 @@ export const FetchComplaintSavePOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({ loading, data, error, refetchComplaintSave: refetch });
 };
 
@@ -949,29 +797,19 @@ export const deleteAccountPOST = (
     }
   ).then(res => handleResponse(res, handlers));
 
-export const useDeleteAccountPOST = ({ accountNumber, consumerNumber }) => {
+export const useDeleteAccountPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPDeleteAccountPOST', args],
+    () => deleteAccountPOST(Constants, args, handlers),
     {
-      body: JSON.stringify({
-        action: 'DeleteAccount',
-        method: 'POST',
-        req: {
-          accountNumber: accountNumber,
-          consumerNumber: consumerNumber,
-          action: 'DeleteAccount',
-        },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () =>
+        queryClient.invalidateQueries(['cISAPPDeleteAccountPOSTS']),
     }
   );
 };
@@ -988,31 +826,14 @@ export const FetchDeleteAccountPOST = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
-    {
-      body: JSON.stringify({
-        action: 'DeleteAccount',
-        method: 'POST',
-        req: {
-          accountNumber: accountNumber,
-          consumerNumber: consumerNumber,
-          action: 'DeleteAccount',
-        },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = useDeleteAccountPOST(
+    { accountNumber, consumerNumber },
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -1027,13 +848,6 @@ export const FetchDeleteAccountPOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({ loading, data, error, refetchDeleteAccount: refetch });
 };
 
@@ -1055,25 +869,18 @@ export const downloadPOST = (Constants, _args, handlers = {}) =>
     }
   ).then(res => handleResponse(res, handlers));
 
-export const useDownloadPOST = () => {
+export const useDownloadPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPDownloadPOST', args],
+    () => downloadPOST(Constants, args, handlers),
     {
-      body: JSON.stringify({
-        action: 'UPLOAD_FORMS',
-        method: 'POST',
-        req: { action: 'UPLOAD_FORMS' },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () => queryClient.invalidateQueries(['cISAPPDownloadPOSTS']),
     }
   );
 };
@@ -1088,27 +895,14 @@ export const FetchDownloadPOST = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
-    {
-      body: JSON.stringify({
-        action: 'UPLOAD_FORMS',
-        method: 'POST',
-        req: { action: 'UPLOAD_FORMS' },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = useDownloadPOST(
+    {},
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -1123,14 +917,76 @@ export const FetchDownloadPOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({ loading, data, error, refetchDownload: refetch });
+};
+
+export const energyTipsPOST = (Constants, _args, handlers = {}) =>
+  fetch(
+    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
+    {
+      body: JSON.stringify({
+        action: 'ENERGYTIPS',
+        method: 'POST',
+        req: { action: 'ENERGYTIPS' },
+        auth: 'NO',
+      }),
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+    }
+  ).then(res => handleResponse(res, handlers));
+
+export const useEnergyTipsPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
+  const Constants = GlobalVariables.useValues();
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPEnergyTipsPOST', args],
+    () => energyTipsPOST(Constants, args, handlers),
+    {
+      refetchInterval,
+      onSuccess: () => queryClient.invalidateQueries(['cISAPPEnergyTipsPOSTS']),
+    }
+  );
+};
+
+export const FetchEnergyTipsPOST = ({
+  children,
+  onData = () => {},
+  handlers = {},
+  refetchInterval,
+}) => {
+  const Constants = GlobalVariables.useValues();
+  const isFocused = useIsFocused();
+  const prevIsFocused = usePrevious(isFocused);
+
+  const {
+    isLoading: loading,
+    data,
+    error,
+    refetch,
+  } = useEnergyTipsPOST(
+    {},
+    { refetchInterval, handlers: { onData, ...handlers } }
+  );
+
+  React.useEffect(() => {
+    if (!prevIsFocused && isFocused) {
+      refetch();
+    }
+  }, [isFocused, prevIsFocused]);
+
+  React.useEffect(() => {
+    if (error) {
+      console.error('Fetch error: ' + error.status + ' ' + error.statusText);
+      console.error(error);
+    }
+  }, [error]);
+  return children({ loading, data, error, refetchEnergyTips: refetch });
 };
 
 export const faqsPOST = (Constants, _args, handlers = {}) =>
@@ -1151,25 +1007,18 @@ export const faqsPOST = (Constants, _args, handlers = {}) =>
     }
   ).then(res => handleResponse(res, handlers));
 
-export const useFaqsPOST = () => {
+export const useFaqsPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPFaqsPOST', args],
+    () => faqsPOST(Constants, args, handlers),
     {
-      body: JSON.stringify({
-        action: 'FAQ',
-        method: 'POST',
-        req: { action: 'FAQ' },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () => queryClient.invalidateQueries(['cISAPPFaqsPOSTS']),
     }
   );
 };
@@ -1184,28 +1033,12 @@ export const FetchFaqsPOST = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
-    {
-      body: JSON.stringify({
-        action: 'FAQ',
-        method: 'POST',
-        req: { action: 'FAQ' },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
-  );
+    refetch,
+  } = useFaqsPOST({}, { refetchInterval, handlers: { onData, ...handlers } });
 
   React.useEffect(() => {
     if (!prevIsFocused && isFocused) {
@@ -1219,13 +1052,6 @@ export const FetchFaqsPOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({ loading, data, error, refetchFaqs: refetch });
 };
 
@@ -1257,31 +1083,18 @@ export const feedbackPOST = (
     }
   ).then(res => handleResponse(res, handlers));
 
-export const useFeedbackPOST = ({ email, name, response, suggestion }) => {
+export const useFeedbackPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPFeedbackPOST', args],
+    () => feedbackPOST(Constants, args, handlers),
     {
-      body: JSON.stringify({
-        action: 'saveFeedback',
-        method: 'POST',
-        req: {
-          name: name,
-          email: email,
-          suggestion: suggestion,
-          response: response,
-          action: 'saveFeedback',
-        },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () => queryClient.invalidateQueries(['cISAPPFeedbackPOSTS']),
     }
   );
 };
@@ -1300,33 +1113,14 @@ export const FetchFeedbackPOST = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
-    {
-      body: JSON.stringify({
-        action: 'saveFeedback',
-        method: 'POST',
-        req: {
-          name: name,
-          email: email,
-          suggestion: suggestion,
-          response: response,
-          action: 'saveFeedback',
-        },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = useFeedbackPOST(
+    { email, name, response, suggestion },
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -1341,13 +1135,6 @@ export const FetchFeedbackPOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({ loading, data, error, refetchFeedback: refetch });
 };
 
@@ -1369,25 +1156,19 @@ export const forgotpasswordPOST = (Constants, { accno }, handlers = {}) =>
     }
   ).then(res => handleResponse(res, handlers));
 
-export const useForgotpasswordPOST = ({ accno }) => {
+export const useForgotpasswordPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPForgotpasswordPOST', args],
+    () => forgotpasswordPOST(Constants, args, handlers),
     {
-      body: JSON.stringify({
-        action: 'forgotPassword',
-        method: 'POST',
-        req: { accno: accno, otp: '', type: 'EMAIL', action: 'forgotPassword' },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () =>
+        queryClient.invalidateQueries(['cISAPPForgotpasswordPOSTS']),
     }
   );
 };
@@ -1403,27 +1184,14 @@ export const FetchForgotpasswordPOST = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
-    {
-      body: JSON.stringify({
-        action: 'forgotPassword',
-        method: 'POST',
-        req: { accno: accno, otp: '', type: 'EMAIL', action: 'forgotPassword' },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = useForgotpasswordPOST(
+    { accno },
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -1438,13 +1206,6 @@ export const FetchForgotpasswordPOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({ loading, data, error, refetchForgotpassword: refetch });
 };
 
@@ -1470,25 +1231,19 @@ export const guestRaiseTicketSendOTPPOST = (
     }
   ).then(res => handleResponse(res, handlers));
 
-export const useGuestRaiseTicketSendOTPPOST = ({ accno }) => {
+export const useGuestRaiseTicketSendOTPPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPGuestRaiseTicketSendOTPPOST', args],
+    () => guestRaiseTicketSendOTPPOST(Constants, args, handlers),
     {
-      body: JSON.stringify({
-        action: 'sendEmailOTP',
-        method: 'POST',
-        req: { action: 'sendEmailOTP', accno: accno },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () =>
+        queryClient.invalidateQueries(['cISAPPGuestRaiseTicketSendOTPPOSTS']),
     }
   );
 };
@@ -1504,27 +1259,14 @@ export const FetchGuestRaiseTicketSendOTPPOST = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
-    {
-      body: JSON.stringify({
-        action: 'sendEmailOTP',
-        method: 'POST',
-        req: { action: 'sendEmailOTP', accno: accno },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = useGuestRaiseTicketSendOTPPOST(
+    { accno },
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -1539,13 +1281,6 @@ export const FetchGuestRaiseTicketSendOTPPOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({
     loading,
     data,
@@ -1576,25 +1311,21 @@ export const guestRaiseTicketAfterSendOTPPOST = (
     }
   ).then(res => handleResponse(res, handlers));
 
-export const useGuestRaiseTicketAfterSendOTPPOST = ({ otp, transid }) => {
+export const useGuestRaiseTicketAfterSendOTPPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPGuestRaiseTicketAfterSendOTPPOST', args],
+    () => guestRaiseTicketAfterSendOTPPOST(Constants, args, handlers),
     {
-      body: JSON.stringify({
-        action: 'validateOTP',
-        method: 'POST',
-        req: { action: 'validateOTP', transid: transid, otp: otp },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () =>
+        queryClient.invalidateQueries([
+          'cISAPPGuestRaiseTicketAfterSendOTPPOSTS',
+        ]),
     }
   );
 };
@@ -1611,27 +1342,14 @@ export const FetchGuestRaiseTicketAfterSendOTPPOST = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
-    {
-      body: JSON.stringify({
-        action: 'validateOTP',
-        method: 'POST',
-        req: { action: 'validateOTP', transid: transid, otp: otp },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = useGuestRaiseTicketAfterSendOTPPOST(
+    { otp, transid },
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -1646,13 +1364,6 @@ export const FetchGuestRaiseTicketAfterSendOTPPOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({
     loading,
     data,
@@ -1679,25 +1390,18 @@ export const languagePOST = (Constants, { action }, handlers = {}) =>
     }
   ).then(res => handleResponse(res, handlers));
 
-export const useLanguagePOST = ({ action }) => {
+export const useLanguagePOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPLanguagePOST', args],
+    () => languagePOST(Constants, args, handlers),
     {
-      body: JSON.stringify({
-        action: 'LANGUAGE',
-        method: 'POST',
-        req: { action: action },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () => queryClient.invalidateQueries(['cISAPPLanguagePOSTS']),
     }
   );
 };
@@ -1713,27 +1417,14 @@ export const FetchLanguagePOST = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
-    {
-      body: JSON.stringify({
-        action: 'LANGUAGE',
-        method: 'POST',
-        req: { action: action },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = useLanguagePOST(
+    { action },
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -1748,17 +1439,14 @@ export const FetchLanguagePOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({ loading, data, error, refetchLanguage: refetch });
 };
 
-export const loadPatternPOST = (Constants, { mtrno }, handlers = {}) =>
+export const loadPatternPOST = (
+  Constants,
+  { accountno, days, mtrno },
+  handlers = {}
+) =>
   fetch(
     `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
@@ -1768,11 +1456,11 @@ export const loadPatternPOST = (Constants, { mtrno }, handlers = {}) =>
         req: {
           action: 'loadPattern',
           mtrno: mtrno,
-          accountno: '258582414',
+          accountno: accountno,
           consType: 'PRE',
           contactedLoad: '5.00',
           loadUnit: 'kW',
-          days: '7',
+          days: days,
           metering_mode: 'NORMAL',
         },
         consType: 'PRE',
@@ -1786,35 +1474,19 @@ export const loadPatternPOST = (Constants, { mtrno }, handlers = {}) =>
     }
   ).then(res => handleResponse(res, handlers));
 
-export const useLoadPatternPOST = ({ mtrno }) => {
+export const useLoadPatternPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPLoadPatternPOST', args],
+    () => loadPatternPOST(Constants, args, handlers),
     {
-      body: JSON.stringify({
-        action: 'loadPattern',
-        method: 'POST',
-        req: {
-          action: 'loadPattern',
-          mtrno: mtrno,
-          accountno: '258582414',
-          consType: 'PRE',
-          contactedLoad: '5.00',
-          loadUnit: 'kW',
-          days: '7',
-          metering_mode: 'NORMAL',
-        },
-        consType: 'PRE',
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () =>
+        queryClient.invalidateQueries(['cISAPPLoadPatternPOSTS']),
     }
   );
 };
@@ -1824,43 +1496,22 @@ export const FetchLoadPatternPOST = ({
   onData = () => {},
   handlers = {},
   refetchInterval,
+  accountno,
+  days,
   mtrno,
 }) => {
   const Constants = GlobalVariables.useValues();
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
-    {
-      body: JSON.stringify({
-        action: 'loadPattern',
-        method: 'POST',
-        req: {
-          action: 'loadPattern',
-          mtrno: mtrno,
-          accountno: '258582414',
-          consType: 'PRE',
-          contactedLoad: '5.00',
-          loadUnit: 'kW',
-          days: '7',
-          metering_mode: 'NORMAL',
-        },
-        consType: 'PRE',
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = useLoadPatternPOST(
+    { accountno, days, mtrno },
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -1875,13 +1526,6 @@ export const FetchLoadPatternPOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({ loading, data, error, refetchLoadPattern: refetch });
 };
 
@@ -1903,25 +1547,18 @@ export const loginPOST = (Constants, { accountno, pwd }, handlers = {}) =>
     }
   ).then(res => handleResponse(res, handlers));
 
-export const useLoginPOST = ({ accountno, pwd }) => {
+export const useLoginPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPLoginPOST', args],
+    () => loginPOST(Constants, args, handlers),
     {
-      body: JSON.stringify({
-        action: 'Login',
-        method: 'POST',
-        req: { action: 'Login', accountno: accountno, pwd: pwd },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () => queryClient.invalidateQueries(['cISAPPLoginPOSTS']),
     }
   );
 };
@@ -1938,27 +1575,14 @@ export const FetchLoginPOST = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
-    {
-      body: JSON.stringify({
-        action: 'Login',
-        method: 'POST',
-        req: { action: 'Login', accountno: accountno, pwd: pwd },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = useLoginPOST(
+    { accountno, pwd },
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -1973,13 +1597,6 @@ export const FetchLoginPOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({ loading, data, error, refetchLogin: refetch });
 };
 
@@ -2001,25 +1618,19 @@ export const loginWithOTPPOST = (Constants, { accno }, handlers = {}) =>
     }
   ).then(res => handleResponse(res, handlers));
 
-export const useLoginWithOTPPOST = ({ accno }) => {
+export const useLoginWithOTPPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPLoginWithOTPPOST', args],
+    () => loginWithOTPPOST(Constants, args, handlers),
     {
-      body: JSON.stringify({
-        action: 'LoginWithOTP',
-        method: 'POST',
-        req: { accno: accno, action: 'LoginWithOTP', otp: '' },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () =>
+        queryClient.invalidateQueries(['cISAPPLoginWithOTPPOSTS']),
     }
   );
 };
@@ -2035,27 +1646,14 @@ export const FetchLoginWithOTPPOST = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
-    {
-      body: JSON.stringify({
-        action: 'LoginWithOTP',
-        method: 'POST',
-        req: { accno: accno, action: 'LoginWithOTP', otp: '' },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = useLoginWithOTPPOST(
+    { accno },
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -2070,13 +1668,6 @@ export const FetchLoginWithOTPPOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({ loading, data, error, refetchLoginWithOTP: refetch });
 };
 
@@ -2102,25 +1693,19 @@ export const manageAccountsPOST = (
     }
   ).then(res => handleResponse(res, handlers));
 
-export const useManageAccountsPOST = ({ accountNumber }) => {
+export const useManageAccountsPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPManageAccountsPOST', args],
+    () => manageAccountsPOST(Constants, args, handlers),
     {
-      body: JSON.stringify({
-        action: 'getAddedAccountList',
-        method: 'POST',
-        req: { accountNumber: accountNumber, action: 'getAddedAccountList' },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () =>
+        queryClient.invalidateQueries(['cISAPPManageAccountsPOSTS']),
     }
   );
 };
@@ -2136,27 +1721,14 @@ export const FetchManageAccountsPOST = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
-    {
-      body: JSON.stringify({
-        action: 'getAddedAccountList',
-        method: 'POST',
-        req: { accountNumber: accountNumber, action: 'getAddedAccountList' },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = useManageAccountsPOST(
+    { accountNumber },
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -2171,13 +1743,6 @@ export const FetchManageAccountsPOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({ loading, data, error, refetchManageAccounts: refetch });
 };
 
@@ -2199,25 +1764,19 @@ export const notificationsPOST = (Constants, _args, handlers = {}) =>
     }
   ).then(res => handleResponse(res, handlers));
 
-export const useNotificationsPOST = () => {
+export const useNotificationsPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPNotificationsPOST', args],
+    () => notificationsPOST(Constants, args, handlers),
     {
-      body: JSON.stringify({
-        action: 'NOTIFICATIONS',
-        method: 'POST',
-        req: { action: 'NOTIFICATIONS' },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () =>
+        queryClient.invalidateQueries(['cISAPPNotificationsPOSTS']),
     }
   );
 };
@@ -2232,27 +1791,14 @@ export const FetchNotificationsPOST = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
-    {
-      body: JSON.stringify({
-        action: 'NOTIFICATIONS',
-        method: 'POST',
-        req: { action: 'NOTIFICATIONS' },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = useNotificationsPOST(
+    {},
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -2267,13 +1813,6 @@ export const FetchNotificationsPOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({ loading, data, error, refetchNotifications: refetch });
 };
 
@@ -2308,41 +1847,19 @@ export const oTPEmailUpdatePOST = (
     }
   ).then(res => handleResponse(res, handlers));
 
-export const useOTPEmailUpdatePOST = ({
-  accno,
-  newEmail,
-  oldEmail,
-  otp,
-  txid,
-  userId,
-}) => {
+export const useOTPEmailUpdatePOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPOTPEmailUpdatePOST', args],
+    () => oTPEmailUpdatePOST(Constants, args, handlers),
     {
-      body: JSON.stringify({
-        action: 'UpdateEmail',
-        method: 'POST',
-        req: {
-          oldEmail: oldEmail,
-          newEmail: newEmail,
-          otp: otp,
-          accno: accno,
-          userId: userId,
-          type: 'UPDATEEMAIL',
-          action: 'UpdateEmail',
-          txid: txid,
-        },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () =>
+        queryClient.invalidateQueries(['cISAPPOTPEmailUpdatePOSTS']),
     }
   );
 };
@@ -2363,36 +1880,14 @@ export const FetchOTPEmailUpdatePOST = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
-    {
-      body: JSON.stringify({
-        action: 'UpdateEmail',
-        method: 'POST',
-        req: {
-          oldEmail: oldEmail,
-          newEmail: newEmail,
-          otp: otp,
-          accno: accno,
-          userId: userId,
-          type: 'UPDATEEMAIL',
-          action: 'UpdateEmail',
-          txid: txid,
-        },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = useOTPEmailUpdatePOST(
+    { accno, newEmail, oldEmail, otp, txid, userId },
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -2407,13 +1902,6 @@ export const FetchOTPEmailUpdatePOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({ loading, data, error, refetchOTPEmailUpdate: refetch });
 };
 
@@ -2448,41 +1936,19 @@ export const oTPMobileUpdatePOST = (
     }
   ).then(res => handleResponse(res, handlers));
 
-export const useOTPMobileUpdatePOST = ({
-  accno,
-  newMobile,
-  oldMobile,
-  otp,
-  txid,
-  userId,
-}) => {
+export const useOTPMobileUpdatePOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPOTPMobileUpdatePOST', args],
+    () => oTPMobileUpdatePOST(Constants, args, handlers),
     {
-      body: JSON.stringify({
-        action: 'UpdateMobile',
-        method: 'POST',
-        req: {
-          action: 'UpdateMobile',
-          newMobile: newMobile,
-          oldMobile: oldMobile,
-          otp: otp,
-          accno: accno,
-          userId: userId,
-          type: 'UPDATEMOBILE',
-          txid: txid,
-        },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () =>
+        queryClient.invalidateQueries(['cISAPPOTPMobileUpdatePOSTS']),
     }
   );
 };
@@ -2503,36 +1969,14 @@ export const FetchOTPMobileUpdatePOST = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
-    {
-      body: JSON.stringify({
-        action: 'UpdateMobile',
-        method: 'POST',
-        req: {
-          action: 'UpdateMobile',
-          newMobile: newMobile,
-          oldMobile: oldMobile,
-          otp: otp,
-          accno: accno,
-          userId: userId,
-          type: 'UPDATEMOBILE',
-          txid: txid,
-        },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = useOTPMobileUpdatePOST(
+    { accno, newMobile, oldMobile, otp, txid, userId },
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -2547,13 +1991,6 @@ export const FetchOTPMobileUpdatePOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({ loading, data, error, refetchOTPMobileUpdate: refetch });
 };
 
@@ -2564,7 +2001,6 @@ export const payemntServicePOST = (
     amount,
     billid,
     consid,
-    email,
     from,
     gateway,
     mobile,
@@ -2584,7 +2020,7 @@ export const payemntServicePOST = (
         method: 'POST',
         req: {
           action: 'callPgRequest',
-          email: email,
+          email: '',
           accno: accno,
           mobile: mobile,
           amount: amount,
@@ -2609,55 +2045,19 @@ export const payemntServicePOST = (
     }
   ).then(res => handleResponse(res, handlers));
 
-export const usePayemntServicePOST = ({
-  accno,
-  amount,
-  billid,
-  consid,
-  email,
-  from,
-  gateway,
-  mobile,
-  name,
-  officeName,
-  officeid,
-  scno,
-  ucode,
-}) => {
+export const usePayemntServicePOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPPayemntServicePOST', args],
+    () => payemntServicePOST(Constants, args, handlers),
     {
-      body: JSON.stringify({
-        action: 'callPgRequest',
-        method: 'POST',
-        req: {
-          action: 'callPgRequest',
-          email: email,
-          accno: accno,
-          mobile: mobile,
-          amount: amount,
-          scno: scno,
-          consid: consid,
-          name: name,
-          billid: billid,
-          ucode: ucode,
-          officeid: officeid,
-          officeName: officeName,
-          from: from,
-          paymentType: 'POST',
-          gateway: gateway,
-        },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () =>
+        queryClient.invalidateQueries(['cISAPPPayemntServicePOSTS']),
     }
   );
 };
@@ -2671,7 +2071,6 @@ export const FetchPayemntServicePOST = ({
   amount,
   billid,
   consid,
-  email,
   from,
   gateway,
   mobile,
@@ -2685,43 +2084,27 @@ export const FetchPayemntServicePOST = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+    refetch,
+  } = usePayemntServicePOST(
     {
-      body: JSON.stringify({
-        action: 'callPgRequest',
-        method: 'POST',
-        req: {
-          action: 'callPgRequest',
-          email: email,
-          accno: accno,
-          mobile: mobile,
-          amount: amount,
-          scno: scno,
-          consid: consid,
-          name: name,
-          billid: billid,
-          ucode: ucode,
-          officeid: officeid,
-          officeName: officeName,
-          from: from,
-          paymentType: 'POST',
-          gateway: gateway,
-        },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+      accno,
+      amount,
+      billid,
+      consid,
+      from,
+      gateway,
+      mobile,
+      name,
+      officeName,
+      officeid,
+      scno,
+      ucode,
+    },
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -2736,17 +2119,14 @@ export const FetchPayemntServicePOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({ loading, data, error, refetchPayemntService: refetch });
 };
 
-export const powerQualityCurrentPOST = (Constants, { mtrno }, handlers = {}) =>
+export const powerQualityCurrentPOST = (
+  Constants,
+  { accountno, days, mtrno },
+  handlers = {}
+) =>
   fetch(
     `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
     {
@@ -2756,8 +2136,8 @@ export const powerQualityCurrentPOST = (Constants, { mtrno }, handlers = {}) =>
         req: {
           action: 'PQCURRENT',
           mtrno: mtrno,
-          accountno: '258951461',
-          days: '30',
+          accountno: accountno,
+          days: days,
         },
         consType: 'PRE',
         auth: 'NO',
@@ -2770,31 +2150,19 @@ export const powerQualityCurrentPOST = (Constants, { mtrno }, handlers = {}) =>
     }
   ).then(res => handleResponse(res, handlers));
 
-export const usePowerQualityCurrentPOST = ({ mtrno }) => {
+export const usePowerQualityCurrentPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPPowerQualityCurrentPOST', args],
+    () => powerQualityCurrentPOST(Constants, args, handlers),
     {
-      body: JSON.stringify({
-        action: 'PQCURRENT',
-        method: 'POST',
-        req: {
-          action: 'PQCURRENT',
-          mtrno: mtrno,
-          accountno: '258951461',
-          days: '30',
-        },
-        consType: 'PRE',
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () =>
+        queryClient.invalidateQueries(['cISAPPPowerQualityCurrentPOSTS']),
     }
   );
 };
@@ -2804,39 +2172,22 @@ export const FetchPowerQualityCurrentPOST = ({
   onData = () => {},
   handlers = {},
   refetchInterval,
+  accountno,
+  days,
   mtrno,
 }) => {
   const Constants = GlobalVariables.useValues();
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
-    {
-      body: JSON.stringify({
-        action: 'PQCURRENT',
-        method: 'POST',
-        req: {
-          action: 'PQCURRENT',
-          mtrno: mtrno,
-          accountno: '258951461',
-          days: '30',
-        },
-        consType: 'PRE',
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = usePowerQualityCurrentPOST(
+    { accountno, days, mtrno },
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -2851,13 +2202,6 @@ export const FetchPowerQualityCurrentPOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({
     loading,
     data,
@@ -2868,7 +2212,7 @@ export const FetchPowerQualityCurrentPOST = ({
 
 export const powerQualityPowerFactorPOST = (
   Constants,
-  { mtrno },
+  { accountno, days, mtrno },
   handlers = {}
 ) =>
   fetch(
@@ -2880,8 +2224,8 @@ export const powerQualityPowerFactorPOST = (
         req: {
           action: 'AVGPF',
           mtrno: mtrno,
-          accountno: '258951461',
-          days: '30',
+          accountno: accountno,
+          days: days,
         },
         consType: 'PRE',
         auth: 'NO',
@@ -2894,31 +2238,19 @@ export const powerQualityPowerFactorPOST = (
     }
   ).then(res => handleResponse(res, handlers));
 
-export const usePowerQualityPowerFactorPOST = ({ mtrno }) => {
+export const usePowerQualityPowerFactorPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPPowerQualityPowerFactorPOST', args],
+    () => powerQualityPowerFactorPOST(Constants, args, handlers),
     {
-      body: JSON.stringify({
-        action: 'AVGPF',
-        method: 'POST',
-        req: {
-          action: 'AVGPF',
-          mtrno: mtrno,
-          accountno: '258951461',
-          days: '30',
-        },
-        consType: 'PRE',
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () =>
+        queryClient.invalidateQueries(['cISAPPPowerQualityPowerFactorPOSTS']),
     }
   );
 };
@@ -2928,39 +2260,22 @@ export const FetchPowerQualityPowerFactorPOST = ({
   onData = () => {},
   handlers = {},
   refetchInterval,
+  accountno,
+  days,
   mtrno,
 }) => {
   const Constants = GlobalVariables.useValues();
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
-    {
-      body: JSON.stringify({
-        action: 'AVGPF',
-        method: 'POST',
-        req: {
-          action: 'AVGPF',
-          mtrno: mtrno,
-          accountno: '258951461',
-          days: '30',
-        },
-        consType: 'PRE',
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = usePowerQualityPowerFactorPOST(
+    { accountno, days, mtrno },
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -2975,13 +2290,6 @@ export const FetchPowerQualityPowerFactorPOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({
     loading,
     data,
@@ -2990,7 +2298,11 @@ export const FetchPowerQualityPowerFactorPOST = ({
   });
 };
 
-export const powerQualityVoltagePOST = (Constants, { mtrno }, handlers = {}) =>
+export const powerQualityVoltagePOST = (
+  Constants,
+  { accountno, days, mtrno },
+  handlers = {}
+) =>
   fetch(
     `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
@@ -3000,8 +2312,8 @@ export const powerQualityVoltagePOST = (Constants, { mtrno }, handlers = {}) =>
         req: {
           action: 'PQVoltage',
           mtrno: mtrno,
-          accountno: '258951461',
-          days: '30',
+          accountno: accountno,
+          days: days,
         },
         consType: 'PRE',
         auth: 'NO',
@@ -3014,31 +2326,19 @@ export const powerQualityVoltagePOST = (Constants, { mtrno }, handlers = {}) =>
     }
   ).then(res => handleResponse(res, handlers));
 
-export const usePowerQualityVoltagePOST = ({ mtrno }) => {
+export const usePowerQualityVoltagePOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPPowerQualityVoltagePOST', args],
+    () => powerQualityVoltagePOST(Constants, args, handlers),
     {
-      body: JSON.stringify({
-        action: 'PQVoltage',
-        method: 'POST',
-        req: {
-          action: 'PQVoltage',
-          mtrno: mtrno,
-          accountno: '258951461',
-          days: '30',
-        },
-        consType: 'PRE',
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () =>
+        queryClient.invalidateQueries(['cISAPPPowerQualityVoltagePOSTS']),
     }
   );
 };
@@ -3048,39 +2348,22 @@ export const FetchPowerQualityVoltagePOST = ({
   onData = () => {},
   handlers = {},
   refetchInterval,
+  accountno,
+  days,
   mtrno,
 }) => {
   const Constants = GlobalVariables.useValues();
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
-    {
-      body: JSON.stringify({
-        action: 'PQVoltage',
-        method: 'POST',
-        req: {
-          action: 'PQVoltage',
-          mtrno: mtrno,
-          accountno: '258951461',
-          days: '30',
-        },
-        consType: 'PRE',
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = usePowerQualityVoltagePOST(
+    { accountno, days, mtrno },
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -3095,19 +2378,82 @@ export const FetchPowerQualityVoltagePOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({
     loading,
     data,
     error,
     refetchPowerQualityVoltage: refetch,
   });
+};
+
+export const privacyPoliciesPOST = (Constants, _args, handlers = {}) =>
+  fetch(
+    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
+    {
+      body: JSON.stringify({
+        action: 'PRIVACYPOLICIES',
+        method: 'POST',
+        req: { action: 'PRIVACYPOLICIES' },
+        auth: 'NO',
+      }),
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+    }
+  ).then(res => handleResponse(res, handlers));
+
+export const usePrivacyPoliciesPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
+  const Constants = GlobalVariables.useValues();
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPPrivacyPoliciesPOST', args],
+    () => privacyPoliciesPOST(Constants, args, handlers),
+    {
+      refetchInterval,
+      onSuccess: () =>
+        queryClient.invalidateQueries(['cISAPPPrivacyPoliciesPOSTS']),
+    }
+  );
+};
+
+export const FetchPrivacyPoliciesPOST = ({
+  children,
+  onData = () => {},
+  handlers = {},
+  refetchInterval,
+}) => {
+  const Constants = GlobalVariables.useValues();
+  const isFocused = useIsFocused();
+  const prevIsFocused = usePrevious(isFocused);
+
+  const {
+    isLoading: loading,
+    data,
+    error,
+    refetch,
+  } = usePrivacyPoliciesPOST(
+    {},
+    { refetchInterval, handlers: { onData, ...handlers } }
+  );
+
+  React.useEffect(() => {
+    if (!prevIsFocused && isFocused) {
+      refetch();
+    }
+  }, [isFocused, prevIsFocused]);
+
+  React.useEffect(() => {
+    if (error) {
+      console.error('Fetch error: ' + error.status + ' ' + error.statusText);
+      console.error(error);
+    }
+  }, [error]);
+  return children({ loading, data, error, refetchPrivacyPolicies: refetch });
 };
 
 export const rechargeHistoryPrepaidPOST = (
@@ -3133,26 +2479,19 @@ export const rechargeHistoryPrepaidPOST = (
     }
   ).then(res => handleResponse(res, handlers));
 
-export const useRechargeHistoryPrepaidPOST = ({ action }) => {
+export const useRechargeHistoryPrepaidPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPRechargeHistoryPrepaidPOST', args],
+    () => rechargeHistoryPrepaidPOST(Constants, args, handlers),
     {
-      body: JSON.stringify({
-        action: action,
-        method: 'GET',
-        auth: 'TOKEN',
-        baseUrlName: '',
-        environmentName: 'SPM_ADANI',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () =>
+        queryClient.invalidateQueries(['cISAPPRechargeHistoryPrepaidPOSTS']),
     }
   );
 };
@@ -3168,28 +2507,14 @@ export const FetchRechargeHistoryPrepaidPOST = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
-    {
-      body: JSON.stringify({
-        action: action,
-        method: 'GET',
-        auth: 'TOKEN',
-        baseUrlName: '',
-        environmentName: 'SPM_ADANI',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = useRechargeHistoryPrepaidPOST(
+    { action },
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -3204,13 +2529,6 @@ export const FetchRechargeHistoryPrepaidPOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({
     loading,
     data,
@@ -3255,39 +2573,18 @@ export const registeredPOST = (
     }
   ).then(res => handleResponse(res, handlers));
 
-export const useRegisteredPOST = ({ accno, email, mobilenumber, password }) => {
+export const useRegisteredPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPRegisteredPOST', args],
+    () => registeredPOST(Constants, args, handlers),
     {
-      body: JSON.stringify({
-        action: 'createWssUser',
-        method: 'POST',
-        req: {
-          action: 'createWssUser',
-          mobilenumber: mobilenumber,
-          accno: accno,
-          address: null,
-          billgroup: null,
-          caNumber: null,
-          email: email,
-          firstName: null,
-          lastName: null,
-          password: password,
-          role: 'consumer',
-          otp: '',
-          type: 'REGISTRATION',
-        },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () => queryClient.invalidateQueries(['cISAPPRegisteredPOSTS']),
     }
   );
 };
@@ -3306,41 +2603,14 @@ export const FetchRegisteredPOST = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
-    {
-      body: JSON.stringify({
-        action: 'createWssUser',
-        method: 'POST',
-        req: {
-          action: 'createWssUser',
-          mobilenumber: mobilenumber,
-          accno: accno,
-          address: null,
-          billgroup: null,
-          caNumber: null,
-          email: email,
-          firstName: null,
-          lastName: null,
-          password: password,
-          role: 'consumer',
-          otp: '',
-          type: 'REGISTRATION',
-        },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = useRegisteredPOST(
+    { accno, email, mobilenumber, password },
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -3355,13 +2625,6 @@ export const FetchRegisteredPOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({ loading, data, error, refetchRegistered: refetch });
 };
 
@@ -3396,38 +2659,19 @@ export const serviceRequestSavePOST = (
     }
   ).then(res => handleResponse(res, handlers));
 
-export const useServiceRequestSavePOST = ({
-  requestDetails,
-  requestnatureId,
-  scNo,
-}) => {
+export const useServiceRequestSavePOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPServiceRequestSavePOST', args],
+    () => serviceRequestSavePOST(Constants, args, handlers),
     {
-      body: JSON.stringify({
-        action: 'csc/rest/RequestTCommercialsave',
-        method: 'POST',
-        req: {
-          requestnatureId: requestnatureId,
-          scNo: scNo,
-          requestDetails: requestDetails,
-          newOwnerName: '',
-          newOwnerFname: '',
-          newOwnerphone: '',
-          newOwnerEmail: '',
-          newCat: '',
-        },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () =>
+        queryClient.invalidateQueries(['cISAPPServiceRequestSavePOSTS']),
     }
   );
 };
@@ -3445,36 +2689,14 @@ export const FetchServiceRequestSavePOST = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
-    {
-      body: JSON.stringify({
-        action: 'csc/rest/RequestTCommercialsave',
-        method: 'POST',
-        req: {
-          requestnatureId: requestnatureId,
-          scNo: scNo,
-          requestDetails: requestDetails,
-          newOwnerName: '',
-          newOwnerFname: '',
-          newOwnerphone: '',
-          newOwnerEmail: '',
-          newCat: '',
-        },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = useServiceRequestSavePOST(
+    { requestDetails, requestnatureId, scNo },
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -3489,13 +2711,6 @@ export const FetchServiceRequestSavePOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({ loading, data, error, refetchServiceRequestSave: refetch });
 };
 
@@ -3516,24 +2731,19 @@ export const serviceRequestCategoryPOST = (Constants, _args, handlers = {}) =>
     }
   ).then(res => handleResponse(res, handlers));
 
-export const useServiceRequestCategoryPOST = () => {
+export const useServiceRequestCategoryPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPServiceRequestCategoryPOST', args],
+    () => serviceRequestCategoryPOST(Constants, args, handlers),
     {
-      body: JSON.stringify({
-        action: 'csc/rest/RequestTypeCommercial/',
-        method: 'GET',
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () =>
+        queryClient.invalidateQueries(['cISAPPServiceRequestCategoryPOSTS']),
     }
   );
 };
@@ -3548,26 +2758,14 @@ export const FetchServiceRequestCategoryPOST = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
-    {
-      body: JSON.stringify({
-        action: 'csc/rest/RequestTypeCommercial/',
-        method: 'GET',
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = useServiceRequestCategoryPOST(
+    {},
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -3582,13 +2780,6 @@ export const FetchServiceRequestCategoryPOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({
     loading,
     data,
@@ -3627,33 +2818,19 @@ export const updateEmailPOST = (
     }
   ).then(res => handleResponse(res, handlers));
 
-export const useUpdateEmailPOST = ({ accno, newEmail, oldEmail, userId }) => {
+export const useUpdateEmailPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPUpdateEmailPOST', args],
+    () => updateEmailPOST(Constants, args, handlers),
     {
-      body: JSON.stringify({
-        action: 'UpdateEmail',
-        method: 'POST',
-        req: {
-          oldEmail: oldEmail,
-          newEmail: newEmail,
-          otp: '',
-          accno: accno,
-          userId: userId,
-          type: 'UPDATEEMAIL',
-          action: 'UpdateEmail',
-        },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () =>
+        queryClient.invalidateQueries(['cISAPPUpdateEmailPOSTS']),
     }
   );
 };
@@ -3672,35 +2849,14 @@ export const FetchUpdateEmailPOST = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
-    {
-      body: JSON.stringify({
-        action: 'UpdateEmail',
-        method: 'POST',
-        req: {
-          oldEmail: oldEmail,
-          newEmail: newEmail,
-          otp: '',
-          accno: accno,
-          userId: userId,
-          type: 'UPDATEEMAIL',
-          action: 'UpdateEmail',
-        },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = useUpdateEmailPOST(
+    { accno, newEmail, oldEmail, userId },
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -3715,13 +2871,6 @@ export const FetchUpdateEmailPOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({ loading, data, error, refetchUpdateEmail: refetch });
 };
 
@@ -3755,38 +2904,19 @@ export const updateProfileMobileNumberPOST = (
     }
   ).then(res => handleResponse(res, handlers));
 
-export const useUpdateProfileMobileNumberPOST = ({
-  accno,
-  newMobile,
-  oldMobile,
-  userId,
-}) => {
+export const useUpdateProfileMobileNumberPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPUpdateProfileMobileNumberPOST', args],
+    () => updateProfileMobileNumberPOST(Constants, args, handlers),
     {
-      body: JSON.stringify({
-        action: 'UpdateMobile',
-        method: 'POST',
-        req: {
-          action: 'UpdateMobile',
-          newMobile: newMobile,
-          oldMobile: oldMobile,
-          otp: '',
-          accno: accno,
-          userId: userId,
-          type: 'UPDATEMOBILE',
-        },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () =>
+        queryClient.invalidateQueries(['cISAPPUpdateProfileMobileNumberPOSTS']),
     }
   );
 };
@@ -3805,35 +2935,14 @@ export const FetchUpdateProfileMobileNumberPOST = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
-    {
-      body: JSON.stringify({
-        action: 'UpdateMobile',
-        method: 'POST',
-        req: {
-          action: 'UpdateMobile',
-          newMobile: newMobile,
-          oldMobile: oldMobile,
-          otp: '',
-          accno: accno,
-          userId: userId,
-          type: 'UPDATEMOBILE',
-        },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = useUpdateProfileMobileNumberPOST(
+    { accno, newMobile, oldMobile, userId },
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -3848,13 +2957,6 @@ export const FetchUpdateProfileMobileNumberPOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({
     loading,
     data,
@@ -3876,20 +2978,19 @@ export const viewBillDetailsPOST = (Constants, { action }, handlers = {}) =>
     }
   ).then(res => handleResponse(res, handlers));
 
-export const useViewBillDetailsPOST = ({ action }) => {
+export const useViewBillDetailsPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPViewBillDetailsPOST', args],
+    () => viewBillDetailsPOST(Constants, args, handlers),
     {
-      body: JSON.stringify({ action: action, method: 'GET', auth: 'NO' }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () =>
+        queryClient.invalidateQueries(['cISAPPViewBillDetailsPOSTS']),
     }
   );
 };
@@ -3905,22 +3006,14 @@ export const FetchViewBillDetailsPOST = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
-    {
-      body: JSON.stringify({ action: action, method: 'GET', auth: 'NO' }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = useViewBillDetailsPOST(
+    { action },
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -3935,13 +3028,6 @@ export const FetchViewBillDetailsPOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({ loading, data, error, refetchViewBillDetails: refetch });
 };
 
@@ -3974,37 +3060,21 @@ export const addAccountConfirmOTPForNewScnoAddingPOST = (
     }
   ).then(res => handleResponse(res, handlers));
 
-export const useAddAccountConfirmOTPForNewScnoAddingPOST = ({
-  existAcct,
-  newAcct,
-  otp,
-  txid,
-}) => {
+export const useAddAccountConfirmOTPForNewScnoAddingPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPAddAccountConfirmOTPForNewScnoAddingPOST', args],
+    () => addAccountConfirmOTPForNewScnoAddingPOST(Constants, args, handlers),
     {
-      body: JSON.stringify({
-        action: 'WssAddAccount',
-        method: 'POST',
-        req: {
-          newAcct: newAcct,
-          existAcct: existAcct,
-          otp: otp,
-          txid: txid,
-          type: 'EMAIL',
-          action: 'WssAddAccount',
-        },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () =>
+        queryClient.invalidateQueries([
+          'cISAPPAddAccountConfirmOTPForNewScnoAddingPOSTS',
+        ]),
     }
   );
 };
@@ -4023,34 +3093,14 @@ export const FetchAddAccountConfirmOTPForNewScnoAddingPOST = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
-    {
-      body: JSON.stringify({
-        action: 'WssAddAccount',
-        method: 'POST',
-        req: {
-          newAcct: newAcct,
-          existAcct: existAcct,
-          otp: otp,
-          txid: txid,
-          type: 'EMAIL',
-          action: 'WssAddAccount',
-        },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = useAddAccountConfirmOTPForNewScnoAddingPOST(
+    { existAcct, newAcct, otp, txid },
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -4065,13 +3115,6 @@ export const FetchAddAccountConfirmOTPForNewScnoAddingPOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({
     loading,
     data,
@@ -4108,31 +3151,21 @@ export const addServiceConnectionAccountPOST = (
     }
   ).then(res => handleResponse(res, handlers));
 
-export const useAddServiceConnectionAccountPOST = ({ existAcct, newAcct }) => {
+export const useAddServiceConnectionAccountPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPAddServiceConnectionAccountPOST', args],
+    () => addServiceConnectionAccountPOST(Constants, args, handlers),
     {
-      body: JSON.stringify({
-        action: 'WssAddAccount',
-        method: 'POST',
-        req: {
-          newAcct: newAcct,
-          existAcct: existAcct,
-          otp: '',
-          type: 'EMAIL',
-          action: 'WssAddAccount',
-        },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () =>
+        queryClient.invalidateQueries([
+          'cISAPPAddServiceConnectionAccountPOSTS',
+        ]),
     }
   );
 };
@@ -4149,33 +3182,14 @@ export const FetchAddServiceConnectionAccountPOST = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
-    {
-      body: JSON.stringify({
-        action: 'WssAddAccount',
-        method: 'POST',
-        req: {
-          newAcct: newAcct,
-          existAcct: existAcct,
-          otp: '',
-          type: 'EMAIL',
-          action: 'WssAddAccount',
-        },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = useAddServiceConnectionAccountPOST(
+    { existAcct, newAcct },
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -4190,13 +3204,6 @@ export const FetchAddServiceConnectionAccountPOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({
     loading,
     data,
@@ -4234,32 +3241,19 @@ export const confirmOTPscreenPOST = (
     }
   ).then(res => handleResponse(res, handlers));
 
-export const useConfirmOTPscreenPOST = ({ otp, transid }) => {
+export const useConfirmOTPscreenPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPConfirmOTPscreenPOST', args],
+    () => confirmOTPscreenPOST(Constants, args, handlers),
     {
-      body: JSON.stringify({
-        action: 'forgotPassword',
-        method: 'POST',
-        req: {
-          accno: '341201210711',
-          otp: otp,
-          type: 'EMAIL',
-          action: 'forgotPassword',
-          transid: transid,
-          newPassword: 'Test@1234444',
-        },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () =>
+        queryClient.invalidateQueries(['cISAPPConfirmOTPscreenPOSTS']),
     }
   );
 };
@@ -4276,34 +3270,14 @@ export const FetchConfirmOTPscreenPOST = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
-    {
-      body: JSON.stringify({
-        action: 'forgotPassword',
-        method: 'POST',
-        req: {
-          accno: '341201210711',
-          otp: otp,
-          type: 'EMAIL',
-          action: 'forgotPassword',
-          transid: transid,
-          newPassword: 'Test@1234444',
-        },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = useConfirmOTPscreenPOST(
+    { otp, transid },
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -4318,13 +3292,6 @@ export const FetchConfirmOTPscreenPOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({ loading, data, error, refetchConfirmOTPscreen: refetch });
 };
 
@@ -4341,20 +3308,19 @@ export const consumerDetailsPOST = (Constants, { action }, handlers = {}) =>
     }
   ).then(res => handleResponse(res, handlers));
 
-export const useConsumerDetailsPOST = ({ action }) => {
+export const useConsumerDetailsPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPConsumerDetailsPOST', args],
+    () => consumerDetailsPOST(Constants, args, handlers),
     {
-      body: JSON.stringify({ action: action, method: 'GET', auth: 'NO' }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () =>
+        queryClient.invalidateQueries(['cISAPPConsumerDetailsPOSTS']),
     }
   );
 };
@@ -4370,22 +3336,14 @@ export const FetchConsumerDetailsPOST = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
-    {
-      body: JSON.stringify({ action: action, method: 'GET', auth: 'NO' }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = useConsumerDetailsPOST(
+    { action },
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -4400,13 +3358,6 @@ export const FetchConsumerDetailsPOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({ loading, data, error, refetchConsumerDetails: refetch });
 };
 
@@ -4428,25 +3379,19 @@ export const getticketdeatilsPOST = (Constants, { consId }, handlers = {}) =>
     }
   ).then(res => handleResponse(res, handlers));
 
-export const useGetticketdeatilsPOST = ({ consId }) => {
+export const useGetticketdeatilsPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPGetticketdeatilsPOST', args],
+    () => getticketdeatilsPOST(Constants, args, handlers),
     {
-      body: JSON.stringify({
-        action: 'getAllTickets',
-        method: 'POST',
-        req: { consId: consId, action: 'getAllTickets' },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () =>
+        queryClient.invalidateQueries(['cISAPPGetticketdeatilsPOSTS']),
     }
   );
 };
@@ -4462,27 +3407,14 @@ export const FetchGetticketdeatilsPOST = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
-    {
-      body: JSON.stringify({
-        action: 'getAllTickets',
-        method: 'POST',
-        req: { consId: consId, action: 'getAllTickets' },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = useGetticketdeatilsPOST(
+    { consId },
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -4497,14 +3429,82 @@ export const FetchGetticketdeatilsPOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({ loading, data, error, refetchGetticketdeatils: refetch });
+};
+
+export const getticketstatusPOST = (
+  Constants,
+  { ticketNumber },
+  handlers = {}
+) =>
+  fetch(
+    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+    {
+      body: JSON.stringify({
+        action: 'getTicketStatus',
+        method: 'POST',
+        req: { ticketNumber: ticketNumber, action: 'getTicketStatus' },
+        auth: 'NO',
+      }),
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+    }
+  ).then(res => handleResponse(res, handlers));
+
+export const useGetticketstatusPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
+  const Constants = GlobalVariables.useValues();
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPGetticketstatusPOST', args],
+    () => getticketstatusPOST(Constants, args, handlers),
+    {
+      refetchInterval,
+      onSuccess: () =>
+        queryClient.invalidateQueries(['cISAPPGetticketstatusPOSTS']),
+    }
+  );
+};
+
+export const FetchGetticketstatusPOST = ({
+  children,
+  onData = () => {},
+  handlers = {},
+  refetchInterval,
+  ticketNumber,
+}) => {
+  const Constants = GlobalVariables.useValues();
+  const isFocused = useIsFocused();
+  const prevIsFocused = usePrevious(isFocused);
+
+  const {
+    isLoading: loading,
+    data,
+    error,
+    refetch,
+  } = useGetticketstatusPOST(
+    { ticketNumber },
+    { refetchInterval, handlers: { onData, ...handlers } }
+  );
+
+  React.useEffect(() => {
+    if (!prevIsFocused && isFocused) {
+      refetch();
+    }
+  }, [isFocused, prevIsFocused]);
+
+  React.useEffect(() => {
+    if (error) {
+      console.error('Fetch error: ' + error.status + ' ' + error.statusText);
+      console.error(error);
+    }
+  }, [error]);
+  return children({ loading, data, error, refetchGetticketstatus: refetch });
 };
 
 export const loginConfirmOTPPOST = (
@@ -4534,30 +3534,19 @@ export const loginConfirmOTPPOST = (
     }
   ).then(res => handleResponse(res, handlers));
 
-export const useLoginConfirmOTPPOST = ({ accno, otp, transid }) => {
+export const useLoginConfirmOTPPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPLoginConfirmOTPPOST', args],
+    () => loginConfirmOTPPOST(Constants, args, handlers),
     {
-      body: JSON.stringify({
-        action: 'LoginWithOTP',
-        method: 'POST',
-        req: {
-          accno: accno,
-          action: 'LoginWithOTP',
-          otp: otp,
-          transid: transid,
-        },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () =>
+        queryClient.invalidateQueries(['cISAPPLoginConfirmOTPPOSTS']),
     }
   );
 };
@@ -4575,32 +3564,14 @@ export const FetchLoginConfirmOTPPOST = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
-    {
-      body: JSON.stringify({
-        action: 'LoginWithOTP',
-        method: 'POST',
-        req: {
-          accno: accno,
-          action: 'LoginWithOTP',
-          otp: otp,
-          transid: transid,
-        },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = useLoginConfirmOTPPOST(
+    { accno, otp, transid },
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -4615,13 +3586,6 @@ export const FetchLoginConfirmOTPPOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({ loading, data, error, refetchLoginConfirmOTP: refetch });
 };
 
@@ -4643,25 +3607,19 @@ export const paymentGatewayPOST = (Constants, _args, handlers = {}) =>
     }
   ).then(res => handleResponse(res, handlers));
 
-export const usePaymentGatewayPOST = () => {
+export const usePaymentGatewayPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPPaymentGatewayPOST', args],
+    () => paymentGatewayPOST(Constants, args, handlers),
     {
-      body: JSON.stringify({
-        action: 'PAYMENT_CONFIG',
-        method: 'POST',
-        req: { action: 'PAYMENT_CONFIG' },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () =>
+        queryClient.invalidateQueries(['cISAPPPaymentGatewayPOSTS']),
     }
   );
 };
@@ -4676,27 +3634,14 @@ export const FetchPaymentGatewayPOST = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
-    {
-      body: JSON.stringify({
-        action: 'PAYMENT_CONFIG',
-        method: 'POST',
-        req: { action: 'PAYMENT_CONFIG' },
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = usePaymentGatewayPOST(
+    {},
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -4711,13 +3656,6 @@ export const FetchPaymentGatewayPOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({ loading, data, error, refetchPaymentGateway: refetch });
 };
 
@@ -4734,20 +3672,19 @@ export const paymentHistoryPOST = (Constants, { action }, handlers = {}) =>
     }
   ).then(res => handleResponse(res, handlers));
 
-export const usePaymentHistoryPOST = ({ action }) => {
+export const usePaymentHistoryPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPPaymentHistoryPOST', args],
+    () => paymentHistoryPOST(Constants, args, handlers),
     {
-      body: JSON.stringify({ action: action, method: 'GET', auth: 'NO' }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () =>
+        queryClient.invalidateQueries(['cISAPPPaymentHistoryPOSTS']),
     }
   );
 };
@@ -4763,22 +3700,14 @@ export const FetchPaymentHistoryPOST = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
-    {
-      body: JSON.stringify({ action: action, method: 'GET', auth: 'NO' }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = usePaymentHistoryPOST(
+    { action },
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -4793,13 +3722,6 @@ export const FetchPaymentHistoryPOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({ loading, data, error, refetchPaymentHistory: refetch });
 };
 
@@ -4822,26 +3744,18 @@ export const prepaidApiPOST = (Constants, { mtrno }, handlers = {}) =>
     }
   ).then(res => handleResponse(res, handlers));
 
-export const usePrepaidApiPOST = ({ mtrno }) => {
+export const usePrepaidApiPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
   const Constants = GlobalVariables.useValues();
-  const isFocused = useIsFocused();
-
-  return useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPPrepaidApiPOST', args],
+    () => prepaidApiPOST(Constants, args, handlers),
     {
-      body: JSON.stringify({
-        action: 'ProfileBasicDetails',
-        method: 'POST',
-        req: { action: 'ProfileBasicDetails', mtrno: mtrno },
-        consType: 'PRE',
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+      refetchInterval,
+      onSuccess: () => queryClient.invalidateQueries(['cISAPPPrepaidApiPOSTS']),
     }
   );
 };
@@ -4857,28 +3771,14 @@ export const FetchPrepaidApiPOST = ({
   const isFocused = useIsFocused();
   const prevIsFocused = usePrevious(isFocused);
 
-  const refetch = () => {};
   const {
     isLoading: loading,
     data,
     error,
-  } = useFetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
-    {
-      body: JSON.stringify({
-        action: 'ProfileBasicDetails',
-        method: 'POST',
-        req: { action: 'ProfileBasicDetails', mtrno: mtrno },
-        consType: 'PRE',
-        auth: 'NO',
-      }),
-      depends: [isFocused],
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
+    refetch,
+  } = usePrepaidApiPOST(
+    { mtrno },
+    { refetchInterval, handlers: { onData, ...handlers } }
   );
 
   React.useEffect(() => {
@@ -4893,12 +3793,5 @@ export const FetchPrepaidApiPOST = ({
       console.error(error);
     }
   }, [error]);
-  React.useEffect(() => {
-    const f = handlers.onData ?? onData;
-    if (data && f) {
-      f(data);
-    }
-  }, [data, onData, handlers]);
-
   return children({ loading, data, error, refetchPrepaidApi: refetch });
 };

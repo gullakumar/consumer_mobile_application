@@ -13,18 +13,44 @@ import {
   Divider,
   Icon,
   ScreenContainer,
+  Swiper,
+  SwiperItem,
   TextInput,
   Touchable,
   withTheme,
 } from '@draftbit/ui';
-import { Image, Text, View, useWindowDimensions } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
+import {
+  ActivityIndicator,
+  Image,
+  Text,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { Fetch } from 'react-request';
 
 const LoginScreen = props => {
   const dimensions = useWindowDimensions();
   const Constants = GlobalVariables.useValues();
   const Variables = Constants;
   const setGlobalVariableValue = GlobalVariables.useSetValue();
+
+  const validateuserName = userName => {
+    var errorMessage = null;
+    if (!userName.trim()) {
+      errorMessage = 'Username is required';
+    }
+    return errorMessage;
+  };
+
+  const validatePassword = password => {
+    var errorMessage = null;
+    if (!password.trim()) {
+      errorMessage = 'Password is required ';
+    }
+    return errorMessage;
+  };
 
   const processErrorMessage = msg => {
     const scheme = {
@@ -72,6 +98,7 @@ const LoginScreen = props => {
   const [checkboxRowValue, setCheckboxRowValue] = React.useState('');
   const [checkboxValue, setCheckboxValue] = React.useState(false);
   const [hiddenPassword, setHiddenPassword] = React.useState(true);
+  const [passswordErrorMsg, setPassswordErrorMsg] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [password1, setPassword1] = React.useState('');
   const [profileDetails, setProfileDetails] = React.useState({});
@@ -79,80 +106,73 @@ const LoginScreen = props => {
     React.useState('');
   const [textInputValue, setTextInputValue] = React.useState('');
   const [textInputValue2, setTextInputValue2] = React.useState('');
+  const [userNameErrorMsg, setUserNameErrorMsg] = React.useState('');
   const [visiblePassword, setVisiblePassword] = React.useState(false);
 
   return (
-    <ScreenContainer scrollable={false} hasSafeArea={true}>
-      {/* header */}
-      <View
-        style={StyleSheet.applyWidth(
-          GlobalStyles.ViewStyles(theme)['fef hed'],
-          dimensions.width
-        )}
+    <ScreenContainer hasSafeArea={true} scrollable={false}>
+      {/* Keyboard Aware Scroll View 2 */}
+      <KeyboardAwareScrollView
+        enableOnAndroid={false}
+        keyboardShouldPersistTaps={'never'}
+        showsVerticalScrollIndicator={true}
       >
-        {/* Back Click */}
+        {/* header */}
         <View
           style={StyleSheet.applyWidth(
-            {
-              alignItems: 'center',
-              height: 48,
-              justifyContent: 'center',
-              width: 48,
-            },
+            GlobalStyles.ViewStyles(theme)['fef hed'],
             dimensions.width
           )}
         >
-          <Touchable
-            onPress={() => {
-              try {
-                navigation.goBack();
-              } catch (err) {
-                console.error(err);
-              }
-            }}
+          {/* Back Click */}
+          <View
+            style={StyleSheet.applyWidth(
+              {
+                alignItems: 'center',
+                height: 48,
+                justifyContent: 'center',
+                width: 48,
+              },
+              dimensions.width
+            )}
           >
-            <Icon
-              size={24}
-              name={'Ionicons/arrow-back-sharp'}
-              color={theme.colors['Custom Color_2']}
-            />
-          </Touchable>
+            <Touchable
+              onPress={() => {
+                try {
+                  navigation.goBack();
+                } catch (err) {
+                  console.error(err);
+                }
+              }}
+            >
+              <Icon
+                color={theme.colors['Custom Color_2']}
+                name={'Ionicons/arrow-back-sharp'}
+                size={24}
+              />
+            </Touchable>
+          </View>
+          {/* Screen Heading */}
+          <Text
+            style={StyleSheet.applyWidth(
+              {
+                color: theme.colors['Strong'],
+                fontFamily: 'Roboto_700Bold',
+                fontSize: 18,
+                marginLeft: 16,
+              },
+              dimensions.width
+            )}
+          >
+            {'Login to Your Account'}
+          </Text>
         </View>
-        {/* Screen Heading */}
-        <Text
-          style={StyleSheet.applyWidth(
-            {
-              color: theme.colors['Strong'],
-              fontFamily: 'Roboto_700Bold',
-              fontSize: 18,
-              marginLeft: 16,
-            },
-            dimensions.width
-          )}
-        >
-          {'Login to Your Account'}
-        </Text>
-      </View>
 
-      <KeyboardAwareScrollView
-        contentContainerStyle={StyleSheet.applyWidth(
-          {
-            alignContent: 'stretch',
-            alignItems: 'stretch',
-            justifyContent: 'flex-start',
-            minHeight: 100,
-          },
-          dimensions.width
-        )}
-        showsVerticalScrollIndicator={true}
-        keyboardShouldPersistTaps={'always'}
-      >
         <View
           style={StyleSheet.applyWidth(
             {
               alignContent: 'stretch',
               alignItems: 'center',
-              flex: 1,
               justifyContent: 'flex-start',
               paddingBottom: 20,
               paddingLeft: 24,
@@ -162,23 +182,64 @@ const LoginScreen = props => {
             dimensions.width
           )}
         >
-          {/* Logo */}
-          <Image
+          <View
             style={StyleSheet.applyWidth(
-              { height: 128, marginTop: 18, width: 128 },
+              StyleSheet.compose(GlobalStyles.ViewStyles(theme)['VIEW'], {
+                marginTop: 10,
+              }),
               dimensions.width
             )}
-            resizeMode={'cover'}
-            source={Images.JBNL}
-          />
+          >
+            <Image
+              style={StyleSheet.applyWidth(
+                StyleSheet.compose(
+                  GlobalStyles.ImageStyles(theme)['banner 3'],
+                  { height: 110, width: 110 }
+                ),
+                dimensions.width
+              )}
+              resizeMode={'cover'}
+              source={Images.JBNL}
+            />
+            <View
+              style={StyleSheet.applyWidth(
+                { alignItems: 'center', marginTop: 10 },
+                dimensions.width
+              )}
+            >
+              <Text
+                style={StyleSheet.applyWidth(
+                  StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+                    fontFamily: 'Roboto_700Bold',
+                    fontSize: 18,
+                  }),
+                  dimensions.width
+                )}
+              >
+                {'Jharkhand Bijli Vitran Nigam Limited'}
+              </Text>
+
+              <Text
+                style={StyleSheet.applyWidth(
+                  StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+                    fontFamily: 'Roboto_400Regular',
+                    fontSize: 16,
+                    marginTop: 10,
+                  }),
+                  dimensions.width
+                )}
+              >
+                {'Consumer Mobile App'}
+              </Text>
+            </View>
+          </View>
           {/* error message */}
           <Text
             style={StyleSheet.applyWidth(
               StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+                alignSelf: 'flex-start',
                 color: theme.colors['Error'],
                 fontFamily: 'Roboto_400Regular',
-                marginBottom: 5,
-                marginTop: 5,
               }),
               dimensions.width
             )}
@@ -200,8 +261,6 @@ const LoginScreen = props => {
                 flexDirection: 'row',
                 height: 50,
                 justifyContent: 'space-between',
-                marginBottom: 15,
-                marginTop: 20,
                 opacity: 1,
                 paddingLeft: 20,
                 paddingRight: 20,
@@ -212,8 +271,8 @@ const LoginScreen = props => {
           >
             <Icon
               color={theme.colors['Medium']}
-              size={24}
               name={'Ionicons/person'}
+              size={24}
             />
             <View
               style={StyleSheet.applyWidth(
@@ -247,6 +306,19 @@ const LoginScreen = props => {
               />
             </View>
           </View>
+          {/* error message */}
+          <Text
+            style={StyleSheet.applyWidth(
+              StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+                alignSelf: 'flex-start',
+                color: theme.colors['Error'],
+                fontFamily: 'Roboto_400Regular',
+              }),
+              dimensions.width
+            )}
+          >
+            {userNameErrorMsg}
+          </Text>
           {/* Password */}
           <>
             {!hiddenPassword ? null : (
@@ -264,7 +336,6 @@ const LoginScreen = props => {
                     flexDirection: 'row',
                     height: 50,
                     justifyContent: 'space-between',
-                    marginBottom: 20,
                     marginTop: 15,
                     paddingLeft: 20,
                     paddingRight: 20,
@@ -274,9 +345,9 @@ const LoginScreen = props => {
                 )}
               >
                 <Icon
-                  size={24}
-                  name={'FontAwesome/lock'}
                   color={theme.colors['Medium']}
+                  name={'FontAwesome/lock'}
+                  size={24}
                 />
                 <View
                   style={StyleSheet.applyWidth(
@@ -306,8 +377,8 @@ const LoginScreen = props => {
                     value={password}
                     placeholder={'Password'}
                     editable={true}
-                    secureTextEntry={true}
                     placeholderTextColor={theme.colors['Medium']}
+                    secureTextEntry={true}
                   />
                 </View>
                 <Checkbox
@@ -321,8 +392,8 @@ const LoginScreen = props => {
                     }
                   }}
                   status={checkboxValue}
-                  uncheckedIcon={'Ionicons/eye-off'}
                   checkedIcon={'Ionicons/eye-off'}
+                  uncheckedIcon={'Ionicons/eye-off'}
                 />
               </View>
             )}
@@ -344,7 +415,6 @@ const LoginScreen = props => {
                     flexDirection: 'row',
                     height: 50,
                     justifyContent: 'space-between',
-                    marginBottom: 20,
                     marginTop: 15,
                     paddingLeft: 20,
                     paddingRight: 20,
@@ -354,9 +424,9 @@ const LoginScreen = props => {
                 )}
               >
                 <Icon
-                  size={24}
                   color={theme.colors['Custom Color_20']}
                   name={'FontAwesome/lock'}
+                  size={24}
                 />
                 <View
                   style={StyleSheet.applyWidth(
@@ -400,18 +470,43 @@ const LoginScreen = props => {
                       console.error(err);
                     }
                   }}
+                  checkedIcon={'Ionicons/eye'}
                   status={checkboxValue}
                   uncheckedIcon={'Ionicons/eye'}
-                  checkedIcon={'Ionicons/eye'}
                 />
               </View>
             )}
           </>
+          {/* error message */}
+          <Text
+            style={StyleSheet.applyWidth(
+              StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+                alignSelf: 'flex-start',
+                color: theme.colors['Error'],
+                fontFamily: 'Roboto_400Regular',
+              }),
+              dimensions.width
+            )}
+          >
+            {passswordErrorMsg}
+          </Text>
           {/* Sign in */}
           <Button
             onPress={() => {
               const handler = async () => {
                 try {
+                  const userNameErrorMsg = validateuserName(
+                    serviceconnectionnumber
+                  );
+                  const passswordErrorMsg = validatePassword(password);
+                  setUserNameErrorMsg(userNameErrorMsg);
+                  setPassswordErrorMsg(passswordErrorMsg);
+                  if (userNameErrorMsg?.length) {
+                    return;
+                  }
+                  if (passswordErrorMsg?.length) {
+                    return;
+                  }
                   const logindata = (
                     await CISAPPApi.loginPOST(Constants, {
                       accountno: serviceconnectionnumber,
@@ -481,80 +576,92 @@ const LoginScreen = props => {
             )}
             title={'Login'}
           />
-          {/* Login with OTP */}
-          <Touchable
-            onPress={() => {
-              try {
-                navigation.navigate('LoginOTPScreen');
-              } catch (err) {
-                console.error(err);
-              }
-            }}
+          {/* View 2 */}
+          <View
+            style={StyleSheet.applyWidth(
+              {
+                alignItems: 'center',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                width: '80%',
+              },
+              dimensions.width
+            )}
           >
-            <View
-              style={StyleSheet.applyWidth(
-                {
-                  alignItems: 'center',
-                  flexDirection: 'row',
-                  justifyContent: 'center',
-                  paddingBottom: 10,
-                  paddingTop: 10,
-                },
-                dimensions.width
-              )}
+            {/* Login with OTP */}
+            <Touchable
+              onPress={() => {
+                try {
+                  navigation.navigate('LoginOTPScreen');
+                } catch (err) {
+                  console.error(err);
+                }
+              }}
             >
-              <Text
+              <View
                 style={StyleSheet.applyWidth(
                   {
-                    color: theme.colors['Custom Color'],
-                    fontFamily: 'Roboto_500Medium',
-                    fontSize: 15,
-                    marginLeft: 10,
+                    alignItems: 'flex-start',
+                    flexDirection: 'row',
+                    paddingBottom: 10,
+                    paddingTop: 10,
                   },
                   dimensions.width
                 )}
               >
-                {'Login with OTP'}
-              </Text>
-            </View>
-          </Touchable>
-          {/* Forgot Password */}
-          <Touchable
-            onPress={() => {
-              try {
-                navigation.navigate('ForgotpasswordScreen');
-              } catch (err) {
-                console.error(err);
-              }
-            }}
-          >
-            <View
-              style={StyleSheet.applyWidth(
-                {
-                  alignItems: 'center',
-                  flexDirection: 'row',
-                  justifyContent: 'center',
-                  paddingBottom: 10,
-                  paddingTop: 10,
-                },
-                dimensions.width
-              )}
+                <Text
+                  style={StyleSheet.applyWidth(
+                    {
+                      color: theme.colors['Custom Color'],
+                      fontFamily: 'Roboto_500Medium',
+                      fontSize: 15,
+                      marginLeft: 10,
+                    },
+                    dimensions.width
+                  )}
+                >
+                  {'Login with OTP'}
+                </Text>
+              </View>
+            </Touchable>
+            {/* Forgot Password */}
+            <Touchable
+              onPress={() => {
+                try {
+                  navigation.navigate('ForgotpasswordScreen');
+                } catch (err) {
+                  console.error(err);
+                }
+              }}
             >
-              <Text
+              <View
                 style={StyleSheet.applyWidth(
                   {
-                    color: theme.colors['Custom Color'],
-                    fontFamily: 'Roboto_500Medium',
-                    fontSize: 15,
-                    marginLeft: 10,
+                    alignItems: 'center',
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    paddingBottom: 10,
+                    paddingTop: 10,
                   },
                   dimensions.width
                 )}
               >
-                {'Forgot password?'}
-              </Text>
-            </View>
-          </Touchable>
+                <Text
+                  style={StyleSheet.applyWidth(
+                    {
+                      color: theme.colors['Custom Color'],
+                      fontFamily: 'Roboto_500Medium',
+                      fontSize: 15,
+                      marginLeft: 10,
+                    },
+                    dimensions.width
+                  )}
+                >
+                  {'Forgot password?'}
+                </Text>
+              </View>
+            </Touchable>
+          </View>
           {/* Sign up */}
           <Touchable
             onPress={() => {
@@ -606,30 +713,122 @@ const LoginScreen = props => {
               </Text>
             </View>
           </Touchable>
-          {/* Quick Pay */}
-          <Button
-            onPress={() => {
-              try {
-                navigation.navigate('QuickPayScreen');
-              } catch (err) {
-                console.error(err);
-              }
-            }}
+          {/* Promotions 2 */}
+          <View
             style={StyleSheet.applyWidth(
               {
-                backgroundColor: theme.colors['GetFit Orange'],
-                borderRadius: 14,
-                fontFamily: 'Roboto_400Regular',
-                fontSize: 16,
-                marginTop: 34,
+                alignItems: 'stretch',
+                height: 108,
+                marginTop: 8,
                 width: '100%',
               },
               dimensions.width
             )}
-            title={'Quick Pay'}
-          />
+          >
+            <CISAPPApi.FetchBANNERSPOST>
+              {({ loading, error, data, refetchBANNERS }) => {
+                const fetchData = data?.json;
+                if (loading) {
+                  return <ActivityIndicator />;
+                }
+
+                if (error || data?.status < 200 || data?.status >= 300) {
+                  return <ActivityIndicator />;
+                }
+
+                return (
+                  <Swiper
+                    renderItem={({ item }) => {
+                      const swiperData = item;
+                      return (
+                        <>
+                          {!swiperData ? null : (
+                            <SwiperItem
+                              style={StyleSheet.applyWidth(
+                                {
+                                  alignSelf: 'stretch',
+                                  height: 108,
+                                  width: '100%',
+                                },
+                                dimensions.width
+                              )}
+                            >
+                              {/* banner */}
+                              <Image
+                                style={StyleSheet.applyWidth(
+                                  StyleSheet.compose(
+                                    GlobalStyles.ImageStyles(theme)['banner 3'],
+                                    { borderRadius: 8, height: 108 }
+                                  ),
+                                  dimensions.width
+                                )}
+                                resizeMode={'cover'}
+                                source={{ uri: `${swiperData?.attachment}` }}
+                              />
+                            </SwiperItem>
+                          )}
+                        </>
+                      );
+                    }}
+                    data={fetchData && fetchData[0].data}
+                    listKey={'Bpddia2k'}
+                    keyExtractor={swiperData =>
+                      swiperData?.id ||
+                      swiperData?.uuid ||
+                      JSON.stringify(swiperData)
+                    }
+                    style={StyleSheet.applyWidth(
+                      StyleSheet.compose(
+                        GlobalStyles.SwiperStyles(theme)['Swiper'],
+                        {
+                          alignSelf: 'auto',
+                          backgroundColor: 'rgb(255, 255, 255)',
+                          borderColor: 'rgb(222, 221, 221)',
+                          height: 108,
+                          position: 'relative',
+                        }
+                      ),
+                      dimensions.width
+                    )}
+                    dotActiveColor={theme.colors.primary}
+                    dotColor={theme.colors.light}
+                    dotsTouchable={true}
+                  />
+                );
+              }}
+            </CISAPPApi.FetchBANNERSPOST>
+          </View>
         </View>
       </KeyboardAwareScrollView>
+      {/* bottom */}
+      <View
+        style={StyleSheet.applyWidth(
+          StyleSheet.compose(GlobalStyles.ViewStyles(theme)['bottom'], {
+            alignContent: 'center',
+            alignItems: 'flex-end',
+            alignSelf: 'auto',
+            borderColor: theme.colors['Custom #d8d8d8'],
+            borderTopWidth: 1,
+            flex: 1,
+            justifyContent: 'center',
+            paddingBottom: 20,
+          }),
+          dimensions.width
+        )}
+      >
+        <Text
+          style={StyleSheet.applyWidth(
+            StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+              color: 'rgb(0,0,0)',
+              fontFamily: 'Roboto_400Regular',
+              fontSize: 16,
+            }),
+            dimensions.width
+          )}
+        >
+          {'Powered by Fluentgrid '}
+        </Text>
+      </View>
     </ScreenContainer>
   );
 };

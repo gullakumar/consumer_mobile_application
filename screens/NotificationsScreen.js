@@ -6,6 +6,7 @@ import Breakpoints from '../utils/Breakpoints';
 import * as StyleSheet from '../utils/StyleSheet';
 import openShareUtil from '../utils/openShare';
 import {
+  AccordionGroup,
   Checkbox,
   Circle,
   CircleImage,
@@ -86,9 +87,9 @@ const NotificationsScreen = props => {
               }}
             >
               <Icon
-                size={24}
-                name={'Ionicons/arrow-back-sharp'}
                 color={theme.colors['Custom Color_2']}
+                name={'Ionicons/arrow-back-sharp'}
+                size={24}
               />
             </Touchable>
           </View>
@@ -113,19 +114,19 @@ const NotificationsScreen = props => {
             { marginTop: 20 },
             dimensions.width
           )}
+          bounces={true}
           showsHorizontalScrollIndicator={true}
           showsVerticalScrollIndicator={true}
-          bounces={true}
         >
           {/* notifications */}
           <CISAPPApi.FetchNotificationsPOST>
             {({ loading, error, data, refetchNotifications }) => {
-              const notificationsData = data;
+              const notificationsData = data?.json;
               if (loading) {
                 return <ActivityIndicator />;
               }
 
-              if (error) {
+              if (error || data?.status < 200 || data?.status >= 300) {
                 return <ActivityIndicator />;
               }
 
@@ -140,50 +141,54 @@ const NotificationsScreen = props => {
                           style={StyleSheet.applyWidth(
                             StyleSheet.compose(
                               GlobalStyles.ViewStyles(theme)['view-n'],
-                              {
-                                marginLeft: 20,
-                                marginRight: 20,
-                                paddingLeft: 8,
-                                paddingRight: 8,
-                              }
+                              { paddingLeft: 8, paddingRight: 8 }
                             ),
                             dimensions.width
                           )}
                         >
                           <View
                             style={StyleSheet.applyWidth(
-                              { flex: 1, paddingLeft: 16 },
+                              {
+                                flex: 1,
+                                marginLeft: 20,
+                                paddingLeft: 10,
+                                paddingRight: 10,
+                              },
                               dimensions.width
                             )}
                           >
-                            {/* Title */}
-                            <Text
+                            <AccordionGroup
                               style={StyleSheet.applyWidth(
-                                {
-                                  color: theme.colors.strong,
-                                  fontFamily: 'Roboto_500Medium',
-                                  fontSize: 14,
-                                },
+                                GlobalStyles.AccordionGroupStyles(theme)[
+                                  'Accordion'
+                                ],
                                 dimensions.width
                               )}
+                              label={listData?.title}
+                              caretColor={theme.colors['Strong']}
+                              caretSize={24}
+                              closedColor={theme.colors['Strong']}
+                              iconSize={24}
+                              openColor={theme.colors['Strong']}
                             >
-                              {listData?.title}
-                            </Text>
-                            {/* Title */}
-                            <Text
-                              style={StyleSheet.applyWidth(
-                                {
-                                  color: theme.colors.strong,
-                                  fontFamily: 'Roboto_300Light',
-                                  fontSize: 14,
-                                  lineHeight: 21,
-                                  paddingTop: 5,
-                                },
-                                dimensions.width
-                              )}
-                            >
-                              {listData?.description}
-                            </Text>
+                              {/* Title */}
+                              <Text
+                                style={StyleSheet.applyWidth(
+                                  {
+                                    color: theme.colors.strong,
+                                    fontFamily: 'Roboto_300Light',
+                                    fontSize: 14,
+                                    lineHeight: 21,
+                                    paddingTop: 5,
+                                    textAlign: 'justify',
+                                    whiteSpace: 'pre-line',
+                                  },
+                                  dimensions.width
+                                )}
+                              >
+                                {listData?.description}
+                              </Text>
+                            </AccordionGroup>
                           </View>
 
                           <View
@@ -196,10 +201,6 @@ const NotificationsScreen = props => {
                               onPress={() => {
                                 const handler = async () => {
                                   try {
-                                    const valuer8om8VVs = listData?.attachment;
-                                    setNotifications(valuer8om8VVs);
-                                    const notification = valuer8om8VVs;
-                                    console.log(notification);
                                     await openShareUtil(
                                       `${listData?.attachment}`
                                     );

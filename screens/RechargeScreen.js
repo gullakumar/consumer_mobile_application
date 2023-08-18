@@ -33,6 +33,7 @@ const RechargeScreen = props => {
   const dimensions = useWindowDimensions();
   const Constants = GlobalVariables.useValues();
   const Variables = Constants;
+  const setGlobalVariableValue = GlobalVariables.useSetValue();
 
   const advanceAmountFun = (buttonValue, amountInput, updatedAmountValue) => {
     console.log('Amount' + amountInput);
@@ -54,6 +55,25 @@ const RechargeScreen = props => {
     }
   };
 
+  const validateScno = scNo => {
+    var errorMessage = null;
+    if (!scNo.trim()) {
+      errorMessage = 'Service connection number is required';
+    }
+    return errorMessage;
+  };
+
+  const validateAmount = amount => {
+    var errorMessage = null;
+    var amountValue = null;
+    amountValue = amount.toString();
+    console.log('amount' + amountValue);
+    if (amountValue.length == 0) {
+      errorMessage = 'Amount is required';
+    }
+    return errorMessage;
+  };
+
   const { theme } = props;
   const { navigation } = props;
 
@@ -61,19 +81,23 @@ const RechargeScreen = props => {
   const [addAmount2, setAddAmount2] = React.useState(250);
   const [addAmountt3, setAddAmountt3] = React.useState(450);
   const [amount1, setAmount1] = React.useState(100);
+  const [amountErrorMsg, setAmountErrorMsg] = React.useState('');
   const [numberInputValue, setNumberInputValue] = React.useState('');
   const [numberInputValue2, setNumberInputValue2] = React.useState('');
+  const [numberInputValue3, setNumberInputValue3] = React.useState('');
   const [radioButtonGroup2Value, setRadioButtonGroup2Value] =
     React.useState('');
   const [radioButtonGroupValue, setRadioButtonGroupValue] = React.useState('');
   const [radioButtonGroupValue2, setRadioButtonGroupValue2] =
     React.useState('');
   const [rechargeAmount, setRechargeAmount] = React.useState('');
+  const [scnoErrorMsg, setScnoErrorMsg] = React.useState('');
   const [textInputValue, setTextInputValue] = React.useState('');
+  const [textInputValue2, setTextInputValue2] = React.useState('');
   const [updatedAmount, setUpdatedAmount] = React.useState('');
 
   return (
-    <ScreenContainer scrollable={false} hasSafeArea={true}>
+    <ScreenContainer hasSafeArea={true} scrollable={false}>
       {/* Header */}
       <View
         style={StyleSheet.applyWidth(
@@ -108,7 +132,7 @@ const RechargeScreen = props => {
               dimensions.width
             )}
           >
-            <Icon size={24} name={'AntDesign/arrowleft'} />
+            <Icon name={'AntDesign/arrowleft'} size={24} />
           </View>
         </Touchable>
         {/* View bill and make payment */}
@@ -132,8 +156,8 @@ const RechargeScreen = props => {
           { marginTop: 40, paddingBottom: 20 },
           dimensions.width
         )}
-        showsVerticalScrollIndicator={true}
         bounces={true}
+        showsVerticalScrollIndicator={true}
       >
         {/* Payment summary */}
         <View>
@@ -154,50 +178,62 @@ const RechargeScreen = props => {
             {/* Service connection number */}
             <View
               style={StyleSheet.applyWidth(
-                StyleSheet.compose(GlobalStyles.ViewStyles(theme)['category'], {
-                  marginTop: 20,
+                GlobalStyles.ViewStyles(theme)['user name 2'],
+                dimensions.width
+              )}
+            >
+              <Icon
+                color={theme.colors['Medium']}
+                name={'MaterialIcons/house'}
+                size={24}
+              />
+              <View
+                style={StyleSheet.applyWidth(
+                  { flex: 1, paddingLeft: 10, paddingRight: 10 },
+                  dimensions.width
+                )}
+              >
+                <TextInput
+                  onChangeText={newTextInputValue => {
+                    try {
+                      setGlobalVariableValue({
+                        key: 'consumerScNo',
+                        value: newTextInputValue,
+                      });
+                    } catch (err) {
+                      console.error(err);
+                    }
+                  }}
+                  style={StyleSheet.applyWidth(
+                    {
+                      borderRadius: 8,
+                      fontFamily: 'Roboto_400Regular',
+                      paddingBottom: 8,
+                      paddingLeft: 8,
+                      paddingRight: 8,
+                      paddingTop: 8,
+                    },
+                    dimensions.width
+                  )}
+                  value={Constants['consumerScNo']}
+                  placeholder={'Service connection number'}
+                  editable={true}
+                  placeholderTextColor={theme.colors['Medium']}
+                />
+              </View>
+            </View>
+            {/* service connection Error Mgs */}
+            <Text
+              style={StyleSheet.applyWidth(
+                StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+                  color: theme.colors['Error'],
+                  fontFamily: 'Roboto_400Regular',
                 }),
                 dimensions.width
               )}
             >
-              {/* Service1 */}
-              <View
-                style={StyleSheet.applyWidth(
-                  GlobalStyles.ViewStyles(theme)['uname'],
-                  dimensions.width
-                )}
-              >
-                <Icon
-                  size={24}
-                  name={'MaterialIcons/house'}
-                  color={theme.colors['Medium']}
-                />
-                <View
-                  style={StyleSheet.applyWidth(
-                    { flex: 1, paddingLeft: 10, paddingRight: 10 },
-                    dimensions.width
-                  )}
-                >
-                  <TextInput
-                    style={StyleSheet.applyWidth(
-                      {
-                        borderRadius: 8,
-                        fontFamily: 'Roboto_400Regular',
-                        paddingBottom: 8,
-                        paddingLeft: 8,
-                        paddingRight: 8,
-                        paddingTop: 8,
-                      },
-                      dimensions.width
-                    )}
-                    placeholder={'Service Connection No'}
-                    editable={true}
-                    placeholderTextColor={theme.colors['Medium']}
-                    defaultValue={props.route?.params?.serviceConNo ?? ''}
-                  />
-                </View>
-              </View>
-            </View>
+              {scnoErrorMsg}
+            </Text>
 
             <View
               style={StyleSheet.applyWidth(
@@ -214,14 +250,14 @@ const RechargeScreen = props => {
               {/* Amount */}
               <View
                 style={StyleSheet.applyWidth(
-                  GlobalStyles.ViewStyles(theme)['uname'],
+                  GlobalStyles.ViewStyles(theme)['user name 3'],
                   dimensions.width
                 )}
               >
                 <Icon
-                  size={24}
-                  name={'FontAwesome/rupee'}
                   color={theme.colors['Medium']}
+                  name={'FontAwesome/rupee'}
+                  size={24}
                 />
                 <View
                   style={StyleSheet.applyWidth(
@@ -238,20 +274,29 @@ const RechargeScreen = props => {
                       }
                     }}
                     style={StyleSheet.applyWidth(
-                      StyleSheet.compose(
-                        GlobalStyles.NumberInputStyles(theme)['Number Input'],
-                        { fontFamily: 'Roboto_400Regular' }
-                      ),
+                      GlobalStyles.NumberInputStyles(theme)['Number Input'],
                       dimensions.width
                     )}
                     value={updatedAmount}
                     changeTextDelay={500}
                     editable={true}
-                    placeholder={'Enter amount'}
+                    placeholder={'Amount'}
                     placeholderTextColor={theme.colors['Medium']}
                   />
                 </View>
               </View>
+              {/* Amount valid message */}
+              <Text
+                style={StyleSheet.applyWidth(
+                  StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+                    color: theme.colors['Error'],
+                    fontFamily: 'Roboto_400Regular',
+                  }),
+                  dimensions.width
+                )}
+              >
+                {amountErrorMsg}
+              </Text>
               {/* Mobile */}
               <View
                 style={StyleSheet.applyWidth(
@@ -421,12 +466,12 @@ const RechargeScreen = props => {
                   {/* Payment Methods */}
                   <CISAPPApi.FetchPaymentGatewayPOST>
                     {({ loading, error, data, refetchPaymentGateway }) => {
-                      const paymentMethodsData = data;
+                      const paymentMethodsData = data?.json;
                       if (loading) {
                         return <ActivityIndicator />;
                       }
 
-                      if (error) {
+                      if (error || data?.status < 200 || data?.status >= 300) {
                         return <ActivityIndicator />;
                       }
 
@@ -513,6 +558,16 @@ const RechargeScreen = props => {
         <Button
           onPress={() => {
             try {
+              const scnoErrorMsg = validateScno(Constants['consumerScNo']);
+              const amountErrorMsg = validateAmount(updatedAmount);
+              setScnoErrorMsg(scnoErrorMsg);
+              setAmountErrorMsg(amountErrorMsg);
+              if (scnoErrorMsg?.length) {
+                return;
+              }
+              if (amountErrorMsg?.length) {
+                return;
+              }
               navigation.navigate('RechargeConfirmationScreen', {
                 Name: props.route?.params?.Name ?? '',
                 serviceConnectionNo: props.route?.params?.serviceConNo ?? '',

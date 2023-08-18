@@ -5,18 +5,15 @@ import { LineChart } from 'react-native-chart-kit';
 export function LineChartComponent2({ loadpatterndeatils }) {
   let newData = [];
   let newBillDates = [];
-
   if (loadpatterndeatils.length) {
-    console.log('details' + loadpatterndeatils.length);
+    //console.log("details"+loadpatterndeatils.length);
     // console.log("loadpatterndeatils"+loadpatterndeatils.length);
-
     newData = loadpatterndeatils.map(item => item.date);
-
-    newBillDates = loadpatterndeatils.map(item => item.kVaImp);
+    newBillDates = loadpatterndeatils.map(item => item.contractedLoad);
   }
   console.log('from custom code', loadpatterndeatils);
   const data = {
-    //lables: billingHistoryScreen.BillIssueDate,
+    //lables: loadpatterndeatils.BillIssueDate,
     labels: newData,
     //labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
     datasets: [
@@ -26,6 +23,7 @@ export function LineChartComponent2({ loadpatterndeatils }) {
         color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
       },
     ],
+    legend: ['contractedLoad(KW)'],
   };
 
   return (
@@ -33,7 +31,8 @@ export function LineChartComponent2({ loadpatterndeatils }) {
       <LineChart
         data={data}
         width={400}
-        height={220}
+        height={350}
+        verticalLabelRotation={60}
         chartConfig={{
           backgroundGradientFrom: 'white',
           backgroundGradientTo: 'white',
