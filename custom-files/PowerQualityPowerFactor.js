@@ -1,9 +1,10 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Dimensions } from 'react-native';
 import { BarChart } from 'react-native-chart-kit';
 
 export function BarChartExample({ powerfactorScreen }) {
   let newData = [];
+  const screenWidth = Dimensions.get('window').width;
   let newBillDates = [];
   if (powerfactorScreen.length) {
     newData = powerfactorScreen.map(item => item.FISCAL_PERIOD);
@@ -36,8 +37,9 @@ export function BarChartExample({ powerfactorScreen }) {
     <View>
       <BarChart
         data={data}
-        width={400}
-        height={390}
+        //width={400}
+        width={screenWidth} // Set the width to the screen width
+        height={420}
         verticalLabelRotation={60}
         //yAxisLabel="$"
         chartConfig={chartConfig}

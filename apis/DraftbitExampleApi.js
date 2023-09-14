@@ -12,9 +12,17 @@ import usePrevious from '../utils/usePrevious';
 import * as GlobalVariables from '../config/GlobalVariableContext';
 
 export const doctorsListGET = (Constants, { count }, handlers = {}) =>
-  fetch(`https://example-data.draftbit.com/people?_limit=${count ?? ''}`, {
-    headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
-  }).then(res => handleResponse(res, handlers));
+  fetch(
+    `https://example-data.draftbit.com/people?_limit=${encodeURIComponent(
+      `${typeof count === 'string' ? count : JSON.stringify(count ?? '')}`
+    )}`,
+    {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    }
+  ).then(res => handleResponse(res, handlers));
 
 export const useDoctorsListGET = (
   args = {},

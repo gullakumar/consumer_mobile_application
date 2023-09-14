@@ -29,10 +29,11 @@ import {
 } from 'react-native';
 import { Fetch } from 'react-request';
 
-const AdvancePayemntScreen = props => {
+const RechargeGuestScreen = props => {
   const dimensions = useWindowDimensions();
   const Constants = GlobalVariables.useValues();
   const Variables = Constants;
+  const setGlobalVariableValue = GlobalVariables.useSetValue();
 
   const advanceAmountFun = (buttonValue, amountInput, updatedAmountValue) => {
     console.log('Amount' + amountInput);
@@ -54,6 +55,25 @@ const AdvancePayemntScreen = props => {
     }
   };
 
+  const validateScno = scNo => {
+    var errorMessage = null;
+    if (!scNo.trim()) {
+      errorMessage = 'Service connection number is required';
+    }
+    return errorMessage;
+  };
+
+  const validateAmount = amount => {
+    var errorMessage = null;
+    var amountValue = null;
+    amountValue = amount.toString();
+    console.log('amount' + amountValue);
+    if (amountValue.length == 0) {
+      errorMessage = 'Amount is required';
+    }
+    return errorMessage;
+  };
+
   const { theme } = props;
   const { navigation } = props;
 
@@ -61,15 +81,19 @@ const AdvancePayemntScreen = props => {
   const [addAmount2, setAddAmount2] = React.useState(250);
   const [addAmountt3, setAddAmountt3] = React.useState(450);
   const [amount1, setAmount1] = React.useState(100);
+  const [amountErrorMsg, setAmountErrorMsg] = React.useState('');
   const [numberInputValue, setNumberInputValue] = React.useState('');
   const [numberInputValue2, setNumberInputValue2] = React.useState('');
+  const [numberInputValue3, setNumberInputValue3] = React.useState('');
   const [radioButtonGroup2Value, setRadioButtonGroup2Value] =
     React.useState('');
   const [radioButtonGroupValue, setRadioButtonGroupValue] = React.useState('');
   const [radioButtonGroupValue2, setRadioButtonGroupValue2] =
     React.useState('');
   const [rechargeAmount, setRechargeAmount] = React.useState('');
+  const [scnoErrorMsg, setScnoErrorMsg] = React.useState('');
   const [textInputValue, setTextInputValue] = React.useState('');
+  const [textInputValue2, setTextInputValue2] = React.useState('');
   const [updatedAmount, setUpdatedAmount] = React.useState('');
 
   return (
@@ -123,13 +147,13 @@ const AdvancePayemntScreen = props => {
             dimensions.width
           )}
         >
-          {'Advance Payment Now'}
+          {'Recharge Now'}
         </Text>
       </View>
 
       <ScrollView
         contentContainerStyle={StyleSheet.applyWidth(
-          { marginTop: 40, paddingBottom: 20, paddingTop: 20 },
+          { marginTop: 40, paddingBottom: 20 },
           dimensions.width
         )}
         bounces={true}
@@ -154,61 +178,62 @@ const AdvancePayemntScreen = props => {
             {/* Service connection number */}
             <View
               style={StyleSheet.applyWidth(
-                StyleSheet.compose(GlobalStyles.ViewStyles(theme)['category'], {
-                  marginTop: 20,
+                GlobalStyles.ViewStyles(theme)['user name 2'],
+                dimensions.width
+              )}
+            >
+              <Icon
+                color={theme.colors['Medium']}
+                name={'MaterialIcons/house'}
+                size={24}
+              />
+              <View
+                style={StyleSheet.applyWidth(
+                  { flex: 1, paddingLeft: 10, paddingRight: 10 },
+                  dimensions.width
+                )}
+              >
+                <TextInput
+                  onChangeText={newTextInputValue => {
+                    try {
+                      setGlobalVariableValue({
+                        key: 'consumerScNo',
+                        value: newTextInputValue,
+                      });
+                    } catch (err) {
+                      console.error(err);
+                    }
+                  }}
+                  style={StyleSheet.applyWidth(
+                    {
+                      borderRadius: 8,
+                      fontFamily: 'Roboto_400Regular',
+                      paddingBottom: 8,
+                      paddingLeft: 8,
+                      paddingRight: 8,
+                      paddingTop: 8,
+                    },
+                    dimensions.width
+                  )}
+                  value={Constants['consumerScNo']}
+                  placeholder={'Service connection number'}
+                  editable={true}
+                  placeholderTextColor={theme.colors['Medium']}
+                />
+              </View>
+            </View>
+            {/* service connection Error Mgs */}
+            <Text
+              style={StyleSheet.applyWidth(
+                StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+                  color: theme.colors['Error'],
+                  fontFamily: 'Roboto_400Regular',
                 }),
                 dimensions.width
               )}
             >
-              {/* Service1 */}
-              <View
-                style={StyleSheet.applyWidth(
-                  StyleSheet.compose(GlobalStyles.ViewStyles(theme)['uname'], {
-                    borderBottomWidth: 1,
-                    borderColor: theme.colors['Divider'],
-                    borderLeftWidth: 1,
-                    borderRadius: 16,
-                    borderRightWidth: 1,
-                    borderTopWidth: 1,
-                    height: 57,
-                    paddingLeft: 20,
-                    paddingRight: 20,
-                    width: '100%',
-                  }),
-                  dimensions.width
-                )}
-              >
-                <Icon
-                  color={theme.colors['Medium']}
-                  name={'MaterialIcons/house'}
-                  size={24}
-                />
-                <View
-                  style={StyleSheet.applyWidth(
-                    { flex: 1, paddingLeft: 10, paddingRight: 10 },
-                    dimensions.width
-                  )}
-                >
-                  <TextInput
-                    style={StyleSheet.applyWidth(
-                      {
-                        borderRadius: 8,
-                        fontFamily: 'Roboto_400Regular',
-                        paddingBottom: 8,
-                        paddingLeft: 8,
-                        paddingRight: 8,
-                        paddingTop: 8,
-                      },
-                      dimensions.width
-                    )}
-                    placeholder={'Service Connection No'}
-                    defaultValue={props.route?.params?.serviceConNo ?? ''}
-                    editable={true}
-                    placeholderTextColor={theme.colors['Medium']}
-                  />
-                </View>
-              </View>
-            </View>
+              {scnoErrorMsg}
+            </Text>
 
             <View
               style={StyleSheet.applyWidth(
@@ -225,17 +250,7 @@ const AdvancePayemntScreen = props => {
               {/* Amount */}
               <View
                 style={StyleSheet.applyWidth(
-                  StyleSheet.compose(GlobalStyles.ViewStyles(theme)['uname'], {
-                    borderBottomWidth: 1,
-                    borderColor: theme.colors['Divider'],
-                    borderLeftWidth: 1,
-                    borderRadius: 16,
-                    borderRightWidth: 1,
-                    borderTopWidth: 1,
-                    height: 57,
-                    paddingLeft: 20,
-                    paddingRight: 20,
-                  }),
+                  GlobalStyles.ViewStyles(theme)['user name 3'],
                   dimensions.width
                 )}
               >
@@ -259,10 +274,7 @@ const AdvancePayemntScreen = props => {
                       }
                     }}
                     style={StyleSheet.applyWidth(
-                      StyleSheet.compose(
-                        GlobalStyles.NumberInputStyles(theme)['Number Input'],
-                        { fontFamily: 'Roboto_400Regular' }
-                      ),
+                      GlobalStyles.NumberInputStyles(theme)['Number Input'],
                       dimensions.width
                     )}
                     value={updatedAmount}
@@ -273,6 +285,18 @@ const AdvancePayemntScreen = props => {
                   />
                 </View>
               </View>
+              {/* Amount valid message */}
+              <Text
+                style={StyleSheet.applyWidth(
+                  StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+                    color: theme.colors['Error'],
+                    fontFamily: 'Roboto_400Regular',
+                  }),
+                  dimensions.width
+                )}
+              >
+                {amountErrorMsg}
+              </Text>
               {/* Mobile */}
               <View
                 style={StyleSheet.applyWidth(
@@ -504,7 +528,7 @@ const AdvancePayemntScreen = props => {
                           data={
                             paymentMethodsData && paymentMethodsData[0].data
                           }
-                          listKey={'iBgG2YLD'}
+                          listKey={'1OKiw5pW'}
                           keyExtractor={flashListData =>
                             flashListData?.id ||
                             flashListData?.uuid ||
@@ -534,7 +558,17 @@ const AdvancePayemntScreen = props => {
         <Button
           onPress={() => {
             try {
-              navigation.navigate('AdvancePayemntConfirmationScreen', {
+              const scnoErrorMsg = validateScno(Constants['consumerScNo']);
+              const amountErrorMsg = validateAmount(updatedAmount);
+              setScnoErrorMsg(scnoErrorMsg);
+              setAmountErrorMsg(amountErrorMsg);
+              if (scnoErrorMsg?.length) {
+                return;
+              }
+              if (amountErrorMsg?.length) {
+                return;
+              }
+              navigation.navigate('RechargeConfirmationGuestScreen', {
                 Name: props.route?.params?.Name ?? '',
                 serviceConnectionNo: props.route?.params?.serviceConNo ?? '',
               });
@@ -561,4 +595,4 @@ const AdvancePayemntScreen = props => {
   );
 };
 
-export default withTheme(AdvancePayemntScreen);
+export default withTheme(RechargeGuestScreen);

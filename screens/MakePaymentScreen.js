@@ -734,7 +734,20 @@ const MakePaymentScreen = props => {
                 {/* Amount */}
                 <View
                   style={StyleSheet.applyWidth(
-                    GlobalStyles.ViewStyles(theme)['uname'],
+                    StyleSheet.compose(
+                      GlobalStyles.ViewStyles(theme)['uname'],
+                      {
+                        borderBottomWidth: 1,
+                        borderColor: theme.colors['Divider'],
+                        borderLeftWidth: 1,
+                        borderRadius: 16,
+                        borderRightWidth: 1,
+                        borderTopWidth: 1,
+                        height: 57,
+                        paddingLeft: 20,
+                        paddingRight: 20,
+                      }
+                    ),
                     dimensions.width
                   )}
                 >
@@ -788,7 +801,18 @@ const MakePaymentScreen = props => {
                   style={StyleSheet.applyWidth(
                     StyleSheet.compose(
                       GlobalStyles.ViewStyles(theme)['uname'],
-                      { marginTop: 8 }
+                      {
+                        borderBottomWidth: 1,
+                        borderColor: theme.colors['Divider'],
+                        borderLeftWidth: 1,
+                        borderRadius: 16,
+                        borderRightWidth: 1,
+                        borderTopWidth: 1,
+                        height: 57,
+                        marginTop: 8,
+                        paddingLeft: 20,
+                        paddingRight: 20,
+                      }
                     ),
                     dimensions.width
                   )}
@@ -868,7 +892,18 @@ const MakePaymentScreen = props => {
                   style={StyleSheet.applyWidth(
                     StyleSheet.compose(
                       GlobalStyles.ViewStyles(theme)['uname'],
-                      { marginTop: 8 }
+                      {
+                        borderBottomWidth: 1,
+                        borderColor: theme.colors['Divider'],
+                        borderLeftWidth: 1,
+                        borderRadius: 16,
+                        borderRightWidth: 1,
+                        borderTopWidth: 1,
+                        height: 57,
+                        marginTop: 8,
+                        paddingLeft: 20,
+                        paddingRight: 20,
+                      }
                     ),
                     dimensions.width
                   )}
@@ -1077,7 +1112,7 @@ const MakePaymentScreen = props => {
                 setAmountErrorMsg(amountErrorMsg);
                 setMobilenoErrorMsg(mobilenoErrorMsg);
                 setEmailErrorMsg(emailErrorMsg);
-                if (false) {
+                if (undefined) {
                   return;
                 }
                 if (mobilenoErrorMsg?.length) {
@@ -1088,9 +1123,7 @@ const MakePaymentScreen = props => {
                 }
                 const consumerDetailsJson = (
                   await CISAPPApi.consumerDetailsPOST(Constants, {
-                    action: buildConsumerString(
-                      props.route?.params?.Scno ?? ''
-                    ),
+                    accno: props.route?.params?.Scno ?? '',
                   })
                 )?.json;
                 buildConsumerString(props.route?.params?.Scno ?? '');

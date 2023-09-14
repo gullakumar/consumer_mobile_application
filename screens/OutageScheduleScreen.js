@@ -804,18 +804,18 @@ const OutageScheduleScreen = props => {
                 zoomEnabled={true}
               >
                 <MapMarker
-                  longitude={73.0243}
                   title={'Arvind Limba'}
                   description={'My Test Address'}
                   latitude={26.2389}
+                  longitude={73.0243}
                   flat={true}
                   pinColor={theme.colors.custom_rgb255_0_0}
                 />
                 <MapMarker
-                  longitude={75.7873}
                   title={'Arvind Limba'}
                   description={'My Test Address'}
                   latitude={26.9124}
+                  longitude={75.7873}
                   flat={true}
                   pinColor={theme.colors.appGreen}
                 />

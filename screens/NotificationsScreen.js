@@ -201,6 +201,7 @@ const NotificationsScreen = props => {
                               onPress={() => {
                                 const handler = async () => {
                                   try {
+                                    console.log();
                                     await openShareUtil(
                                       `${listData?.attachment}`
                                     );

@@ -12,9 +12,17 @@ import usePrevious from '../utils/usePrevious';
 import * as GlobalVariables from '../config/GlobalVariableContext';
 
 export const postsGET = (Constants, { limit }, handlers = {}) =>
-  fetch(`https://example-data.draftbit.com/posts?_limit=${limit ?? ''}`, {
-    headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
-  }).then(res => handleResponse(res, handlers));
+  fetch(
+    `https://example-data.draftbit.com/posts?_limit=${encodeURIComponent(
+      `${typeof limit === 'string' ? limit : JSON.stringify(limit ?? '')}`
+    )}`,
+    {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    }
+  ).then(res => handleResponse(res, handlers));
 
 export const usePostsGET = (
   args = {},

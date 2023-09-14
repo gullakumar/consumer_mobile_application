@@ -23,6 +23,7 @@ const RegisterScreen = props => {
   const dimensions = useWindowDimensions();
   const Constants = GlobalVariables.useValues();
   const Variables = Constants;
+  const setGlobalVariableValue = GlobalVariables.useSetValue();
 
   const validateScno = scNo => {
     var errorMessage = null;
@@ -244,11 +245,11 @@ const RegisterScreen = props => {
           {/* Logo */}
           <Image
             style={StyleSheet.applyWidth(
-              { height: 128, marginBottom: 10, marginTop: 10, width: 128 },
+              { height: 90, marginBottom: 10, marginTop: 10, width: 245 },
               dimensions.width
             )}
             resizeMode={'cover'}
-            source={Images.JBNL}
+            source={Images.FluentgridLogoGray}
           />
           <View
             style={StyleSheet.applyWidth(
@@ -265,7 +266,7 @@ const RegisterScreen = props => {
                 dimensions.width
               )}
             >
-              {'Jharkhand Bijli Vitran Nigam Limited'}
+              {'Utility Self Service '}
             </Text>
 
             <Text
@@ -578,6 +579,7 @@ const RegisterScreen = props => {
                     value={password}
                     placeholder={'Password'}
                     editable={true}
+                    maxLength={12}
                     placeholderTextColor={theme.colors['Medium']}
                     secureTextEntry={true}
                   />
@@ -658,6 +660,7 @@ const RegisterScreen = props => {
                     value={password}
                     placeholder={'Password'}
                     editable={true}
+                    maxLength={12}
                     placeholderTextColor={theme.colors['Custom Color_20']}
                     secureTextEntry={false}
                   />
@@ -750,6 +753,7 @@ const RegisterScreen = props => {
                     value={confirmpassword}
                     placeholder={'Confirm password'}
                     editable={true}
+                    maxLength={12}
                     placeholderTextColor={theme.colors['Medium']}
                     secureTextEntry={true}
                   />
@@ -828,6 +832,7 @@ const RegisterScreen = props => {
                     value={confirmpassword}
                     placeholder={'Confirm password'}
                     editable={true}
+                    maxLength={12}
                     placeholderTextColor={theme.colors['Custom Color_20']}
                     secureTextEntry={false}
                   />

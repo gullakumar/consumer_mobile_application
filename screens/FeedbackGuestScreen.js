@@ -237,7 +237,11 @@ console.log("i came here");
         <View
           style={StyleSheet.applyWidth(
             StyleSheet.compose(GlobalStyles.ViewStyles(theme)['user name'], {
+              height: 50,
               marginTop: 20,
+              paddingLeft: 20,
+              paddingRight: 20,
+              width: '100%',
             }),
             dimensions.width
           )}
@@ -296,7 +300,11 @@ console.log("i came here");
         <View
           style={StyleSheet.applyWidth(
             StyleSheet.compose(GlobalStyles.ViewStyles(theme)['user name'], {
+              height: 50,
               marginTop: 20,
+              paddingLeft: 20,
+              paddingRight: 20,
+              width: '100%',
             }),
             dimensions.width
           )}
@@ -355,7 +363,11 @@ console.log("i came here");
         <View
           style={StyleSheet.applyWidth(
             StyleSheet.compose(GlobalStyles.ViewStyles(theme)['user name'], {
+              height: 50,
               marginTop: 20,
+              paddingLeft: 20,
+              paddingRight: 20,
+              width: '100%',
             }),
             dimensions.width
           )}

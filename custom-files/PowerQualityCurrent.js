@@ -1,8 +1,9 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Dimensions } from 'react-native';
 import { BarChart } from 'react-native-chart-kit';
 
 export function BarChartExample({ currentScreen }) {
+  const screenWidth = Dimensions.get('window').width;
   let newData = [];
   let newBillDates = [];
   if (currentScreen.length) {
@@ -36,8 +37,9 @@ export function BarChartExample({ currentScreen }) {
     <View>
       <BarChart
         data={data}
-        width={400}
-        height={390}
+        //width={400}
+        width={screenWidth} // Set the width to the screen width
+        height={420}
         verticalLabelRotation={60}
         //yAxisLabel="$"
         chartConfig={chartConfig}

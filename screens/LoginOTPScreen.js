@@ -215,6 +215,7 @@ const LoginOTPScreen = props => {
           {
             alignItems: 'center',
             flexDirection: 'column',
+            height: 50,
             justifyContent: 'space-evenly',
             paddingLeft: 20,
             paddingRight: 20,

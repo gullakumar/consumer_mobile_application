@@ -235,6 +235,7 @@ const ChangePasswordScreen = props => {
                   value={oldPassword}
                   placeholder={'Old password'}
                   editable={true}
+                  maxLength={12}
                   placeholderTextColor={theme.colors['Medium']}
                   secureTextEntry={true}
                 />
@@ -299,6 +300,7 @@ const ChangePasswordScreen = props => {
                   value={oldPassword}
                   placeholder={'Old password'}
                   editable={true}
+                  maxLength={12}
                   placeholderTextColor={theme.colors['Custom Color_20']}
                   secureTextEntry={false}
                 />
@@ -377,6 +379,7 @@ const ChangePasswordScreen = props => {
                   value={newPassword}
                   placeholder={'New password'}
                   editable={true}
+                  maxLength={12}
                   placeholderTextColor={theme.colors['Medium']}
                   secureTextEntry={true}
                 />
@@ -443,6 +446,7 @@ const ChangePasswordScreen = props => {
                   value={newPassword}
                   placeholder={'New password'}
                   editable={true}
+                  maxLength={12}
                   placeholderTextColor={theme.colors['Medium']}
                   secureTextEntry={false}
                 />

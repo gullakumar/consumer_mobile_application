@@ -100,9 +100,11 @@ line two` ) and will not work with special characters inside of quotes ( example
 
   const rechargeHistoryBuildString = meterNo => {
     console.log(
-      `/SPM/getAllSpmBillDetailsByAccountNoOrMeterNumber?accountNoOrMeterNumber=${meterNo}`
+      `/SPM/getAllSpmRechargeHistoryDetailsByMeterNumberOrAccountNo?meterNumberOrAccountNo=${meterNo}`
     );
-    return `/SPM/getAllSpmBillDetailsByAccountNoOrMeterNumber?accountNoOrMeterNumber=${meterNo}`;
+    //return `/SPM/getAllSpmBillDetailsByAccountNoOrMeterNumber?accountNoOrMeterNumber=${meterNo}`
+
+    return `/SPM/getAllSpmRechargeHistoryDetailsByMeterNumberOrAccountNo?meterNumberOrAccountNo=${meterNo}`;
   };
 
   const converDateTimeToDate = dateTime => {
@@ -120,98 +122,204 @@ line two` ) and will not work with special characters inside of quotes ( example
   const isFocused = useIsFocused();
   React.useEffect(() => {
     const handler = async () => {
+      console.log('Screen ON_SCREEN_FOCUS Start');
+      let error = null;
       try {
         if (!isFocused) {
           return;
         }
-        setServiceConNumber(Constants['name']);
+        console.log('Start ON_SCREEN_FOCUS:0 SET_VARIABLE');
+        setTextInputValue(Constants['name']);
+        console.log('Complete ON_SCREEN_FOCUS:0 SET_VARIABLE');
+        console.log('Start ON_SCREEN_FOCUS:1 FETCH_REQUEST');
         const consumerDetailsJson = (
           await CISAPPApi.consumerDetailsPOST(Constants, {
-            action: buildConsumerString(Constants['name']),
+            accno: Constants['name'],
           })
         )?.json;
+        console.log('Complete ON_SCREEN_FOCUS:1 FETCH_REQUEST', {
+          consumerDetailsJson,
+        });
+        console.log('Start ON_SCREEN_FOCUS:2 CONSOLE_LOG');
         console.log(consumerDetailsJson);
+        console.log('Complete ON_SCREEN_FOCUS:2 CONSOLE_LOG');
+        console.log('Start ON_SCREEN_FOCUS:3 CUSTOM_FUNCTION');
         buildConsumerString(Constants['name']);
+        console.log('Complete ON_SCREEN_FOCUS:3 CUSTOM_FUNCTION');
+        console.log('Start ON_SCREEN_FOCUS:4 EXTRACT_KEY');
         const prepaidFlag = (consumerDetailsJson && consumerDetailsJson[0])
           ?.data?.prepaidFlag;
+        console.log('Complete ON_SCREEN_FOCUS:4 EXTRACT_KEY', { prepaidFlag });
+        console.log('Start ON_SCREEN_FOCUS:5 SET_VARIABLE');
         setPrepaidFlag(prepaidFlag);
+        console.log('Complete ON_SCREEN_FOCUS:5 SET_VARIABLE');
+        console.log('Start ON_SCREEN_FOCUS:6 EXTRACT_KEY');
         const meterNo = (consumerDetailsJson && consumerDetailsJson[0])?.data
           ?.meterNumber;
+        console.log('Complete ON_SCREEN_FOCUS:6 EXTRACT_KEY', { meterNo });
+        console.log('Start ON_SCREEN_FOCUS:7 SET_VARIABLE');
         setMeterNumber(meterNo);
+        console.log('Complete ON_SCREEN_FOCUS:7 SET_VARIABLE');
+        console.log('Start ON_SCREEN_FOCUS:8 EXTRACT_KEY');
         const Scno = (consumerDetailsJson && consumerDetailsJson[0])?.data
           ?.scno;
-        setGlobalVariableValue({
-          key: 'consumerScNo',
-          value: Scno,
-        });
+        console.log('Complete ON_SCREEN_FOCUS:8 EXTRACT_KEY', { Scno });
+        console.log('Start ON_SCREEN_FOCUS:9 SET_VARIABLE');
+        setConsumerScNo(Scno);
+        console.log('Complete ON_SCREEN_FOCUS:9 SET_VARIABLE');
+        console.log('Start ON_SCREEN_FOCUS:10 EXTRACT_KEY');
         const Name = (consumerDetailsJson && consumerDetailsJson[0])?.data
           ?.name;
+        console.log('Complete ON_SCREEN_FOCUS:10 EXTRACT_KEY', { Name });
+        console.log('Start ON_SCREEN_FOCUS:11 SET_VARIABLE');
         setConsumerName(Name);
+        console.log('Complete ON_SCREEN_FOCUS:11 SET_VARIABLE');
         const Billdetailsjson = await (async () => {
+          console.log('Start ON_SCREEN_FOCUS:12 FETCH_REQUEST');
           if (prepaidFlag === 'N') {
-            return (
+            const __result = (
               await CISAPPApi.viewBillDetailsPOST(Constants, {
                 action: buildString(Constants['name']),
               })
             )?.json;
+            console.log('Complete ON_SCREEN_FOCUS:12 FETCH_REQUEST', {
+              Billdetailsjson,
+            });
+            return __result;
+          } else {
+            console.log(
+              'Skipped ON_SCREEN_FOCUS:12 FETCH_REQUEST: condition not met'
+            );
           }
         })();
+        console.log('Start ON_SCREEN_FOCUS:13 CONSOLE_LOG');
         console.log(Billdetailsjson);
+        console.log('Complete ON_SCREEN_FOCUS:13 CONSOLE_LOG');
+        console.log('Start ON_SCREEN_FOCUS:14 CUSTOM_FUNCTION');
         buildString(Constants['name']);
-
+        console.log('Complete ON_SCREEN_FOCUS:14 CUSTOM_FUNCTION');
+        console.log('Start ON_SCREEN_FOCUS:15 SET_VARIABLE');
         const valuePRx6J3RZ =
           Billdetailsjson && Billdetailsjson[0].data.BillDataJson[0];
         setViewBillDetails(valuePRx6J3RZ);
         const Billdetailslog = valuePRx6J3RZ;
+        console.log('Complete ON_SCREEN_FOCUS:15 SET_VARIABLE');
+        console.log('Start ON_SCREEN_FOCUS:16 FETCH_REQUEST');
         const paymenthistoryjson = (
           await CISAPPApi.paymentHistoryPOST(Constants, {
             action: paymentBuildString(Constants['name']),
           })
         )?.json;
+        console.log('Complete ON_SCREEN_FOCUS:16 FETCH_REQUEST', {
+          paymenthistoryjson,
+        });
+        console.log('Start ON_SCREEN_FOCUS:17 CUSTOM_FUNCTION');
         paymentBuildString(Constants['name']);
-
+        console.log('Complete ON_SCREEN_FOCUS:17 CUSTOM_FUNCTION');
+        console.log('Start ON_SCREEN_FOCUS:18 SET_VARIABLE');
         const valueqY5c4IUo = paymenthistoryjson && paymenthistoryjson[0].data;
         setViewPaymentDetails(valueqY5c4IUo);
         const paymentdetailslog = valueqY5c4IUo;
+        console.log('Complete ON_SCREEN_FOCUS:18 SET_VARIABLE');
         const prepaidJson = await (async () => {
+          console.log('Start ON_SCREEN_FOCUS:19 FETCH_REQUEST');
           if (prepaidFlag === 'Y') {
-            return (
+            const __result = (
               await CISAPPApi.prepaidApiPOST(Constants, { mtrno: meterNo })
             )?.json;
+            console.log('Complete ON_SCREEN_FOCUS:19 FETCH_REQUEST', {
+              prepaidJson,
+            });
+            return __result;
+          } else {
+            console.log(
+              'Skipped ON_SCREEN_FOCUS:19 FETCH_REQUEST: condition not met'
+            );
           }
         })();
+        console.log('Start ON_SCREEN_FOCUS:20 CONSOLE_LOG');
         console.log(prepaidJson);
+        console.log('Complete ON_SCREEN_FOCUS:20 CONSOLE_LOG');
+        console.log('Start ON_SCREEN_FOCUS:21 EXTRACT_KEY');
         const availableBalance = (prepaidJson && prepaidJson[0])?.data[0]
           ?.avail_balance;
+        console.log('Complete ON_SCREEN_FOCUS:21 EXTRACT_KEY', {
+          availableBalance,
+        });
+        console.log('Start ON_SCREEN_FOCUS:22 CONSOLE_LOG');
         console.log(availableBalance);
+        console.log('Complete ON_SCREEN_FOCUS:22 CONSOLE_LOG');
+        console.log('Start ON_SCREEN_FOCUS:23 SET_VARIABLE');
         setAvailableBalance(availableBalance);
+        console.log('Complete ON_SCREEN_FOCUS:23 SET_VARIABLE');
+        console.log('Start ON_SCREEN_FOCUS:24 FETCH_REQUEST');
         const RechargeHistoryJson = (
-          await CISAPPApi.rechargeHistoryPrepaidPOST(Constants, {
-            action: rechargeHistoryBuildString(meterNo),
+          await CISAPPApi.rechargeHistoryDetailsPOST(Constants, {
+            action: (() => {
+              const e = rechargeHistoryBuildString(meterNo);
+              console.log(e);
+              return e;
+            })(),
           })
         )?.json;
+        console.log('Complete ON_SCREEN_FOCUS:24 FETCH_REQUEST', {
+          RechargeHistoryJson,
+        });
+        console.log('Start ON_SCREEN_FOCUS:25 CUSTOM_FUNCTION');
         rechargeHistoryBuildString(meterNo);
+        console.log('Complete ON_SCREEN_FOCUS:25 CUSTOM_FUNCTION');
+        console.log('Start ON_SCREEN_FOCUS:26 CONSOLE_LOG');
         console.log(RechargeHistoryJson);
+        console.log('Complete ON_SCREEN_FOCUS:26 CONSOLE_LOG');
+        console.log('Start ON_SCREEN_FOCUS:27 EXTRACT_KEY');
         const rechargeData =
           RechargeHistoryJson && RechargeHistoryJson[0].data.data;
-        setViewRechargeDetails(rechargeData);
+        console.log('Complete ON_SCREEN_FOCUS:27 EXTRACT_KEY', {
+          rechargeData,
+        });
+        console.log('Start ON_SCREEN_FOCUS:28 SET_VARIABLE');
+        setViewRechargeDetails(
+          (() => {
+            const e = rechargeData;
+            console.log(e);
+            return e;
+          })()
+        );
+        console.log('Complete ON_SCREEN_FOCUS:28 SET_VARIABLE');
+        console.log('Start ON_SCREEN_FOCUS:29 FETCH_REQUEST');
         const ManageAccountDetails = (
           await CISAPPApi.manageAccountsPOST(Constants, {
             accountNumber: Constants['name'],
           })
         )?.json;
+        console.log('Complete ON_SCREEN_FOCUS:29 FETCH_REQUEST', {
+          ManageAccountDetails,
+        });
+        console.log('Start ON_SCREEN_FOCUS:30 CONSOLE_LOG');
         console.log(ManageAccountDetails);
+        console.log('Complete ON_SCREEN_FOCUS:30 CONSOLE_LOG');
+        console.log('Start ON_SCREEN_FOCUS:31 SET_VARIABLE');
         const result = setGlobalVariableValue({
           key: 'manageaccount_picker',
           value: manageAccountFun(
             ManageAccountDetails && ManageAccountDetails[0].data[0].data
           ),
         });
+        console.log('Complete ON_SCREEN_FOCUS:31 SET_VARIABLE', { result });
+        console.log('Start ON_SCREEN_FOCUS:32 CONSOLE_LOG');
         console.log(result);
+        console.log('Complete ON_SCREEN_FOCUS:32 CONSOLE_LOG');
+        console.log('Start ON_SCREEN_FOCUS:33 SET_VARIABLE');
         setServiceConNumber(props.route?.params?.Name ?? '');
+        console.log('Complete ON_SCREEN_FOCUS:33 SET_VARIABLE');
       } catch (err) {
         console.error(err);
+        error = err.message ?? err;
       }
+      console.log(
+        'Screen ON_SCREEN_FOCUS Complete',
+        error ? { error } : 'no error'
+      );
     };
     handler();
   }, [isFocused]);
@@ -224,6 +332,7 @@ line two` ) and will not work with special characters inside of quotes ( example
   const [prepaidFlag, setPrepaidFlag] = React.useState('');
   const [serviceConNumber, setServiceConNumber] = React.useState('');
   const [showNav, setShowNav] = React.useState(false);
+  const [textInputValue, setTextInputValue] = React.useState('');
   const [viewBillDetails, setViewBillDetails] = React.useState({});
   const [viewPaymentDetails, setViewPaymentDetails] = React.useState({});
   const [viewRechargeDetails, setViewRechargeDetails] = React.useState({});
@@ -441,98 +550,109 @@ line two` ) and will not work with special characters inside of quotes ( example
                   </View>
                 </Touchable>
                 {/* Load Enhancement */}
-                <Touchable
-                  onPress={() => {
-                    const handler = async () => {
-                      try {
-                        navigation.navigate('LoadQualityScreen');
-                        await WebBrowser.openBrowserAsync(
-                          'http://20.192.2.50:9388/cportal/#/bltLec/KUM188'
-                        );
-                      } catch (err) {
-                        console.error(err);
-                      }
-                    };
-                    handler();
-                  }}
-                >
-                  <View
-                    style={StyleSheet.applyWidth(
-                      {
-                        alignItems: 'center',
-                        flexDirection: 'row',
-                        paddingBottom: 12,
-                        paddingLeft: 24,
-                        paddingRight: 24,
-                        paddingTop: 12,
-                      },
-                      dimensions.width
-                    )}
-                  >
-                    <Icon
-                      name={'MaterialCommunityIcons/alert-outline'}
-                      size={24}
-                    />
-                    <Text
-                      style={StyleSheet.applyWidth(
-                        {
-                          color: theme.colors['Strong'],
-                          fontFamily: 'Roboto_400Regular',
-                          fontSize: 16,
-                          marginLeft: 8,
-                        },
-                        dimensions.width
-                      )}
+                <>
+                  {!(prepaidFlag === 'N') ? null : (
+                    <Touchable
+                      onPress={() => {
+                        const handler = async () => {
+                          try {
+                            navigation.navigate('LoadQualityScreen');
+                            await WebBrowser.openBrowserAsync(
+                              'http://20.192.2.50:9388/cportal/#/bltLec/KUM188'
+                            );
+                          } catch (err) {
+                            console.error(err);
+                          }
+                        };
+                        handler();
+                      }}
                     >
-                      {'Load Enhancement'}
-                    </Text>
-                  </View>
-                </Touchable>
+                      <View
+                        style={StyleSheet.applyWidth(
+                          {
+                            alignItems: 'center',
+                            flexDirection: 'row',
+                            paddingBottom: 12,
+                            paddingLeft: 24,
+                            paddingRight: 24,
+                            paddingTop: 12,
+                          },
+                          dimensions.width
+                        )}
+                      >
+                        <Icon
+                          name={'MaterialCommunityIcons/alert-outline'}
+                          size={24}
+                        />
+                        <Text
+                          style={StyleSheet.applyWidth(
+                            {
+                              color: theme.colors['Strong'],
+                              fontFamily: 'Roboto_400Regular',
+                              fontSize: 16,
+                              marginLeft: 8,
+                            },
+                            dimensions.width
+                          )}
+                        >
+                          {'Load Enhancement'}
+                        </Text>
+                      </View>
+                    </Touchable>
+                  )}
+                </>
                 {/* Load Reduction */}
-                <Touchable
-                  onPress={() => {
-                    const handler = async () => {
-                      try {
-                        navigation.navigate('LoadQualityScreen');
-                        await WebBrowser.openBrowserAsync(
-                          'http://20.192.2.50:9388/cportal/#/bltLrc/KUM188'
-                        );
-                      } catch (err) {
-                        console.error(err);
-                      }
-                    };
-                    handler();
-                  }}
-                >
-                  <View
-                    style={StyleSheet.applyWidth(
-                      {
-                        alignItems: 'center',
-                        flexDirection: 'row',
-                        paddingBottom: 12,
-                        paddingLeft: 24,
-                        paddingRight: 24,
-                        paddingTop: 12,
-                      },
-                      dimensions.width
-                    )}
-                  >
-                    <Icon name={'FontAwesome/exclamation-triangle'} size={24} />
-                    <Text
-                      style={StyleSheet.applyWidth(
-                        {
-                          color: theme.colors['Strong'],
-                          fontFamily: 'Roboto_400Regular',
-                          fontSize: 16,
-                          marginLeft: 8,
-                        },
-                        dimensions.width
-                      )}
+                <>
+                  {!(prepaidFlag === 'N') ? null : (
+                    <Touchable
+                      onPress={() => {
+                        const handler = async () => {
+                          try {
+                            navigation.navigate('LoadQualityScreen');
+                            await WebBrowser.openBrowserAsync(
+                              'http://20.192.2.50:9388/cportal/#/bltLrc/KUM188'
+                            );
+                          } catch (err) {
+                            console.error(err);
+                          }
+                        };
+                        handler();
+                      }}
                     >
-                      {'Load Reduction'}
-                    </Text>
-                  </View>
-                </Touchable>
+                      <View
+                        style={StyleSheet.applyWidth(
+                          {
+                            alignItems: 'center',
+                            flexDirection: 'row',
+                            paddingBottom: 12,
+                            paddingLeft: 24,
+                            paddingRight: 24,
+                            paddingTop: 12,
+                          },
+                          dimensions.width
+                        )}
+                      >
+                        <Icon
+                          name={'FontAwesome/exclamation-triangle'}
+                          size={24}
+                        />
+                        <Text
+                          style={StyleSheet.applyWidth(
+                            {
+                              color: theme.colors['Strong'],
+                              fontFamily: 'Roboto_400Regular',
+                              fontSize: 16,
+                              marginLeft: 8,
+                            },
+                            dimensions.width
+                          )}
+                        >
+                          {'Load Reduction'}
+                        </Text>
+                      </View>
+                    </Touchable>
+                  )}
+                </>
                 {/* Downloads */}
                 <Touchable
                   onPress={() => {
@@ -976,7 +1096,6 @@ line two` ) and will not work with special characters inside of quotes ( example
                   borderRadius: 16,
                   borderRightWidth: 1,
                   borderTopWidth: 1,
-                  height: 50,
                   paddingLeft: 20,
                   paddingRight: 20,
                 }),
@@ -991,12 +1110,11 @@ line two` ) and will not work with special characters inside of quotes ( example
               <Picker
                 onValueChange={newPickerValue => {
                   const handler = async () => {
-                    const pickerValue = newPickerValue;
                     try {
-                      setServiceConNumber(newPickerValue);
+                      setTextInputValue(newPickerValue);
                       const consumerDetailsJson = (
                         await CISAPPApi.consumerDetailsPOST(Constants, {
-                          action: buildConsumerString(newPickerValue),
+                          accno: Constants['name'],
                         })
                       )?.json;
                       console.log(consumerDetailsJson);
@@ -1013,10 +1131,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                       const Scno = (
                         consumerDetailsJson && consumerDetailsJson[0]
                       )?.data?.scno;
-                      setGlobalVariableValue({
-                        key: 'consumerScNo',
-                        value: Scno,
-                      });
+                      setConsumerScNo(Scno);
                       const Name = (
                         consumerDetailsJson && consumerDetailsJson[0]
                       )?.data?.name;
@@ -1066,7 +1181,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                       const RechargeHistoryJson = await (async () => {
                         if (prepaidFlag === 'Y') {
                           return (
-                            await CISAPPApi.rechargeHistoryPrepaidPOST(
+                            await CISAPPApi.rechargeHistoryDetailsPOST(
                               Constants,
                               { action: rechargeHistoryBuildString(meterNo) }
                             )
@@ -1089,13 +1204,13 @@ line two` ) and will not work with special characters inside of quotes ( example
                     borderColor: theme.colors['Background'],
                     borderWidth: 1,
                     fontFamily: 'Roboto_400Regular',
-                    marginTop: -5,
+                    width: '95%',
                   },
                   dimensions.width
                 )}
+                value={textInputValue}
                 options={Constants['manageaccount_picker']}
                 autoDismissKeyboard={true}
-                defaultValue={Constants['name']}
                 iconColor={theme.colors['Medium']}
                 iconSize={24}
                 leftIconMode={'inset'}
@@ -1572,6 +1687,131 @@ line two` ) and will not work with special characters inside of quotes ( example
                 </View>
               )}
             </>
+            {/* Prepaid Table */}
+            <>
+              {!(prepaidFlag === 'Y') ? null : (
+                <View
+                  style={StyleSheet.applyWidth(
+                    GlobalStyles.ViewStyles(theme)['Table 3'],
+                    dimensions.width
+                  )}
+                >
+                  {/* Date */}
+                  <View
+                    style={StyleSheet.applyWidth(
+                      {
+                        borderColor: theme.colors['White'],
+                        borderRightWidth: 1,
+                        flex: 1,
+                      },
+                      dimensions.width
+                    )}
+                  >
+                    <View
+                      style={StyleSheet.applyWidth(
+                        {
+                          backgroundColor: theme.colors['ViewBG'],
+                          height: 40,
+                          justifyContent: 'center',
+                        },
+                        dimensions.width
+                      )}
+                    >
+                      <Text
+                        style={StyleSheet.applyWidth(
+                          StyleSheet.compose(
+                            GlobalStyles.TextStyles(theme)['Text'],
+                            {
+                              color: 'rgb(42, 42, 42)',
+                              fontFamily: 'Roboto_700Bold',
+                              textAlign: 'center',
+                              textTransform: 'capitalize',
+                            }
+                          ),
+                          dimensions.width
+                        )}
+                      >
+                        {'Date'}
+                      </Text>
+                    </View>
+                  </View>
+                  {/* Recharge Amount */}
+                  <View
+                    style={StyleSheet.applyWidth(
+                      {
+                        borderColor: theme.colors['White'],
+                        borderRightWidth: 1,
+                        flex: 1,
+                      },
+                      dimensions.width
+                    )}
+                  >
+                    <View
+                      style={StyleSheet.applyWidth(
+                        {
+                          backgroundColor: theme.colors['ViewBG'],
+                          height: 40,
+                          justifyContent: 'center',
+                        },
+                        dimensions.width
+                      )}
+                    >
+                      <Text
+                        style={StyleSheet.applyWidth(
+                          StyleSheet.compose(
+                            GlobalStyles.TextStyles(theme)['Text'],
+                            {
+                              color: 'rgb(42, 42, 42)',
+                              fontFamily: 'Roboto_700Bold',
+                              textAlign: 'center',
+                              textTransform: 'capitalize',
+                            }
+                          ),
+                          dimensions.width
+                        )}
+                      >
+                        {'Recharge Amount'}
+                      </Text>
+                    </View>
+                  </View>
+                  {/* AvailableAmount */}
+                  <View
+                    style={StyleSheet.applyWidth(
+                      { borderColor: theme.colors['White'], flex: 1 },
+                      dimensions.width
+                    )}
+                  >
+                    <View
+                      style={StyleSheet.applyWidth(
+                        {
+                          backgroundColor: theme.colors['ViewBG'],
+                          height: 40,
+                          justifyContent: 'center',
+                        },
+                        dimensions.width
+                      )}
+                    >
+                      <Text
+                        style={StyleSheet.applyWidth(
+                          StyleSheet.compose(
+                            GlobalStyles.TextStyles(theme)['Text'],
+                            {
+                              color: 'rgb(42, 42, 42)',
+                              fontFamily: 'Roboto_700Bold',
+                              textAlign: 'center',
+                              textTransform: 'capitalize',
+                            }
+                          ),
+                          dimensions.width
+                        )}
+                      >
+                        {'Available Amount'}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              )}
+            </>
             {/* prepaid */}
             <>
               {!(prepaidFlag === 'Y') ? null : (
@@ -1625,7 +1865,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                                   dimensions.width
                                 )}
                               >
-                                {converDateTimeToDate(listData?.prstRdgDate)}
+                                {converDateTimeToDate(listData?.requestTime)}
                               </Text>
                               {/* purpose */}
                               <Text
@@ -1640,7 +1880,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                                   dimensions.width
                                 )}
                               >
-                                {listData?.billType}
+                                {listData?.rechargeType}
                               </Text>
                             </View>
                             {/* View 2 */}
@@ -1658,7 +1898,25 @@ line two` ) and will not work with special characters inside of quotes ( example
                                 )}
                               >
                                 {'₹'}
-                                {listData?.closingBalance}
+                                {listData?.rechargeAmt}
+                              </Text>
+                            </View>
+                            {/* View 3 */}
+                            <View>
+                              <Text
+                                style={StyleSheet.applyWidth(
+                                  StyleSheet.compose(
+                                    GlobalStyles.TextStyles(theme)['Text'],
+                                    {
+                                      fontFamily: 'Roboto_400Regular',
+                                      fontSize: 16,
+                                    }
+                                  ),
+                                  dimensions.width
+                                )}
+                              >
+                                {'₹'}
+                                {listData?.availableAmount}
                               </Text>
                             </View>
                           </View>
@@ -1872,46 +2130,51 @@ line two` ) and will not work with special characters inside of quotes ( example
           </View>
         </Touchable>
         {/* Support */}
-        <Touchable
-          onPress={() => {
-            try {
-              navigation.navigate('CheckTicketStatusScreen');
-            } catch (err) {
-              console.error(err);
-            }
-          }}
-          activeOpacity={0.8}
-          disabledOpacity={0.8}
-        >
-          <View
-            style={StyleSheet.applyWidth(
-              {
-                alignItems: 'center',
-                height: 48,
-                justifyContent: 'center',
-                width: 55,
-              },
-              dimensions.width
-            )}
-          >
-            <Icon
-              color={theme.colors['Community_Light_Black']}
-              name={'MaterialIcons/support-agent'}
-              size={24}
-            />
-            <Text
-              style={StyleSheet.applyWidth(
-                StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
-                  color: theme.colors['Community_Light_Black'],
-                  fontFamily: 'Roboto_400Regular',
-                }),
-                dimensions.width
-              )}
+        <>
+          {!(prepaidFlag === 'N') ? null : (
+            <Touchable
+              onPress={() => {
+                try {
+                  navigation.navigate('CheckTicketStatusScreen');
+                } catch (err) {
+                  console.error(err);
+                }
+              }}
+              disabled={false}
+              activeOpacity={0.8}
+              disabledOpacity={0.8}
             >
-              {'Support'}
-            </Text>
-          </View>
-        </Touchable>
+              <View
+                style={StyleSheet.applyWidth(
+                  {
+                    alignItems: 'center',
+                    height: 48,
+                    justifyContent: 'center',
+                    width: 55,
+                  },
+                  dimensions.width
+                )}
+              >
+                <Icon
+                  color={theme.colors['Community_Light_Black']}
+                  name={'MaterialIcons/support-agent'}
+                  size={24}
+                />
+                <Text
+                  style={StyleSheet.applyWidth(
+                    StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+                      color: theme.colors['Community_Light_Black'],
+                      fontFamily: 'Roboto_400Regular',
+                    }),
+                    dimensions.width
+                  )}
+                >
+                  {'Support'}
+                </Text>
+              </View>
+            </Touchable>
+          )}
+        </>
       </View>
     </ScreenContainer>
   );

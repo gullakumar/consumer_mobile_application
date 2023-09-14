@@ -17,7 +17,7 @@ export const serviceRequestSubCategoryPOST = (
   handlers = {}
 ) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
     {
       body: JSON.stringify({ action: action, method: 'GET', auth: 'NO' }),
       headers: {
@@ -88,7 +88,7 @@ export const FetchServiceRequestSubCategoryPOST = ({
 
 export const aNNOUNCEMENTSPOST = (Constants, _args, handlers = {}) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
       body: JSON.stringify({
         action: 'ANNOUNCEMENTS',
@@ -162,7 +162,7 @@ export const aftersentOTPforgorpasswordPOST = (
   handlers = {}
 ) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
       body: JSON.stringify({
         action: 'forgotPassword',
@@ -250,7 +250,7 @@ export const FetchAftersentOTPforgorpasswordPOST = ({
 
 export const bANNERSPOST = (Constants, _args, handlers = {}) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
       body: JSON.stringify({
         action: 'BANNERS',
@@ -323,7 +323,7 @@ export const billingHistoryPrepaidPOST = (
   handlers = {}
 ) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
     {
       body: JSON.stringify({
         action: action,
@@ -400,7 +400,7 @@ export const FetchBillingHistoryPrepaidPOST = ({
 
 export const billingHistoryPOST = (Constants, { action }, handlers = {}) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
       body: JSON.stringify({ action: action, method: 'GET', auth: 'NO' }),
       headers: {
@@ -470,7 +470,7 @@ export const changePasswordPOST = (
   handlers = {}
 ) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
       body: JSON.stringify({
         action: 'ChangePassword',
@@ -548,7 +548,7 @@ export const FetchChangePasswordPOST = ({
 
 export const complaintCategoryPOST = (Constants, _args, handlers = {}) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
     {
       body: JSON.stringify({
         action: 'csc/rest/RequestTypeFocc/',
@@ -621,7 +621,7 @@ export const complaintSubCategoryPOST = (
   handlers = {}
 ) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
     {
       body: JSON.stringify({ action: action, method: 'GET', auth: 'NO' }),
       headers: {
@@ -696,7 +696,7 @@ export const complaintSavePOST = (
   handlers = {}
 ) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
     {
       body: JSON.stringify({
         action: 'csc/rest/RequestTsave',
@@ -777,7 +777,7 @@ export const deleteAccountPOST = (
   handlers = {}
 ) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
       body: JSON.stringify({
         action: 'DeleteAccount',
@@ -853,7 +853,7 @@ export const FetchDeleteAccountPOST = ({
 
 export const downloadPOST = (Constants, _args, handlers = {}) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
       body: JSON.stringify({
         action: 'UPLOAD_FORMS',
@@ -922,7 +922,7 @@ export const FetchDownloadPOST = ({
 
 export const energyTipsPOST = (Constants, _args, handlers = {}) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
     {
       body: JSON.stringify({
         action: 'ENERGYTIPS',
@@ -991,7 +991,7 @@ export const FetchEnergyTipsPOST = ({
 
 export const faqsPOST = (Constants, _args, handlers = {}) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
       body: JSON.stringify({
         action: 'FAQ',
@@ -1061,7 +1061,7 @@ export const feedbackPOST = (
   handlers = {}
 ) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
       body: JSON.stringify({
         action: 'saveFeedback',
@@ -1140,7 +1140,7 @@ export const FetchFeedbackPOST = ({
 
 export const forgotpasswordPOST = (Constants, { accno }, handlers = {}) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
       body: JSON.stringify({
         action: 'forgotPassword',
@@ -1215,7 +1215,7 @@ export const guestRaiseTicketSendOTPPOST = (
   handlers = {}
 ) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
       body: JSON.stringify({
         action: 'sendEmailOTP',
@@ -1295,7 +1295,7 @@ export const guestRaiseTicketAfterSendOTPPOST = (
   handlers = {}
 ) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
       body: JSON.stringify({
         action: 'validateOTP',
@@ -1374,7 +1374,7 @@ export const FetchGuestRaiseTicketAfterSendOTPPOST = ({
 
 export const languagePOST = (Constants, { action }, handlers = {}) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
       body: JSON.stringify({
         action: 'LANGUAGE',
@@ -1448,7 +1448,7 @@ export const loadPatternPOST = (
   handlers = {}
 ) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
       body: JSON.stringify({
         action: 'loadPattern',
@@ -1531,7 +1531,7 @@ export const FetchLoadPatternPOST = ({
 
 export const loginPOST = (Constants, { accountno, pwd }, handlers = {}) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
       body: JSON.stringify({
         action: 'Login',
@@ -1602,7 +1602,7 @@ export const FetchLoginPOST = ({
 
 export const loginWithOTPPOST = (Constants, { accno }, handlers = {}) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
       body: JSON.stringify({
         action: 'LoginWithOTP',
@@ -1677,7 +1677,7 @@ export const manageAccountsPOST = (
   handlers = {}
 ) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
       body: JSON.stringify({
         action: 'getAddedAccountList',
@@ -1748,7 +1748,7 @@ export const FetchManageAccountsPOST = ({
 
 export const notificationsPOST = (Constants, _args, handlers = {}) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
       body: JSON.stringify({
         action: 'NOTIFICATIONS',
@@ -1822,7 +1822,7 @@ export const oTPEmailUpdatePOST = (
   handlers = {}
 ) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
       body: JSON.stringify({
         action: 'UpdateEmail',
@@ -1911,7 +1911,7 @@ export const oTPMobileUpdatePOST = (
   handlers = {}
 ) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
       body: JSON.stringify({
         action: 'UpdateMobile',
@@ -2013,7 +2013,7 @@ export const payemntServicePOST = (
   handlers = {}
 ) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
       body: JSON.stringify({
         action: 'callPgRequest',
@@ -2128,7 +2128,7 @@ export const powerQualityCurrentPOST = (
   handlers = {}
 ) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
     {
       body: JSON.stringify({
         action: 'PQCURRENT',
@@ -2216,7 +2216,7 @@ export const powerQualityPowerFactorPOST = (
   handlers = {}
 ) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
     {
       body: JSON.stringify({
         action: 'AVGPF',
@@ -2304,7 +2304,7 @@ export const powerQualityVoltagePOST = (
   handlers = {}
 ) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
       body: JSON.stringify({
         action: 'PQVoltage',
@@ -2388,7 +2388,7 @@ export const FetchPowerQualityVoltagePOST = ({
 
 export const privacyPoliciesPOST = (Constants, _args, handlers = {}) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
     {
       body: JSON.stringify({
         action: 'PRIVACYPOLICIES',
@@ -2462,7 +2462,7 @@ export const rechargeHistoryPrepaidPOST = (
   handlers = {}
 ) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
       body: JSON.stringify({
         action: action,
@@ -2537,13 +2537,94 @@ export const FetchRechargeHistoryPrepaidPOST = ({
   });
 };
 
+export const rechargeHistoryDetailsPOST = (
+  Constants,
+  { action },
+  handlers = {}
+) =>
+  fetch(
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
+    {
+      body: JSON.stringify({
+        action: action,
+        method: 'GET',
+        auth: 'TOKEN',
+        baseUrlName: '',
+        environmentName: 'SPM_ADANI',
+      }),
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+    }
+  ).then(res => handleResponse(res, handlers));
+
+export const useRechargeHistoryDetailsPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
+  const Constants = GlobalVariables.useValues();
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPRechargeHistoryDetailsPOST', args],
+    () => rechargeHistoryDetailsPOST(Constants, args, handlers),
+    {
+      refetchInterval,
+      onSuccess: () =>
+        queryClient.invalidateQueries(['cISAPPRechargeHistoryDetailsPOSTS']),
+    }
+  );
+};
+
+export const FetchRechargeHistoryDetailsPOST = ({
+  children,
+  onData = () => {},
+  handlers = {},
+  refetchInterval,
+  action,
+}) => {
+  const Constants = GlobalVariables.useValues();
+  const isFocused = useIsFocused();
+  const prevIsFocused = usePrevious(isFocused);
+
+  const {
+    isLoading: loading,
+    data,
+    error,
+    refetch,
+  } = useRechargeHistoryDetailsPOST(
+    { action },
+    { refetchInterval, handlers: { onData, ...handlers } }
+  );
+
+  React.useEffect(() => {
+    if (!prevIsFocused && isFocused) {
+      refetch();
+    }
+  }, [isFocused, prevIsFocused]);
+
+  React.useEffect(() => {
+    if (error) {
+      console.error('Fetch error: ' + error.status + ' ' + error.statusText);
+      console.error(error);
+    }
+  }, [error]);
+  return children({
+    loading,
+    data,
+    error,
+    refetchRechargeHistoryDetails: refetch,
+  });
+};
+
 export const registeredPOST = (
   Constants,
   { accno, email, mobilenumber, password },
   handlers = {}
 ) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
       body: JSON.stringify({
         action: 'createWssUser',
@@ -2634,7 +2715,7 @@ export const serviceRequestSavePOST = (
   handlers = {}
 ) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
     {
       body: JSON.stringify({
         action: 'csc/rest/RequestTCommercialsave',
@@ -2716,7 +2797,7 @@ export const FetchServiceRequestSavePOST = ({
 
 export const serviceRequestCategoryPOST = (Constants, _args, handlers = {}) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
     {
       body: JSON.stringify({
         action: 'csc/rest/RequestTypeCommercial/',
@@ -2788,13 +2869,84 @@ export const FetchServiceRequestCategoryPOST = ({
   });
 };
 
+export const todayDetailsPOST = (Constants, { mtrno }, handlers = {}) =>
+  fetch(
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
+    {
+      body: JSON.stringify({
+        action: 'TodaysDetails',
+        method: 'POST',
+        req: { action: 'TodaysDetails', mtrno: mtrno },
+        auth: 'NO',
+      }),
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+    }
+  ).then(res => handleResponse(res, handlers));
+
+export const useTodayDetailsPOST = (
+  args = {},
+  { refetchInterval, handlers = {} } = {}
+) => {
+  const Constants = GlobalVariables.useValues();
+  const queryClient = useQueryClient();
+  return useQuery(
+    ['cISAPPTodayDetailsPOST', args],
+    () => todayDetailsPOST(Constants, args, handlers),
+    {
+      refetchInterval,
+      onSuccess: () =>
+        queryClient.invalidateQueries(['cISAPPTodayDetailsPOSTS']),
+    }
+  );
+};
+
+export const FetchTodayDetailsPOST = ({
+  children,
+  onData = () => {},
+  handlers = {},
+  refetchInterval,
+  mtrno,
+}) => {
+  const Constants = GlobalVariables.useValues();
+  const isFocused = useIsFocused();
+  const prevIsFocused = usePrevious(isFocused);
+
+  const {
+    isLoading: loading,
+    data,
+    error,
+    refetch,
+  } = useTodayDetailsPOST(
+    { mtrno },
+    { refetchInterval, handlers: { onData, ...handlers } }
+  );
+
+  React.useEffect(() => {
+    if (!prevIsFocused && isFocused) {
+      refetch();
+    }
+  }, [isFocused, prevIsFocused]);
+
+  React.useEffect(() => {
+    if (error) {
+      console.error('Fetch error: ' + error.status + ' ' + error.statusText);
+      console.error(error);
+    }
+  }, [error]);
+  return children({ loading, data, error, refetchTodayDetails: refetch });
+};
+
 export const updateEmailPOST = (
   Constants,
   { accno, newEmail, oldEmail, userId },
   handlers = {}
 ) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
       body: JSON.stringify({
         action: 'UpdateEmail',
@@ -2880,7 +3032,7 @@ export const updateProfileMobileNumberPOST = (
   handlers = {}
 ) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
       body: JSON.stringify({
         action: 'UpdateMobile',
@@ -2967,7 +3119,7 @@ export const FetchUpdateProfileMobileNumberPOST = ({
 
 export const viewBillDetailsPOST = (Constants, { action }, handlers = {}) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
       body: JSON.stringify({ action: action, method: 'GET', auth: 'NO' }),
       headers: {
@@ -3037,7 +3189,7 @@ export const addAccountConfirmOTPForNewScnoAddingPOST = (
   handlers = {}
 ) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
       body: JSON.stringify({
         action: 'WssAddAccount',
@@ -3129,7 +3281,7 @@ export const addServiceConnectionAccountPOST = (
   handlers = {}
 ) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
       body: JSON.stringify({
         action: 'WssAddAccount',
@@ -3218,7 +3370,7 @@ export const confirmOTPscreenPOST = (
   handlers = {}
 ) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
       body: JSON.stringify({
         action: 'forgotPassword',
@@ -3295,11 +3447,16 @@ export const FetchConfirmOTPscreenPOST = ({
   return children({ loading, data, error, refetchConfirmOTPscreen: refetch });
 };
 
-export const consumerDetailsPOST = (Constants, { action }, handlers = {}) =>
+export const consumerDetailsPOST = (Constants, { accno }, handlers = {}) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
-      body: JSON.stringify({ action: action, method: 'GET', auth: 'NO' }),
+      body: JSON.stringify({
+        action: 'getConsumerDetails',
+        method: 'POST',
+        req: { action: 'getConsumerDetails', accno: accno },
+        auth: 'NO',
+      }),
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -3330,7 +3487,7 @@ export const FetchConsumerDetailsPOST = ({
   onData = () => {},
   handlers = {},
   refetchInterval,
-  action,
+  accno,
 }) => {
   const Constants = GlobalVariables.useValues();
   const isFocused = useIsFocused();
@@ -3342,7 +3499,7 @@ export const FetchConsumerDetailsPOST = ({
     error,
     refetch,
   } = useConsumerDetailsPOST(
-    { action },
+    { accno },
     { refetchInterval, handlers: { onData, ...handlers } }
   );
 
@@ -3363,7 +3520,7 @@ export const FetchConsumerDetailsPOST = ({
 
 export const getticketdeatilsPOST = (Constants, { consId }, handlers = {}) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
       body: JSON.stringify({
         action: 'getAllTickets',
@@ -3438,7 +3595,7 @@ export const getticketstatusPOST = (
   handlers = {}
 ) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
       body: JSON.stringify({
         action: 'getTicketStatus',
@@ -3513,7 +3670,7 @@ export const loginConfirmOTPPOST = (
   handlers = {}
 ) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
       body: JSON.stringify({
         action: 'LoginWithOTP',
@@ -3591,7 +3748,7 @@ export const FetchLoginConfirmOTPPOST = ({
 
 export const paymentGatewayPOST = (Constants, _args, handlers = {}) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
       body: JSON.stringify({
         action: 'PAYMENT_CONFIG',
@@ -3661,7 +3818,7 @@ export const FetchPaymentGatewayPOST = ({
 
 export const paymentHistoryPOST = (Constants, { action }, handlers = {}) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service`,
     {
       body: JSON.stringify({ action: action, method: 'GET', auth: 'NO' }),
       headers: {
@@ -3727,7 +3884,7 @@ export const FetchPaymentHistoryPOST = ({
 
 export const prepaidApiPOST = (Constants, { mtrno }, handlers = {}) =>
   fetch(
-    `http://mbackend.fluentgrid.com:9887/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
+    `http://20.192.2.50:9388/fgweb/web/json/plugin/com.fluentgrid.cp.api.ExtIntegrationService/service.`,
     {
       body: JSON.stringify({
         action: 'ProfileBasicDetails',

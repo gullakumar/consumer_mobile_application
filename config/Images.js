@@ -52,4 +52,7 @@ export default {
   Sub4: require('../assets/images/Sub4.png'),
   JBVNLLogo: require('../assets/images/JBVNLLogo.png'),
   JBNL: require('../assets/images/JBNL.png'),
+  FluentgridLogo: require('../assets/images/FluentgridLogo.png'),
+  Fluentgrid: require('../assets/images/Fluentgrid.png'),
+  FluentgridLogoGray: require('../assets/images/FluentgridLogoGray.png'),
 };

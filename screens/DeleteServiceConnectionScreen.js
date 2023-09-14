@@ -172,7 +172,10 @@ const DeleteServiceConnectionScreen = props => {
           <View
             style={StyleSheet.applyWidth(
               StyleSheet.compose(GlobalStyles.ViewStyles(theme)['user name'], {
+                height: 50,
                 marginBottom: 10,
+                paddingLeft: 20,
+                paddingRight: 20,
               }),
               dimensions.width
             )}

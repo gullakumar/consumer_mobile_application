@@ -202,7 +202,11 @@ const UpdateEmailScreen = props => {
           {/* Service connection number */}
           <View
             style={StyleSheet.applyWidth(
-              GlobalStyles.ViewStyles(theme)['user name'],
+              StyleSheet.compose(GlobalStyles.ViewStyles(theme)['user name'], {
+                height: 50,
+                paddingLeft: 20,
+                paddingRight: 20,
+              }),
               dimensions.width
             )}
           >
@@ -260,7 +264,10 @@ const UpdateEmailScreen = props => {
           <View
             style={StyleSheet.applyWidth(
               StyleSheet.compose(GlobalStyles.ViewStyles(theme)['user name'], {
+                height: 50,
                 marginTop: 20,
+                paddingLeft: 20,
+                paddingRight: 20,
               }),
               dimensions.width
             )}
@@ -299,8 +306,8 @@ const UpdateEmailScreen = props => {
                   dimensions.width
                 )}
                 value={Constants['email']}
+                editable={false}
                 placeholder={'Old Email'}
-                editable={true}
                 placeholderTextColor={theme.colors['Medium']}
               />
             </View>

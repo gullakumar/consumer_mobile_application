@@ -232,6 +232,7 @@ const UpdateNewPasswordScreen = props => {
                   value={newpassword}
                   placeholder={'New password'}
                   editable={true}
+                  maxLength={12}
                   placeholderTextColor={theme.colors['Medium']}
                   secureTextEntry={true}
                 />
@@ -295,6 +296,7 @@ const UpdateNewPasswordScreen = props => {
                   value={newpassword}
                   placeholder={'New password'}
                   editable={true}
+                  maxLength={12}
                   placeholderTextColor={theme.colors['Custom Color_20']}
                   secureTextEntry={false}
                 />
@@ -371,6 +373,7 @@ const UpdateNewPasswordScreen = props => {
               value={confirmpassword}
               placeholder={'Confirm password'}
               editable={true}
+              maxLength={12}
               placeholderTextColor={theme.colors['Medium']}
               secureTextEntry={true}
             />

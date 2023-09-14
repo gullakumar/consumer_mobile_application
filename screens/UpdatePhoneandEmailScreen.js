@@ -49,10 +49,10 @@ const UpdatePhoneandEmailScreen = props => {
         if (!isFocused) {
           return;
         }
-        setServiceConNo(Constants['name']);
+        setTextInputValue(Constants['name']);
         const consumerDetailsJson = (
           await CISAPPApi.consumerDetailsPOST(Constants, {
-            action: buildConsumerString(Constants['name']),
+            accno: Constants['name'],
           })
         )?.json;
         console.log(consumerDetailsJson);
@@ -67,7 +67,7 @@ const UpdatePhoneandEmailScreen = props => {
         setConsumerAddress(valueeOut98xC);
         const consumerAddressData = valueeOut98xC;
         const mobileNoData = setGlobalVariableValue({
-          key: 'mobileNumber',
+          key: 'phonenumbercon',
           value: (consumerDetailsJson && consumerDetailsJson[0])?.data?.mobile,
         });
         const emailData = setGlobalVariableValue({
@@ -125,6 +125,7 @@ const UpdatePhoneandEmailScreen = props => {
   const [prepaidFlag, setPrepaidFlag] = React.useState('');
   const [selectedTab, setSelectedTab] = React.useState('dashboard');
   const [serviceConNo, setServiceConNo] = React.useState('');
+  const [textInputValue, setTextInputValue] = React.useState('');
 
   return (
     <ScreenContainer
@@ -218,7 +219,10 @@ const UpdatePhoneandEmailScreen = props => {
             {/* serviceconectionno */}
             <View
               style={StyleSheet.applyWidth(
-                GlobalStyles.ViewStyles(theme)['user name'],
+                StyleSheet.compose(
+                  GlobalStyles.ViewStyles(theme)['user name'],
+                  { paddingLeft: 20, paddingRight: 20, width: '100%' }
+                ),
                 dimensions.width
               )}
             >
@@ -231,10 +235,10 @@ const UpdatePhoneandEmailScreen = props => {
                 onValueChange={newPickerValue => {
                   const handler = async () => {
                     try {
-                      setServiceConNo(newPickerValue);
+                      setTextInputValue(newPickerValue);
                       const consumerDetailsJson = (
                         await CISAPPApi.consumerDetailsPOST(Constants, {
-                          action: buildConsumerString(newPickerValue),
+                          accno: newPickerValue,
                         })
                       )?.json;
                       console.log(consumerDetailsJson);
@@ -250,7 +254,7 @@ const UpdatePhoneandEmailScreen = props => {
                       setConsumerAddress(valueaZeONaJn);
                       const consumerAddressData = valueaZeONaJn;
                       const mobileNoData = setGlobalVariableValue({
-                        key: 'mobileNumber',
+                        key: 'phonenumbercon',
                         value: (consumerDetailsJson && consumerDetailsJson[0])
                           ?.data?.mobile,
                       });
@@ -294,19 +298,17 @@ const UpdatePhoneandEmailScreen = props => {
                 style={StyleSheet.applyWidth(
                   {
                     borderColor: theme.colors['Background'],
-                    borderWidth: 1,
                     fontFamily: 'Roboto_400Regular',
-                    marginTop: -5,
+                    width: '90%',
                   },
                   dimensions.width
                 )}
+                value={textInputValue}
                 options={Constants['manageaccount_picker']}
                 autoDismissKeyboard={true}
-                defaultValue={Constants['name']}
                 iconColor={theme.colors['Medium']}
                 iconSize={24}
                 leftIconMode={'inset'}
-                placeholder={' '}
                 placeholderTextColor={theme.colors['Medium']}
                 rightIconName={'Feather/chevron-down'}
                 type={'solid'}
@@ -424,7 +426,7 @@ const UpdatePhoneandEmailScreen = props => {
                 )}
               >
                 {'Mobile : '}
-                {Constants['mobileNumber']}
+                {Constants['phonenumbercon']}
               </Text>
             </View>
             {/* Email */}
@@ -816,46 +818,51 @@ const UpdatePhoneandEmailScreen = props => {
           </View>
         </Touchable>
         {/* Support */}
-        <Touchable
-          onPress={() => {
-            try {
-              navigation.navigate('CheckTicketStatusScreen');
-            } catch (err) {
-              console.error(err);
-            }
-          }}
-          activeOpacity={0.8}
-          disabledOpacity={0.8}
-        >
-          <View
-            style={StyleSheet.applyWidth(
-              {
-                alignItems: 'center',
-                height: 48,
-                justifyContent: 'center',
-                width: 55,
-              },
-              dimensions.width
-            )}
-          >
-            <Icon
-              color={theme.colors['Community_Light_Black']}
-              name={'MaterialIcons/support-agent'}
-              size={24}
-            />
-            <Text
-              style={StyleSheet.applyWidth(
-                StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
-                  color: theme.colors['Community_Light_Black'],
-                  fontFamily: 'Roboto_400Regular',
-                }),
-                dimensions.width
-              )}
+        <>
+          {!(prepaidFlag === 'N') ? null : (
+            <Touchable
+              onPress={() => {
+                try {
+                  navigation.navigate('CheckTicketStatusScreen');
+                } catch (err) {
+                  console.error(err);
+                }
+              }}
+              disabled={false}
+              activeOpacity={0.8}
+              disabledOpacity={0.8}
             >
-              {'Support'}
-            </Text>
-          </View>
-        </Touchable>
+              <View
+                style={StyleSheet.applyWidth(
+                  {
+                    alignItems: 'center',
+                    height: 48,
+                    justifyContent: 'center',
+                    width: 55,
+                  },
+                  dimensions.width
+                )}
+              >
+                <Icon
+                  color={theme.colors['Community_Light_Black']}
+                  name={'MaterialIcons/support-agent'}
+                  size={24}
+                />
+                <Text
+                  style={StyleSheet.applyWidth(
+                    StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+                      color: theme.colors['Community_Light_Black'],
+                      fontFamily: 'Roboto_400Regular',
+                    }),
+                    dimensions.width
+                  )}
+                >
+                  {'Support'}
+                </Text>
+              </View>
+            </Touchable>
+          )}
+        </>
       </View>
     </ScreenContainer>
   );

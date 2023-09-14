@@ -79,10 +79,11 @@ line two` ) and will not work with special characters inside of quotes ( example
         if (!isFocused) {
           return;
         }
+        console.log('on focus');
         setTextInputValue(Constants['name']);
         const consumerDetailsJson = (
           await CISAPPApi.consumerDetailsPOST(Constants, {
-            action: buildConsumerString(Constants['name']),
+            accno: Constants['name'],
           })
         )?.json;
         console.log(consumerDetailsJson);
@@ -97,10 +98,7 @@ line two` ) and will not work with special characters inside of quotes ( example
         setMeterNumber(meterNo);
         const Scno = (consumerDetailsJson && consumerDetailsJson[0])?.data
           ?.scno;
-        setGlobalVariableValue({
-          key: 'consumerScNo',
-          value: Scno,
-        });
+        setConsumerScNo(Scno);
         console.log(Scno);
         const Name = (consumerDetailsJson && consumerDetailsJson[0])?.data
           ?.name;
@@ -132,6 +130,22 @@ line two` ) and will not work with special characters inside of quotes ( example
           ?.data[0]?.avail_balance;
         console.log(availableBalance);
         setAvailableBalance(availableBalance);
+        const TodayDetailsJson = (
+          await CISAPPApi.todayDetailsPOST(Constants, { mtrno: meterNo })
+        )?.json;
+        console.log(TodayDetailsJson);
+        const LateastDate = (TodayDetailsJson && TodayDetailsJson[0])?.data[0]
+          ?.READ_DATE;
+        setLateastDate(LateastDate);
+        const Todayusage = (TodayDetailsJson && TodayDetailsJson[0])?.data[0]
+          ?.KVA_EXP;
+        setTodayusage(Todayusage);
+        const Currentload = (TodayDetailsJson && TodayDetailsJson[0])?.data[0]
+          ?.L1_CURRENT;
+        setCurrentload(Currentload);
+        const Currentread = (TodayDetailsJson && TodayDetailsJson[0])?.data[0]
+          ?.L1_VOLTAGE;
+        setCurrentread(Currentread);
         const ManageAccountDetails = (
           await CISAPPApi.manageAccountsPOST(Constants, {
             accountNumber: Constants['name'],
@@ -152,6 +166,10 @@ line two` ) and will not work with special characters inside of quotes ( example
     };
     handler();
   }, [isFocused]);
+  const [Currentload, setCurrentload] = React.useState('');
+  const [Currentread, setCurrentread] = React.useState('');
+  const [LateastDate, setLateastDate] = React.useState('');
+  const [Todayusage, setTodayusage] = React.useState('');
   const [accountno, setAccountno] = React.useState('');
   const [availableBalance, setAvailableBalance] = React.useState('');
   const [consumerName, setConsumerName] = React.useState('');
@@ -380,98 +398,109 @@ line two` ) and will not work with special characters inside of quotes ( example
                   </View>
                 </Touchable>
                 {/* Load Enhancement */}
-                <Touchable
-                  onPress={() => {
-                    const handler = async () => {
-                      try {
-                        navigation.navigate('LoadQualityScreen');
-                        await WebBrowser.openBrowserAsync(
-                          'http://20.192.2.50:9388/cportal/#/bltLec/KUM188'
-                        );
-                      } catch (err) {
-                        console.error(err);
-                      }
-                    };
-                    handler();
-                  }}
-                >
-                  <View
-                    style={StyleSheet.applyWidth(
-                      {
-                        alignItems: 'center',
-                        flexDirection: 'row',
-                        paddingBottom: 12,
-                        paddingLeft: 24,
-                        paddingRight: 24,
-                        paddingTop: 12,
-                      },
-                      dimensions.width
-                    )}
-                  >
-                    <Icon
-                      name={'MaterialCommunityIcons/alert-outline'}
-                      size={24}
-                    />
-                    <Text
-                      style={StyleSheet.applyWidth(
-                        {
-                          color: theme.colors['Strong'],
-                          fontFamily: 'Roboto_400Regular',
-                          fontSize: 16,
-                          marginLeft: 8,
-                        },
-                        dimensions.width
-                      )}
+                <>
+                  {!(prepaidFlag === 'N') ? null : (
+                    <Touchable
+                      onPress={() => {
+                        const handler = async () => {
+                          try {
+                            navigation.navigate('LoadQualityScreen');
+                            await WebBrowser.openBrowserAsync(
+                              'http://20.192.2.50:9388/cportal/#/bltLec/KUM188'
+                            );
+                          } catch (err) {
+                            console.error(err);
+                          }
+                        };
+                        handler();
+                      }}
                     >
-                      {'Load Enhancement'}
-                    </Text>
-                  </View>
-                </Touchable>
+                      <View
+                        style={StyleSheet.applyWidth(
+                          {
+                            alignItems: 'center',
+                            flexDirection: 'row',
+                            paddingBottom: 12,
+                            paddingLeft: 24,
+                            paddingRight: 24,
+                            paddingTop: 12,
+                          },
+                          dimensions.width
+                        )}
+                      >
+                        <Icon
+                          name={'MaterialCommunityIcons/alert-outline'}
+                          size={24}
+                        />
+                        <Text
+                          style={StyleSheet.applyWidth(
+                            {
+                              color: theme.colors['Strong'],
+                              fontFamily: 'Roboto_400Regular',
+                              fontSize: 16,
+                              marginLeft: 8,
+                            },
+                            dimensions.width
+                          )}
+                        >
+                          {'Load Enhancement'}
+                        </Text>
+                      </View>
+                    </Touchable>
+                  )}
+                </>
                 {/* Load Reduction */}
-                <Touchable
-                  onPress={() => {
-                    const handler = async () => {
-                      try {
-                        navigation.navigate('LoadQualityScreen');
-                        await WebBrowser.openBrowserAsync(
-                          'http://20.192.2.50:9388/cportal/#/bltLrc/KUM188'
-                        );
-                      } catch (err) {
-                        console.error(err);
-                      }
-                    };
-                    handler();
-                  }}
-                >
-                  <View
-                    style={StyleSheet.applyWidth(
-                      {
-                        alignItems: 'center',
-                        flexDirection: 'row',
-                        paddingBottom: 12,
-                        paddingLeft: 24,
-                        paddingRight: 24,
-                        paddingTop: 12,
-                      },
-                      dimensions.width
-                    )}
-                  >
-                    <Icon name={'FontAwesome/exclamation-triangle'} size={24} />
-                    <Text
-                      style={StyleSheet.applyWidth(
-                        {
-                          color: theme.colors['Strong'],
-                          fontFamily: 'Roboto_400Regular',
-                          fontSize: 16,
-                          marginLeft: 8,
-                        },
-                        dimensions.width
-                      )}
+                <>
+                  {!(prepaidFlag === 'N') ? null : (
+                    <Touchable
+                      onPress={() => {
+                        const handler = async () => {
+                          try {
+                            navigation.navigate('LoadQualityScreen');
+                            await WebBrowser.openBrowserAsync(
+                              'http://20.192.2.50:9388/cportal/#/bltLrc/KUM188'
+                            );
+                          } catch (err) {
+                            console.error(err);
+                          }
+                        };
+                        handler();
+                      }}
                     >
-                      {'Load Reduction'}
-                    </Text>
-                  </View>
-                </Touchable>
+                      <View
+                        style={StyleSheet.applyWidth(
+                          {
+                            alignItems: 'center',
+                            flexDirection: 'row',
+                            paddingBottom: 12,
+                            paddingLeft: 24,
+                            paddingRight: 24,
+                            paddingTop: 12,
+                          },
+                          dimensions.width
+                        )}
+                      >
+                        <Icon
+                          name={'FontAwesome/exclamation-triangle'}
+                          size={24}
+                        />
+                        <Text
+                          style={StyleSheet.applyWidth(
+                            {
+                              color: theme.colors['Strong'],
+                              fontFamily: 'Roboto_400Regular',
+                              fontSize: 16,
+                              marginLeft: 8,
+                            },
+                            dimensions.width
+                          )}
+                        >
+                          {'Load Reduction'}
+                        </Text>
+                      </View>
+                    </Touchable>
+                  )}
+                </>
                 {/* Downloads */}
                 <Touchable
                   onPress={() => {
@@ -908,7 +937,7 @@ line two` ) and will not work with special characters inside of quotes ( example
               style={StyleSheet.applyWidth(
                 StyleSheet.compose(
                   GlobalStyles.ViewStyles(theme)['viewbilldetails'],
-                  { height: 50, justifyContent: 'flex-start' }
+                  { justifyContent: 'flex-start' }
                 ),
                 dimensions.width
               )}
@@ -916,7 +945,10 @@ line two` ) and will not work with special characters inside of quotes ( example
               {/* Enter customer service number */}
               <View
                 style={StyleSheet.applyWidth(
-                  GlobalStyles.ViewStyles(theme)['user name'],
+                  StyleSheet.compose(
+                    GlobalStyles.ViewStyles(theme)['user name'],
+                    { paddingLeft: 20, paddingRight: 20 }
+                  ),
                   dimensions.width
                 )}
               >
@@ -932,7 +964,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                         setTextInputValue(newPickerValue);
                         const consumerDetailsJson = (
                           await CISAPPApi.consumerDetailsPOST(Constants, {
-                            action: buildConsumerString(newPickerValue),
+                            accno: Constants['name'],
                           })
                         )?.json;
                         console.log(consumerDetailsJson);
@@ -950,10 +982,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                         const Scno = (
                           consumerDetailsJson && consumerDetailsJson[0]
                         )?.data?.scno;
-                        setGlobalVariableValue({
-                          key: 'consumerScNo',
-                          value: Scno,
-                        });
+                        setConsumerScNo(Scno);
                         console.log(Scno);
                         const Name = (
                           consumerDetailsJson && consumerDetailsJson[0]
@@ -990,6 +1019,28 @@ line two` ) and will not work with special characters inside of quotes ( example
                         )?.data[0]?.avail_balance;
                         console.log(availableBalance);
                         setAvailableBalance(availableBalance);
+                        const TodayDetailsJson = (
+                          await CISAPPApi.todayDetailsPOST(Constants, {
+                            mtrno: meterNo,
+                          })
+                        )?.json;
+                        console.log(TodayDetailsJson);
+                        const LateastDate = (
+                          TodayDetailsJson && TodayDetailsJson[0]
+                        )?.data[0]?.READ_DATE;
+                        setLateastDate(LateastDate);
+                        const Todayusage = (
+                          TodayDetailsJson && TodayDetailsJson[0]
+                        )?.data[0]?.KVA_EXP;
+                        setTodayusage(Todayusage);
+                        const Currentload = (
+                          TodayDetailsJson && TodayDetailsJson[0]
+                        )?.data[0]?.L1_CURRENT;
+                        setCurrentload(Currentload);
+                        const Currentread = (
+                          TodayDetailsJson && TodayDetailsJson[0]
+                        )?.data[0]?.L1_VOLTAGE;
+                        setCurrentread(Currentread);
                       } catch (err) {
                         console.error(err);
                       }
@@ -999,15 +1050,14 @@ line two` ) and will not work with special characters inside of quotes ( example
                   style={StyleSheet.applyWidth(
                     {
                       borderColor: theme.colors['Background'],
-                      borderWidth: 1,
                       fontFamily: 'Roboto_400Regular',
-                      marginTop: -5,
+                      width: '95%',
                     },
                     dimensions.width
                   )}
+                  value={textInputValue}
                   options={Constants['manageaccount_picker']}
                   autoDismissKeyboard={true}
-                  defaultValue={textInputValue}
                   iconColor={theme.colors['Medium']}
                   iconSize={24}
                   leftIconMode={'inset'}
@@ -1279,12 +1329,187 @@ line two` ) and will not work with special characters inside of quotes ( example
                 </View>
               )}
             </>
+            <>
+              {!(prepaidFlag === 'Y') ? null : (
+                <View
+                  style={StyleSheet.applyWidth(
+                    {
+                      flexDirection: 'row',
+                      justifyContent: 'flex-end',
+                      marginTop: 30,
+                      paddingRight: 8,
+                    },
+                    dimensions.width
+                  )}
+                >
+                  <Icon
+                    style={StyleSheet.applyWidth(
+                      { marginBottom: 3 },
+                      dimensions.width
+                    )}
+                    color={theme.colors['Medium']}
+                    name={'Ionicons/refresh'}
+                    size={20}
+                  />
+                  <Text
+                    style={StyleSheet.applyWidth(
+                      StyleSheet.compose(
+                        GlobalStyles.TextStyles(theme)['Text'],
+                        { fontFamily: 'Roboto_400Regular', fontSize: 13 }
+                      ),
+                      dimensions.width
+                    )}
+                  >
+                    {'Last updated on: '}
+                    {LateastDate}
+                  </Text>
+                </View>
+              )}
+            </>
+            {/* card */}
+            <>
+              {!(prepaidFlag === 'Y') ? null : (
+                <View
+                  style={StyleSheet.applyWidth(
+                    StyleSheet.compose(GlobalStyles.ViewStyles(theme)['card'], {
+                      backgroundColor: 'rgb(255, 255, 255)',
+                      borderColor: 'rgb(199, 198, 198)',
+                      borderRadius: 8,
+                      borderWidth: 1,
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      marginBottom: 30,
+                      paddingBottom: 10,
+                      paddingLeft: 20,
+                      paddingTop: 10,
+                    }),
+                    dimensions.width
+                  )}
+                >
+                  <View
+                    style={StyleSheet.applyWidth(
+                      { alignSelf: 'auto', justifyContent: 'flex-start' },
+                      dimensions.width
+                    )}
+                  >
+                    {/* Todays Usage */}
+                    <Text
+                      style={StyleSheet.applyWidth(
+                        {
+                          color: theme.colors.strong,
+                          fontFamily: 'Roboto_400Regular',
+                          fontSize: 12,
+                          opacity: 1,
+                        },
+                        dimensions.width
+                      )}
+                    >
+                      {"Today's Usage"}
+                    </Text>
+                    {/* Amount  */}
+                    <Text
+                      style={StyleSheet.applyWidth(
+                        {
+                          alignSelf: 'center',
+                          color: theme.colors.strong,
+                          fontFamily: 'Roboto_400Regular',
+                          fontSize: 14,
+                          lineHeight: 23,
+                          opacity: 1,
+                        },
+                        dimensions.width
+                      )}
+                    >
+                      {Todayusage}
+                    </Text>
+                  </View>
+
+                  <View
+                    style={StyleSheet.applyWidth(
+                      { alignSelf: 'auto' },
+                      dimensions.width
+                    )}
+                  >
+                    {/* Current Load */}
+                    <Text
+                      style={StyleSheet.applyWidth(
+                        {
+                          color: theme.colors.strong,
+                          fontFamily: 'Roboto_400Regular',
+                          fontSize: 12,
+                          opacity: 1,
+                        },
+                        dimensions.width
+                      )}
+                    >
+                      {'Current Load'}
+                    </Text>
+                    {/* KW */}
+                    <Text
+                      style={StyleSheet.applyWidth(
+                        {
+                          alignSelf: 'center',
+                          color: theme.colors.strong,
+                          fontFamily: 'Roboto_700Bold',
+                          fontSize: 14,
+                          lineHeight: 23,
+                          opacity: 1,
+                        },
+                        dimensions.width
+                      )}
+                    >
+                      {Currentload}
+                    </Text>
+                  </View>
+
+                  <View
+                    style={StyleSheet.applyWidth(
+                      { alignSelf: 'auto' },
+                      dimensions.width
+                    )}
+                  >
+                    {/* Current Reading */}
+                    <Text
+                      style={StyleSheet.applyWidth(
+                        {
+                          color: theme.colors.strong,
+                          fontFamily: 'Roboto_400Regular',
+                          fontSize: 12,
+                          opacity: 1,
+                        },
+                        dimensions.width
+                      )}
+                    >
+                      {'Current Reading'}
+                    </Text>
+                    {/* KW */}
+                    <Text
+                      style={StyleSheet.applyWidth(
+                        {
+                          alignSelf: 'center',
+                          color: theme.colors.strong,
+                          fontFamily: 'Roboto_700Bold',
+                          fontSize: 14,
+                          lineHeight: 23,
+                          opacity: 1,
+                        },
+                        dimensions.width
+                      )}
+                    >
+                      {Currentread}
+                    </Text>
+                  </View>
+                </View>
+              )}
+            </>
           </View>
           {/* Promotions */}
           <View
             style={StyleSheet.applyWidth(
               StyleSheet.compose(GlobalStyles.ViewStyles(theme)['Promotions'], {
                 marginTop: 10,
+                paddingLeft: 16,
+                paddingRight: 16,
               }),
               dimensions.width
             )}
@@ -1557,45 +1782,50 @@ line two` ) and will not work with special characters inside of quotes ( example
           </View>
         </Touchable>
         {/* Support */}
-        <Touchable
-          onPress={() => {
-            try {
-              navigation.navigate('CheckTicketStatusScreen');
-            } catch (err) {
-              console.error(err);
-            }
-          }}
-          activeOpacity={0.8}
-          disabledOpacity={0.8}
-        >
-          <View
-            style={StyleSheet.applyWidth(
-              {
-                alignItems: 'center',
-                height: 48,
-                justifyContent: 'center',
-                width: 55,
-              },
-              dimensions.width
-            )}
-          >
-            <Icon
-              color={theme.colors['Community_Light_Black']}
-              name={'MaterialIcons/support-agent'}
-              size={24}
-            />
-            <Text
-              style={StyleSheet.applyWidth(
-                StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
-                  fontFamily: 'Roboto_400Regular',
-                }),
-                dimensions.width
-              )}
+        <>
+          {!(prepaidFlag === 'N') ? null : (
+            <Touchable
+              onPress={() => {
+                try {
+                  navigation.navigate('CheckTicketStatusScreen');
+                } catch (err) {
+                  console.error(err);
+                }
+              }}
+              disabled={false}
+              activeOpacity={0.8}
+              disabledOpacity={0.8}
             >
-              {'Support'}
-            </Text>
-          </View>
-        </Touchable>
+              <View
+                style={StyleSheet.applyWidth(
+                  {
+                    alignItems: 'center',
+                    height: 48,
+                    justifyContent: 'center',
+                    width: 55,
+                  },
+                  dimensions.width
+                )}
+              >
+                <Icon
+                  color={theme.colors['Community_Light_Black']}
+                  name={'MaterialIcons/support-agent'}
+                  size={24}
+                />
+                <Text
+                  style={StyleSheet.applyWidth(
+                    StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+                      fontFamily: 'Roboto_400Regular',
+                    }),
+                    dimensions.width
+                  )}
+                >
+                  {'Support'}
+                </Text>
+              </View>
+            </Touchable>
+          )}
+        </>
       </View>
     </ScreenContainer>
   );

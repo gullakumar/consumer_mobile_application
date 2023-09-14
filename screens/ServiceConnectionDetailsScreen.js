@@ -180,7 +180,11 @@ const ServiceConnectionDetailsScreen = props => {
           {/* Service connection number */}
           <View
             style={StyleSheet.applyWidth(
-              GlobalStyles.ViewStyles(theme)['user name'],
+              StyleSheet.compose(GlobalStyles.ViewStyles(theme)['user name'], {
+                height: 50,
+                paddingLeft: 20,
+                paddingRight: 20,
+              }),
               dimensions.width
             )}
           >

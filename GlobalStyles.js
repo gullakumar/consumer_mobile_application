@@ -50,12 +50,50 @@ export const ViewStyles = theme =>
     'Navi-App': { flexDirection: 'row', paddingLeft: 16, paddingRight: 16 },
     'Payment Methods': { flexDirection: 'column' },
     'Payment Methods 2': { flexDirection: 'column' },
-    Promotions: { alignItems: 'stretch', paddingLeft: 16, paddingRight: 16 },
+    Promotions: { alignItems: 'stretch' },
     'Section Header': {
       flexDirection: 'row',
       justifyContent: 'space-between',
       marginBottom: 12,
       marginTop: 20,
+    },
+    Table: {
+      backgroundColor: 'rgb(211, 211, 211)',
+      borderBottomWidth: 1,
+      borderColor: 'rgb(211, 211, 211)',
+      borderLeftWidth: 1,
+      borderRightWidth: 1,
+      borderTopLeftRadius: 5,
+      borderTopRightRadius: 5,
+      borderTopWidth: 1,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    'Table 2': {
+      backgroundColor: 'rgb(211, 211, 211)',
+      borderBottomWidth: 1,
+      borderColor: 'rgb(211, 211, 211)',
+      borderLeftWidth: 1,
+      borderRightWidth: 1,
+      borderTopLeftRadius: 5,
+      borderTopRightRadius: 5,
+      borderTopWidth: 1,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      width: '100%',
+    },
+    'Table 3': {
+      backgroundColor: 'rgb(211, 211, 211)',
+      borderBottomWidth: 1,
+      borderColor: 'rgb(211, 211, 211)',
+      borderLeftWidth: 1,
+      borderRightWidth: 1,
+      borderTopLeftRadius: 5,
+      borderTopRightRadius: 5,
+      borderTopWidth: 1,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      width: '100%',
     },
     Tabs: {
       alignItems: 'center',
@@ -301,11 +339,7 @@ export const ViewStyles = theme =>
       borderRightWidth: 1,
       borderTopWidth: 1,
       flexDirection: 'row',
-      height: 50,
       justifyContent: 'space-between',
-      paddingLeft: 20,
-      paddingRight: 20,
-      width: '100%',
     },
     'user name 2': {
       alignItems: 'center',
@@ -402,7 +436,7 @@ export const SurfaceStyles = theme =>
 export const ImageStyles = theme =>
   StyleSheet.create({
     Image: { height: 100, width: 100 },
-    banner: { borderRadius: 20, height: 140 },
+    banner: { height: 140 },
     'banner 2': { borderRadius: 20, height: 140 },
     'banner 3': { borderRadius: 20, height: 140 },
   });
@@ -417,6 +451,25 @@ export const NumberInputStyles = theme =>
       paddingLeft: 8,
       paddingRight: 8,
       paddingTop: 8,
+    },
+  });
+
+export const PinInputStyles = theme =>
+  StyleSheet.create({
+    'Pin Input': {
+      alignItems: 'center',
+      borderColor: theme.colors.medium,
+      borderRadius: 5,
+      borderWidth: 1,
+      color: theme.colors.strong,
+      flex: 1,
+      fontSize: 25,
+      justifyContent: 'center',
+      marginLeft: 5,
+      marginRight: 5,
+      maxHeight: 70,
+      maxWidth: 70,
+      padding: 5,
     },
   });
 

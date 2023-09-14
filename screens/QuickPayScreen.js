@@ -20,6 +20,7 @@ const QuickPayScreen = props => {
   const dimensions = useWindowDimensions();
   const Constants = GlobalVariables.useValues();
   const Variables = Constants;
+  const setGlobalVariableValue = GlobalVariables.useSetValue();
 
   const buildString = Scno => {
     console.log(`billing/rest/getBillDataWss/${Scno}`);
@@ -34,10 +35,27 @@ const QuickPayScreen = props => {
     return errorMessage;
   };
 
+  const buildConsumerString = Scno => {
+    // Type the code for the body of your function or hook here.
+    // Functions can be triggered via Button/Touchable actions.
+    // Hooks are run per ReactJS rules.
+
+    /* String line breaks are accomplished with backticks ( example: `line one
+line two` ) and will not work with special characters inside of quotes ( example: "line one line two" ) */
+
+    console.log(`billing/rest/AccountInfo/${Scno}`);
+    return `billing/rest/AccountInfo/${Scno}`;
+  };
+
   const { theme } = props;
   const { navigation } = props;
 
+  const [availableBalance, setAvailableBalance] = React.useState('');
   const [checkboxRowValue, setCheckboxRowValue] = React.useState('');
+  const [consumerName, setConsumerName] = React.useState('');
+  const [consumerScNo, setConsumerScNo] = React.useState('');
+  const [meterNumber, setMeterNumber] = React.useState('');
+  const [prepaidFlag, setPrepaidFlag] = React.useState('');
   const [scnoErrorMsg, setScnoErrorMsg] = React.useState('');
   const [textInputValue, setTextInputValue] = React.useState('');
   const [viewbilldetails, setViewbilldetails] = React.useState({});
@@ -116,7 +134,10 @@ const QuickPayScreen = props => {
         <View
           style={StyleSheet.applyWidth(
             StyleSheet.compose(GlobalStyles.ViewStyles(theme)['user name'], {
+              height: 50,
               marginTop: 20,
+              paddingLeft: 20,
+              paddingRight: 20,
             }),
             dimensions.width
           )}
@@ -158,6 +179,55 @@ const QuickPayScreen = props => {
             />
           </View>
         </View>
+        {/* prepaid/post card */}
+        <View
+          style={StyleSheet.applyWidth(
+            StyleSheet.compose(
+              GlobalStyles.ViewStyles(theme)['postpaid view 2'],
+              {
+                marginBottom: 5,
+                marginTop: 10,
+                paddingLeft: 20,
+                paddingRight: 20,
+                width: '100%',
+              }
+            ),
+            dimensions.width
+          )}
+        >
+          {/* Prepaid */}
+          <>
+            {!(prepaidFlag === 'Y') ? null : (
+              <Text
+                style={StyleSheet.applyWidth(
+                  StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+                    fontFamily: 'Roboto_400Regular',
+                    textAlign: 'right',
+                  }),
+                  dimensions.width
+                )}
+              >
+                {'Prepaid'}
+              </Text>
+            )}
+          </>
+          {/* Postpaid */}
+          <>
+            {!(prepaidFlag === 'N') ? null : (
+              <Text
+                style={StyleSheet.applyWidth(
+                  StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+                    fontFamily: 'Roboto_400Regular',
+                    textAlign: 'right',
+                  }),
+                  dimensions.width
+                )}
+              >
+                {'Postpaid'}
+              </Text>
+            )}
+          </>
+        </View>
         {/* Service connection error message */}
         <Text
           style={StyleSheet.applyWidth(
@@ -181,6 +251,28 @@ const QuickPayScreen = props => {
                 if (scnoErrorMsg?.length) {
                   return;
                 }
+                const consumerDetailsJson = (
+                  await CISAPPApi.consumerDetailsPOST(Constants, {
+                    accno: textInputValue,
+                  })
+                )?.json;
+                buildConsumerString(Constants['name']);
+                const prepaidFlag = (
+                  consumerDetailsJson && consumerDetailsJson[0]
+                )?.data?.prepaidFlag;
+                console.log(prepaidFlag);
+                setPrepaidFlag(prepaidFlag);
+                const meterNo = (consumerDetailsJson && consumerDetailsJson[0])
+                  ?.data?.meterNumber;
+                console.log(meterNo);
+                setMeterNumber(meterNo);
+                const Scno = (consumerDetailsJson && consumerDetailsJson[0])
+                  ?.data?.scno;
+                console.log(Scno);
+                setConsumerScNo(Scno);
+                const Name = (consumerDetailsJson && consumerDetailsJson[0])
+                  ?.data?.name;
+                setConsumerName(Name);
                 const Viewbilldetailsjson = (
                   await CISAPPApi.viewBillDetailsPOST(Constants, {
                     action: buildString(textInputValue),
@@ -194,6 +286,21 @@ const QuickPayScreen = props => {
                 setViewbilldetails(valueaueixQRY);
                 const Viewbilldetailslog = valueaueixQRY;
                 console.log(Viewbilldetailslog);
+                const prepaiddetailsJson = await (async () => {
+                  if (prepaidFlag === 'Y') {
+                    return (
+                      await CISAPPApi.prepaidApiPOST(Constants, {
+                        mtrno: meterNo,
+                      })
+                    )?.json;
+                  }
+                })();
+                console.log(prepaiddetailsJson);
+                const availableBalance = (
+                  prepaiddetailsJson && prepaiddetailsJson[0]
+                )?.data[0]?.avail_balance;
+                console.log(availableBalance);
+                setAvailableBalance(availableBalance);
               } catch (err) {
                 console.error(err);
               }
@@ -214,10 +321,10 @@ const QuickPayScreen = props => {
         />
       </View>
       {/* Details fetaching */}
-      <>
-        {!viewbilldetails?.Name ? null : (
-          <View>
-            {/* card */}
+      <View>
+        {/* card */}
+        <>
+          {!(prepaidFlag === 'N') ? null : (
             <View
               style={StyleSheet.applyWidth(
                 StyleSheet.compose(GlobalStyles.ViewStyles(theme)['card'], {
@@ -267,7 +374,11 @@ const QuickPayScreen = props => {
                 {viewbilldetails?.AccNo}
               </Text>
             </View>
-            {/* card */}
+          )}
+        </>
+        {/* card */}
+        <>
+          {!(prepaidFlag === 'N') ? null : (
             <View
               style={StyleSheet.applyWidth(
                 StyleSheet.compose(GlobalStyles.ViewStyles(theme)['card'], {
@@ -379,9 +490,77 @@ const QuickPayScreen = props => {
                 title={'Pay Now'}
               />
             </View>
-          </View>
-        )}
-      </>
+          )}
+        </>
+        {/* prepaid card */}
+        <>
+          {!(prepaidFlag === 'Y') ? null : (
+            <View
+              style={StyleSheet.applyWidth(
+                StyleSheet.compose(GlobalStyles.ViewStyles(theme)['card'], {
+                  alignItems: 'center',
+                  backgroundColor: 'rgb(255, 255, 255)',
+                  borderColor: 'rgb(199, 198, 198)',
+                  borderRadius: 8,
+                  borderWidth: 1,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  marginBottom: 15,
+                  marginLeft: 20,
+                  marginRight: 20,
+                  marginTop: 5,
+                  paddingBottom: 10,
+                  paddingLeft: 20,
+                  paddingTop: 10,
+                }),
+                dimensions.width
+              )}
+            >
+              {/* Name */}
+              <Text
+                style={StyleSheet.applyWidth(
+                  {
+                    color: theme.colors.strong,
+                    fontFamily: 'Roboto_400Regular',
+                    fontSize: 14,
+                    opacity: 1,
+                  },
+                  dimensions.width
+                )}
+              >
+                {'Available balance  ₹'}
+                {null}
+              </Text>
+              {/* Recharge Now */}
+              <Button
+                onPress={() => {
+                  try {
+                    navigation.navigate('RechargeGuestScreen', {
+                      Name: consumerName,
+                      serviceConNo: consumerScNo,
+                    });
+                  } catch (err) {
+                    console.error(err);
+                  }
+                }}
+                style={StyleSheet.applyWidth(
+                  {
+                    backgroundColor: theme.colors.primary,
+                    borderRadius: 14,
+                    fontFamily: 'Roboto_400Regular',
+                    fontSize: 16,
+                    height: 36,
+                    textAlign: 'center',
+                    width: '45%',
+                  },
+                  dimensions.width
+                )}
+                title={'Recharge Now'}
+              />
+            </View>
+          )}
+        </>
+      </View>
     </ScreenContainer>
   );
 };

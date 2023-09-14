@@ -1,8 +1,9 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Dimensions } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 
 export function LineChartComponent({ billingHistoryScreen }) {
+  const screenWidth = Dimensions.get('window').width;
   let newData = [];
   let newBillDates = [];
   let billMonth = [];
@@ -65,14 +66,15 @@ export function LineChartComponent({ billingHistoryScreen }) {
         color: (opacity = 1) => `rgba(255, 0, 0, ${opacity})`,
       },*/
     ],
-    legend: ['Units(Kwh)'],
+    legend: ['Units(Kvah)'],
   };
 
   return (
     <View style={{ flex: 1 }}>
       <LineChart
         data={data}
-        width={400}
+        //width={400}
+        width={screenWidth} // Set the width to the screen width
         height={350}
         verticalLabelRotation={60}
         chartConfig={{

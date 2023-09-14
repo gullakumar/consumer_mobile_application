@@ -595,7 +595,11 @@ const UpdatePhonenumberScreen = props => {
           {/* Service connection number */}
           <View
             style={StyleSheet.applyWidth(
-              GlobalStyles.ViewStyles(theme)['user name'],
+              StyleSheet.compose(GlobalStyles.ViewStyles(theme)['user name'], {
+                height: 50,
+                paddingLeft: 20,
+                paddingRight: 20,
+              }),
               dimensions.width
             )}
           >
@@ -649,7 +653,11 @@ const UpdatePhonenumberScreen = props => {
           {/* Meter Number */}
           <View
             style={StyleSheet.applyWidth(
-              GlobalStyles.ViewStyles(theme)['user name'],
+              StyleSheet.compose(GlobalStyles.ViewStyles(theme)['user name'], {
+                height: 50,
+                paddingLeft: 20,
+                paddingRight: 20,
+              }),
               dimensions.width
             )}
           >
@@ -680,8 +688,8 @@ const UpdatePhonenumberScreen = props => {
                   dimensions.width
                 )}
                 value={Constants['mobileNumber']}
+                editable={false}
                 changeTextDelay={500}
-                editable={true}
                 maxLength={10}
                 placeholder={'Old Mobile Number'}
                 placeholderTextColor={theme.colors['Medium']}

@@ -45,6 +45,7 @@ const ManageAccountScreen = props => {
   }, [isFocused]);
   const [hiddenHindi, setHiddenHindi] = React.useState(true);
   const [managead, setManagead] = React.useState({});
+  const [prepaidFlag, setPrepaidFlag] = React.useState('');
   const [serviceConNo, setServiceConNo] = React.useState('');
   const [showNav, setShowNav] = React.useState(false);
   const [visibleHindi, setVisibleHindi] = React.useState(false);
@@ -527,46 +528,51 @@ const ManageAccountScreen = props => {
           </View>
         </Touchable>
         {/* Support */}
-        <Touchable
-          onPress={() => {
-            try {
-              navigation.navigate('CheckTicketStatusScreen');
-            } catch (err) {
-              console.error(err);
-            }
-          }}
-          activeOpacity={0.8}
-          disabledOpacity={0.8}
-        >
-          <View
-            style={StyleSheet.applyWidth(
-              {
-                alignItems: 'center',
-                height: 48,
-                justifyContent: 'center',
-                width: 55,
-              },
-              dimensions.width
-            )}
-          >
-            <Icon
-              color={theme.colors['Community_Light_Black']}
-              name={'MaterialIcons/support-agent'}
-              size={24}
-            />
-            <Text
-              style={StyleSheet.applyWidth(
-                StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
-                  color: theme.colors['Community_Light_Black'],
-                  fontFamily: 'Roboto_400Regular',
-                }),
-                dimensions.width
-              )}
+        <>
+          {!(prepaidFlag === 'N') ? null : (
+            <Touchable
+              onPress={() => {
+                try {
+                  navigation.navigate('CheckTicketStatusScreen');
+                } catch (err) {
+                  console.error(err);
+                }
+              }}
+              disabled={false}
+              activeOpacity={0.8}
+              disabledOpacity={0.8}
             >
-              {'Support'}
-            </Text>
-          </View>
-        </Touchable>
+              <View
+                style={StyleSheet.applyWidth(
+                  {
+                    alignItems: 'center',
+                    height: 48,
+                    justifyContent: 'center',
+                    width: 55,
+                  },
+                  dimensions.width
+                )}
+              >
+                <Icon
+                  color={theme.colors['Community_Light_Black']}
+                  name={'MaterialIcons/support-agent'}
+                  size={24}
+                />
+                <Text
+                  style={StyleSheet.applyWidth(
+                    StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+                      color: theme.colors['Community_Light_Black'],
+                      fontFamily: 'Roboto_400Regular',
+                    }),
+                    dimensions.width
+                  )}
+                >
+                  {'Support'}
+                </Text>
+              </View>
+            </Touchable>
+          )}
+        </>
       </View>
     </ScreenContainer>
   );

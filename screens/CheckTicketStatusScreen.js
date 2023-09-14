@@ -94,9 +94,10 @@ const CheckTicketStatusScreen = props => {
         if (!isFocused) {
           return;
         }
+        setTextInputValue(Constants['name']);
         const consumerDetailsJson = (
           await CISAPPApi.consumerDetailsPOST(Constants, {
-            action: buildConsumerString(Constants['name']),
+            accno: Constants['name'],
           })
         )?.json;
         console.log(consumerDetailsJson);
@@ -116,6 +117,7 @@ const CheckTicketStatusScreen = props => {
             ((getticketdata && getticketdata[0])?.data)[0]
           )?.data
         );
+        console.log();
       } catch (err) {
         console.error(err);
       }
@@ -139,6 +141,7 @@ const CheckTicketStatusScreen = props => {
   const [refreshingLaj3UIhC, setRefreshingLaj3UIhC] = React.useState(false);
   const [remarks, setRemarks] = React.useState('');
   const [tableData, setTableData] = React.useState([]);
+  const [textInputValue, setTextInputValue] = React.useState('');
 
   return (
     <ScreenContainer
@@ -199,7 +202,11 @@ const CheckTicketStatusScreen = props => {
       {/* Search and add */}
       <View
         style={StyleSheet.applyWidth(
-          GlobalStyles.ViewStyles(theme)['search and Add'],
+          StyleSheet.compose(GlobalStyles.ViewStyles(theme)['search and Add'], {
+            paddingBottom: 16,
+            paddingTop: 16,
+            width: '100%',
+          }),
           dimensions.width
         )}
       >
@@ -215,7 +222,6 @@ const CheckTicketStatusScreen = props => {
               borderTopWidth: 1,
               flex: 1,
               flexDirection: 'row',
-              height: 50,
               justifyContent: 'space-between',
               paddingLeft: 20,
               paddingRight: 25,
@@ -227,11 +233,11 @@ const CheckTicketStatusScreen = props => {
           <Picker
             onValueChange={newPickerValue => {
               const handler = async () => {
-                const pickerValue = newPickerValue;
                 try {
+                  setTextInputValue(newPickerValue);
                   const consumerDetailsJson = (
                     await CISAPPApi.consumerDetailsPOST(Constants, {
-                      action: buildConsumerString(newPickerValue),
+                      accno: Constants['name'],
                     })
                   )?.json;
                   console.log(consumerDetailsJson);
@@ -239,7 +245,7 @@ const CheckTicketStatusScreen = props => {
                   const consumerId = (
                     consumerDetailsJson && consumerDetailsJson[0]
                   )?.data?.consumerId;
-                  setConsumerId(consumerId);
+                  setTextInputValue(newPickerValue);
                   const getticketdata = (
                     await CISAPPApi.getticketdeatilsPOST(Constants, {
                       consId: consumerId,
@@ -263,13 +269,13 @@ const CheckTicketStatusScreen = props => {
                 borderColor: theme.colors['Background'],
                 borderWidth: 1,
                 fontFamily: 'Roboto_400Regular',
-                height: 48,
+                width: '95%',
               },
               dimensions.width
             )}
+            value={textInputValue}
             options={Constants['manageaccount_picker']}
             autoDismissKeyboard={true}
-            defaultValue={Constants['name']}
             iconSize={24}
             leftIconMode={'inset'}
             placeholder={'Select an option'}
@@ -301,303 +307,238 @@ const CheckTicketStatusScreen = props => {
       {/* Second Navigation Frame */}
       <View
         style={StyleSheet.applyWidth(
-          { marginTop: 15, paddingLeft: 12, paddingRight: 12 },
+          {
+            alignItems: 'center',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginTop: 15,
+            paddingLeft: 12,
+            paddingRight: 12,
+          },
           dimensions.width
         )}
       >
-        {/* 3 Options Frame */}
+        {/* Option 1 Frame */}
         <View
           style={StyleSheet.applyWidth(
-            { flexDirection: 'row', paddingBottom: 12, paddingTop: 12 },
+            {
+              alignItems: 'center',
+              flex: 1,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            },
             dimensions.width
           )}
         >
-          {/* Option 1 Frame */}
-          <View
-            style={StyleSheet.applyWidth(
-              {
-                backgroundColor: theme.colors.communityIconBGColor,
-                borderBottomLeftRadius: 64,
-                borderTopLeftRadius: 64,
-                flex: 1,
-                flexGrow: 1,
-                flexShrink: 0,
-                justifyContent: 'center',
-              },
-              dimensions.width
+          {/* Flex Frame for Touchable */}
+          <>
+            {!menuTab1 ? null : (
+              <View
+                style={StyleSheet.applyWidth({ flex: 1 }, dimensions.width)}
+              >
+                <Touchable
+                  onPress={() => {
+                    try {
+                      setMenuTab1(true);
+                      setMenuTab2(false);
+                      setMenuTab3(false);
+                      setListMissing(false);
+                    } catch (err) {
+                      console.error(err);
+                    }
+                  }}
+                >
+                  {/* Button Frame True */}
+                  <View
+                    style={StyleSheet.applyWidth(
+                      {
+                        alignItems: 'center',
+                        borderBottomWidth: 3,
+                        borderColor: theme.colors['Primary'],
+                        flexGrow: 0,
+                        flexShrink: 0,
+                        height: 25,
+                      },
+                      dimensions.width
+                    )}
+                  >
+                    {/* Label */}
+                    <Text
+                      style={StyleSheet.applyWidth(
+                        {
+                          color: theme.colors['Custom Color'],
+                          fontFamily: 'Roboto_400Regular',
+                          fontSize: 14,
+                        },
+                        dimensions.width
+                      )}
+                    >
+                      {'Open Tickets'}
+                    </Text>
+                  </View>
+                </Touchable>
+              </View>
             )}
-          >
-            {/* Flex Frame for Touchable */}
-            <>
-              {!menuTab1 ? null : (
-                <View
-                  style={StyleSheet.applyWidth(
-                    {
-                      backgroundColor: theme.colors.communityIconBGColor,
-                      borderBottomLeftRadius: 64,
-                      borderTopLeftRadius: 64,
-                    },
-                    dimensions.width
-                  )}
+          </>
+          {/* Flex Frame for Touchable */}
+          <>
+            {menuTab1 ? null : (
+              <View
+                style={StyleSheet.applyWidth({ flex: 1 }, dimensions.width)}
+              >
+                <Touchable
+                  onPress={() => {
+                    try {
+                      setMenuTab1(true);
+                      setMenuTab2(false);
+                      setMenuTab3(false);
+                      setListMissing(false);
+                    } catch (err) {
+                      console.error(err);
+                    }
+                  }}
                 >
-                  <Touchable
-                    onPress={() => {
-                      try {
-                        setMenuTab1(true);
-                        setMenuTab2(false);
-                        setMenuTab3(false);
-                        setListMissing(false);
-                      } catch (err) {
-                        console.error(err);
-                      }
-                    }}
+                  {/* Button Frame False */}
+                  <View
+                    style={StyleSheet.applyWidth(
+                      {
+                        alignItems: 'center',
+                        borderBottomWidth: 2,
+                        borderColor: theme.colors['Light'],
+                        flexGrow: 0,
+                        flexShrink: 0,
+                        height: 25,
+                      },
+                      dimensions.width
+                    )}
                   >
-                    {/* Button Frame True */}
-                    <View
+                    {/* Label */}
+                    <Text
                       style={StyleSheet.applyWidth(
                         {
-                          alignItems: 'center',
-                          backgroundColor: theme.colors.communityTrueOption,
-                          borderBottomWidth: 2,
-                          borderColor: theme.colors.communityDarkUI,
-                          borderLeftWidth: 2,
-                          borderRadius: 64,
-                          borderRightWidth: 2,
-                          borderTopWidth: 2,
-                          flexGrow: 0,
-                          flexShrink: 0,
-                          justifyContent: 'center',
-                          paddingBottom: 9,
-                          paddingLeft: 9,
-                          paddingRight: 9,
-                          paddingTop: 9,
+                          color: theme.colors['Light'],
+                          fontFamily: 'Roboto_400Regular',
+                          fontSize: 14,
                         },
                         dimensions.width
                       )}
                     >
-                      {/* Label */}
-                      <Text
-                        style={StyleSheet.applyWidth(
-                          {
-                            color: theme.colors.communityWhite,
-                            fontFamily: 'Roboto_400Regular',
-                            fontSize: 12,
-                            lineHeight: 18,
-                          },
-                          dimensions.width
-                        )}
-                      >
-                        {'Open Tickets'}
-                      </Text>
-                    </View>
-                  </Touchable>
-                </View>
-              )}
-            </>
-            {/* Flex Frame for Touchable */}
-            <>
-              {menuTab1 ? null : (
-                <View
-                  style={StyleSheet.applyWidth(
-                    {
-                      backgroundColor: theme.colors.communityIconBGColor,
-                      borderBottomLeftRadius: 64,
-                      borderTopLeftRadius: 64,
-                    },
-                    dimensions.width
-                  )}
-                >
-                  <Touchable
-                    onPress={() => {
-                      try {
-                        setMenuTab1(true);
-                        setMenuTab2(false);
-                        setMenuTab3(false);
-                        setListMissing(false);
-                      } catch (err) {
-                        console.error(err);
-                      }
-                    }}
-                  >
-                    {/* Button Frame False */}
-                    <View
-                      style={StyleSheet.applyWidth(
-                        {
-                          alignItems: 'center',
-                          backgroundColor: theme.colors.communityIconBGColor,
-                          borderBottomWidth: 2,
-                          borderColor: theme.colors.communityIconBGColor,
-                          borderLeftWidth: 2,
-                          borderRadius: 64,
-                          borderRightWidth: 2,
-                          borderTopWidth: 2,
-                          flexGrow: 0,
-                          flexShrink: 0,
-                          justifyContent: 'center',
-                          paddingBottom: 9,
-                          paddingLeft: 9,
-                          paddingRight: 9,
-                          paddingTop: 9,
-                        },
-                        dimensions.width
-                      )}
-                    >
-                      {/* Label */}
-                      <Text
-                        style={StyleSheet.applyWidth(
-                          {
-                            color: theme.colors.communityDarkUI,
-                            fontFamily: 'Roboto_400Regular',
-                            fontSize: 12,
-                            lineHeight: 18,
-                          },
-                          dimensions.width
-                        )}
-                      >
-                        {'Open Tickets'}
-                      </Text>
-                    </View>
-                  </Touchable>
-                </View>
-              )}
-            </>
-          </View>
-          {/* Option 2 Frame */}
-          <View
-            style={StyleSheet.applyWidth(
-              { flex: 1, flexGrow: 1, flexShrink: 0 },
-              dimensions.width
+                      {'Open Tickets'}
+                    </Text>
+                  </View>
+                </Touchable>
+              </View>
             )}
-          >
-            {/* Flex Frame for Touchable */}
-            <>
-              {!menuTab2 ? null : (
-                <View
-                  style={StyleSheet.applyWidth(
-                    { backgroundColor: theme.colors.communityIconBGColor },
-                    dimensions.width
-                  )}
+          </>
+        </View>
+        {/* Option 2 Frame */}
+        <View
+          style={StyleSheet.applyWidth(
+            {
+              alignItems: 'center',
+              flex: 1,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            },
+            dimensions.width
+          )}
+        >
+          {/* Flex Frame for Touchable */}
+          <>
+            {!menuTab2 ? null : (
+              <View
+                style={StyleSheet.applyWidth({ flex: 1 }, dimensions.width)}
+              >
+                <Touchable
+                  onPress={() => {
+                    try {
+                      setMenuTab1(false);
+                      setMenuTab2(true);
+                      setMenuTab3(false);
+                    } catch (err) {
+                      console.error(err);
+                    }
+                  }}
                 >
-                  <Touchable
-                    onPress={() => {
-                      try {
-                        setMenuTab1(false);
-                        setMenuTab2(true);
-                        setMenuTab3(false);
-                      } catch (err) {
-                        console.error(err);
-                      }
-                    }}
+                  {/* Button Frame True */}
+                  <View
+                    style={StyleSheet.applyWidth(
+                      {
+                        alignItems: 'center',
+                        borderBottomWidth: 3,
+                        borderColor: theme.colors['Primary'],
+                        flexGrow: 0,
+                        flexShrink: 0,
+                        height: 25,
+                      },
+                      dimensions.width
+                    )}
                   >
-                    {/* Button Frame True */}
-                    <View
+                    {/* Label */}
+                    <Text
                       style={StyleSheet.applyWidth(
                         {
-                          alignItems: 'center',
-                          backgroundColor: theme.colors.communityTrueOption,
-                          borderBottomWidth: 2,
-                          borderColor: theme.colors.communityDarkUI,
-                          borderLeftWidth: 2,
-                          borderRadius: 64,
-                          borderRightWidth: 2,
-                          borderTopWidth: 2,
-                          flexGrow: 0,
-                          flexShrink: 0,
-                          justifyContent: 'center',
-                          paddingBottom: 9,
-                          paddingLeft: 9,
-                          paddingRight: 9,
-                          paddingTop: 9,
+                          color: theme.colors['Custom Color'],
+                          fontFamily: 'Roboto_400Regular',
+                          fontSize: 14,
                         },
                         dimensions.width
                       )}
                     >
-                      {/* Label */}
-                      <Text
-                        style={StyleSheet.applyWidth(
-                          {
-                            color: theme.colors.communityWhite,
-                            fontFamily: 'Roboto_400Regular',
-                            fontSize: 12,
-                            lineHeight: 18,
-                          },
-                          dimensions.width
-                        )}
-                      >
-                        {'All Tickets'}
-                      </Text>
-                    </View>
-                  </Touchable>
-                </View>
-              )}
-            </>
-            {/* Flex Frame for Touchable */}
-            <>
-              {menuTab2 ? null : (
-                <View
-                  style={StyleSheet.applyWidth(
-                    {
-                      backgroundColor: theme.colors.communityIconBGColor,
-                      paddingBottom: 1,
-                      paddingTop: 1,
-                    },
-                    dimensions.width
-                  )}
+                      {'All Tickets'}
+                    </Text>
+                  </View>
+                </Touchable>
+              </View>
+            )}
+          </>
+          {/* Flex Frame for Touchable */}
+          <>
+            {menuTab2 ? null : (
+              <View
+                style={StyleSheet.applyWidth({ flex: 1 }, dimensions.width)}
+              >
+                <Touchable
+                  onPress={() => {
+                    try {
+                      setMenuTab1(false);
+                      setMenuTab3(false);
+                      setMenuTab2(true);
+                    } catch (err) {
+                      console.error(err);
+                    }
+                  }}
                 >
-                  <Touchable
-                    onPress={() => {
-                      try {
-                        setMenuTab1(false);
-                        setMenuTab3(false);
-                        setMenuTab2(true);
-                      } catch (err) {
-                        console.error(err);
-                      }
-                    }}
+                  {/* Button Frame False */}
+                  <View
+                    style={StyleSheet.applyWidth(
+                      {
+                        alignItems: 'center',
+                        borderBottomWidth: 2,
+                        borderColor: theme.colors['Light'],
+                        height: 25,
+                      },
+                      dimensions.width
+                    )}
                   >
-                    {/* Button Frame False */}
-                    <View
+                    {/* Label */}
+                    <Text
                       style={StyleSheet.applyWidth(
                         {
-                          alignItems: 'center',
-                          backgroundColor: theme.colors.communityIconBGColor,
-                          borderBottomWidth: 2,
-                          borderColor: theme.colors.communityIconBGColor,
-                          borderLeftWidth: 2,
-                          borderRadius: 64,
-                          borderRightWidth: 2,
-                          borderTopWidth: 2,
-                          flexGrow: 0,
-                          flexShrink: 0,
-                          justifyContent: 'center',
-                          paddingBottom: 9,
-                          paddingLeft: 9,
-                          paddingRight: 9,
-                          paddingTop: 9,
+                          color: theme.colors['Light'],
+                          fontFamily: 'Roboto_400Regular',
+                          fontSize: 14,
                         },
                         dimensions.width
                       )}
                     >
-                      {/* Label */}
-                      <Text
-                        style={StyleSheet.applyWidth(
-                          {
-                            color: theme.colors.communityDarkUI,
-                            fontFamily: 'Roboto_400Regular',
-                            fontSize: 12,
-                            lineHeight: 18,
-                          },
-                          dimensions.width
-                        )}
-                      >
-                        {'All Tickets'}
-                      </Text>
-                    </View>
-                  </Touchable>
-                </View>
-              )}
-            </>
-          </View>
+                      {'All Tickets'}
+                    </Text>
+                  </View>
+                </Touchable>
+              </View>
+            )}
+          </>
         </View>
       </View>
       {/* Scroll Content View */}
@@ -1074,6 +1015,7 @@ const CheckTicketStatusScreen = props => {
                         onRefresh={() => {
                           try {
                             setRefreshingLaj3UIhC(true);
+                            console.log();
                             setRefreshingLaj3UIhC(false);
                           } catch (err) {
                             console.error(err);

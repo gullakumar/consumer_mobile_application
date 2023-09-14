@@ -1,8 +1,9 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Dimensions } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 
 export function LineChartComponent1({ billingHistoryScreen }) {
+  const screenWidth = Dimensions.get('window').width;
   let newData = [];
   let newBillDates = [];
   let billMonth = [];
@@ -73,7 +74,8 @@ export function LineChartComponent1({ billingHistoryScreen }) {
     <View style={{ flex: 1 }}>
       <LineChart
         data={data}
-        width={430}
+        //width={430}
+        width={screenWidth} // Set the width to the screen width
         height={350}
         verticalLabelRotation={60}
         chartConfig={{

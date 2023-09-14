@@ -3,13 +3,13 @@ import { View, ActivityIndicator } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const DeviceVariables = {
+export const DeviceVariables = {
   OTP_ACK_NUMBER: {},
   OTP_SERVICE_NUMBER: '',
   exi_acc: '',
   new_acc: '',
 };
-const AppVariables = {
+export const AppVariables = {
   ERROR_MESSAGE: '',
   Viewbilldetailsjson: '',
   accountno: '',
@@ -27,6 +27,7 @@ const AppVariables = {
   name: '',
   password1: '',
   payemntfinalurl: '',
+  phonenumbercon: '',
   picker_option1: '',
   picker_option2: '',
   serviceConNo: ['11111474812', 'KUM188'],

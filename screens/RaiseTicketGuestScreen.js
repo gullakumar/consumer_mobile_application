@@ -361,7 +361,6 @@ line two` ) and will not work with special characters inside of quotes ( example
                   onValueChange={newPickerValue => {
                     const handler = async () => {
                       try {
-                        setPickerValue(newPickerValue);
                         const subCategoryJson = (
                           await CISAPPApi.serviceRequestSubCategoryPOST(
                             Constants,
@@ -385,7 +384,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                     handler();
                   }}
                   style={StyleSheet.applyWidth(
-                    { height: 50 },
+                    { width: '100%' },
                     dimensions.width
                   )}
                   options={Constants['picker_option1']}
@@ -393,7 +392,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                   iconColor={theme.colors['Medium']}
                   iconSize={24}
                   leftIconMode={'inset'}
-                  placeholder={'Select Category'}
+                  placeholder={'Request Nature'}
                   placeholderTextColor={theme.colors['Medium']}
                   rightIconName={'Entypo/chevron-down'}
                   type={'solid'}
@@ -418,7 +417,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                     }
                   }}
                   style={StyleSheet.applyWidth(
-                    { height: 50 },
+                    { width: '100%' },
                     dimensions.width
                   )}
                   options={Constants['sub_category']}
@@ -426,7 +425,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                   iconColor={theme.colors['Medium']}
                   iconSize={24}
                   leftIconMode={'inset'}
-                  placeholder={'Select Sub Category'}
+                  placeholder={'Request Type'}
                   placeholderTextColor={theme.colors['Medium']}
                   rightIconName={'Entypo/chevron-down'}
                   type={'solid'}
@@ -553,7 +552,6 @@ line two` ) and will not work with special characters inside of quotes ( example
                     const handler = async () => {
                       const pickerValue = newPickerValue;
                       try {
-                        setPickerValue3(newPickerValue);
                         const comsubcat = (
                           await CISAPPApi.complaintSubCategoryPOST(Constants, {
                             action: buildSubCategory(newPickerValue),
@@ -581,7 +579,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                     handler();
                   }}
                   style={StyleSheet.applyWidth(
-                    { height: 50 },
+                    { width: '100%' },
                     dimensions.width
                   )}
                   options={Constants['picker_option2']}
@@ -589,7 +587,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                   iconColor={theme.colors['Medium']}
                   iconSize={24}
                   leftIconMode={'inset'}
-                  placeholder={'Select Category'}
+                  placeholder={'Complaint Nature'}
                   placeholderTextColor={theme.colors['Medium']}
                   rightIconName={'Entypo/chevron-down'}
                   type={'solid'}
@@ -616,7 +614,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                     }
                   }}
                   style={StyleSheet.applyWidth(
-                    { height: 50 },
+                    { width: '100%' },
                     dimensions.width
                   )}
                   options={Constants['sub_category2']}
@@ -624,7 +622,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                   iconColor={theme.colors['Medium']}
                   iconSize={24}
                   leftIconMode={'inset'}
-                  placeholder={'Select Sub Category'}
+                  placeholder={'Complaint Type'}
                   placeholderTextColor={theme.colors['Medium']}
                   rightIconName={'Entypo/chevron-down'}
                   type={'solid'}

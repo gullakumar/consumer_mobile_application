@@ -27,14 +27,14 @@ async function openImagePicker({
     base64: true,
   });
 
-  let asset = result.assets[0];
+  let asset = result.assets?.length > 0 ? result.assets[0] : null;
 
   if (!result.canceled && asset) {
     if (Platform.OS === 'web') return asset.uri;
 
     const mimeType = getMimeTypeFromFilename(asset.uri);
 
-    if (result.type === 'video') {
+    if (asset.type === 'video') {
       const base64Video = await FileSystem.readAsStringAsync(asset.uri, {
         encoding: 'base64',
       });

@@ -139,7 +139,7 @@ const AddTicketProcessGuestScreen = props => {
             dimensions.width
           )}
         >
-          {'Add Ticket\n'}
+          {'Raise Ticket\n'}
         </Text>
       </View>
       {/* error message */}
@@ -164,6 +164,7 @@ const AddTicketProcessGuestScreen = props => {
           {
             alignItems: 'center',
             flexDirection: 'column',
+            height: 50,
             justifyContent: 'space-evenly',
             paddingLeft: 20,
             paddingRight: 20,

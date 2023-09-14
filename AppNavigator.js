@@ -58,7 +58,9 @@ import RaiseTicketScreen from './screens/RaiseTicketScreen';
 import RaiseTicketSuccessScreen from './screens/RaiseTicketSuccessScreen';
 import ReceiptGuestScreen from './screens/ReceiptGuestScreen';
 import ReceiptScreen from './screens/ReceiptScreen';
+import RechargeConfirmationGuestScreen from './screens/RechargeConfirmationGuestScreen';
 import RechargeConfirmationScreen from './screens/RechargeConfirmationScreen';
+import RechargeGuestScreen from './screens/RechargeGuestScreen';
 import RechargeScreen from './screens/RechargeScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import RegisterSuccessScreen from './screens/RegisterSuccessScreen';
@@ -597,6 +599,20 @@ export default function RootAppNavigator() {
           component={RemarksSuccessScreen}
           options={{
             title: 'Remarks Success',
+          }}
+        />
+        <Stack.Screen
+          name="RechargeGuestScreen"
+          component={RechargeGuestScreen}
+          options={{
+            title: 'Recharge Guest',
+          }}
+        />
+        <Stack.Screen
+          name="RechargeConfirmationGuestScreen"
+          component={RechargeConfirmationGuestScreen}
+          options={{
+            title: 'Recharge Confirmation  Guest',
           }}
         />
       </Stack.Navigator>

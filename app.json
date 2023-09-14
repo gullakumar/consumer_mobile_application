@@ -10,7 +10,7 @@
       "android",
       "web"
     ],
-    "version": "1.2.0",
+    "version": "1.0.0",
     "orientation": "default",
     "icon": "./assets/app/icon.png",
     "splash": {
@@ -23,16 +23,18 @@
     ],
     "ios": {
       "bundleIdentifier": "com.draftbit.untitledapp",
-      "buildNumber": "1.2.0",
+      "buildNumber": "1.0.0",
       "infoPlist": {},
       "usesIcloudStorage": false
     },
     "android": {
-      "versionCode": 2,
+      "versionCode": 1,
       "package": "com.fluentgrid.mss",
       "permissions": [],
       "adaptiveIcon": {}
     },
+    "androidStatusBar": {},
+    "androidNavigationBar": {},
     "web": {
       "themeColor": "#000000"
     },

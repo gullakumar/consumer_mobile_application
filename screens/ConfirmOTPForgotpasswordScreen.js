@@ -9,6 +9,7 @@ import {
   Button,
   Icon,
   Link,
+  PinInput,
   ScreenContainer,
   TextInput,
   Touchable,
@@ -103,6 +104,14 @@ const ConfirmOTPForgotpasswordScreen = props => {
     return seconds;
   };
 
+  const otpValidation = otp => {
+    var errorMessage = null;
+    if (!otp.trim()) {
+      errorMessage = 'Otp is required';
+    }
+    return errorMessage;
+  };
+
   const { theme } = props;
   const { navigation } = props;
 
@@ -118,10 +127,13 @@ const ConfirmOTPForgotpasswordScreen = props => {
     }
   }, [isFocused]);
   const [ERROR_MESSAGE, setERROR_MESSAGE] = React.useState('');
+  const [codeInputValue, setCodeInputValue] = React.useState(undefined);
+  const [otpErrorMsg, setOtpErrorMsg] = React.useState('');
   const [otpValue1, setOtpValue1] = React.useState('');
   const [otpValue2, setOtpValue2] = React.useState('');
   const [otpValue3, setOtpValue3] = React.useState('');
   const [otpValue4, setOtpValue4] = React.useState('');
+  const [pinInputValue, setPinInputValue] = React.useState('');
   const [seconds, setSeconds] = React.useState(21);
   const [textInputValue, setTextInputValue] = React.useState(0);
 
@@ -229,175 +241,71 @@ const ConfirmOTPForgotpasswordScreen = props => {
       {/* OTP */}
       <View
         style={StyleSheet.applyWidth(
-          {
-            alignItems: 'center',
-            flexDirection: 'row',
-            justifyContent: 'space-evenly',
-            paddingLeft: 20,
-            paddingRight: 20,
-          },
+          { paddingLeft: 20, paddingRight: 20 },
           dimensions.width
         )}
       >
-        {/* OTP Input */}
-        <TextInput
-          onChangeText={newOTPInputValue => {
+        <PinInput
+          renderItem={({ cellValue, isFocused }) => {
+            return null;
+          }}
+          onInputFull={finalValue => {
+            const codeInputValue = finalValue;
             try {
-              setOtpValue1(newOTPInputValue);
-              oTPInputttCHhQeKRef.current.focus();
+            } catch (err) {
+              console.error(err);
+            }
+          }}
+          onChangeText={newPinInputValue => {
+            const codeInputValue = newPinInputValue;
+            try {
+              setPinInputValue(newPinInputValue);
             } catch (err) {
               console.error(err);
             }
           }}
           style={StyleSheet.applyWidth(
-            {
-              backgroundColor: theme.colors['BG Gray'],
-              borderBottomWidth: 1,
-              borderColor: theme.colors.divider,
-              borderLeftWidth: 1,
-              borderRadius: 16,
-              borderRightWidth: 1,
-              borderTopWidth: 1,
-              fontFamily: 'System',
-              fontSize: 18,
-              fontWeight: '600',
-              height: 61,
-              paddingBottom: 8,
-              paddingLeft: 8,
-              paddingRight: 8,
-              paddingTop: 8,
-              textAlign: 'center',
-              width: '21%',
-            },
+            StyleSheet.compose(
+              GlobalStyles.PinInputStyles(theme)['Pin Input'],
+              {
+                backgroundColor: theme.colors['BG Gray'],
+                borderColor: theme.colors['Divider'],
+                borderRadius: 16,
+                fontFamily: 'System',
+                fontSize: 18,
+                fontWeight: '700',
+                maxHeight: 61,
+                padding: 8,
+                width: '100%',
+              }
+            ),
             dimensions.width
           )}
-          value={otpValue1}
-          placeholder={'*'}
-          editable={true}
-          keyboardType={'numeric'}
-          maxLength={1}
-          placeholderTextColor={theme.colors['Medium']}
-        />
-        {/* OTP Input */}
-        <TextInput
-          onChangeText={newOTPInputValue => {
-            try {
-              setOtpValue2(newOTPInputValue);
-              oTPInputorcisgezRef.current.focus();
-            } catch (err) {
-              console.error(err);
-            }
-          }}
-          style={StyleSheet.applyWidth(
-            {
-              backgroundColor: theme.colors['BG Gray'],
-              borderBottomWidth: 1,
-              borderColor: theme.colors.divider,
-              borderLeftWidth: 1,
-              borderRadius: 16,
-              borderRightWidth: 1,
-              borderTopWidth: 1,
-              fontFamily: 'System',
-              fontSize: 18,
-              fontWeight: '600',
-              height: 61,
-              paddingBottom: 8,
-              paddingLeft: 8,
-              paddingRight: 8,
-              paddingTop: 8,
-              textAlign: 'center',
-              width: '21%',
-            },
-            dimensions.width
-          )}
-          value={otpValue2}
-          placeholder={'*'}
-          editable={true}
-          keyboardType={'numeric'}
-          maxLength={1}
-          placeholderTextColor={theme.colors['Medium']}
-          ref={oTPInputttCHhQeKRef}
-        />
-        {/* OTP Input */}
-        <TextInput
-          onChangeText={newOTPInputValue => {
-            try {
-              setOtpValue3(newOTPInputValue);
-              oTPInputYUdHARwvRef.current.focus();
-            } catch (err) {
-              console.error(err);
-            }
-          }}
-          style={StyleSheet.applyWidth(
-            {
-              backgroundColor: theme.colors['BG Gray'],
-              borderBottomWidth: 1,
-              borderColor: theme.colors.divider,
-              borderLeftWidth: 1,
-              borderRadius: 16,
-              borderRightWidth: 1,
-              borderTopWidth: 1,
-              fontFamily: 'System',
-              fontSize: 18,
-              fontWeight: '600',
-              height: 61,
-              paddingBottom: 8,
-              paddingLeft: 8,
-              paddingRight: 8,
-              paddingTop: 8,
-              textAlign: 'center',
-              width: '21%',
-            },
-            dimensions.width
-          )}
-          value={otpValue3}
-          placeholder={'*'}
-          editable={true}
-          keyboardType={'numeric'}
-          maxLength={1}
-          placeholderTextColor={theme.colors['Medium']}
-          ref={oTPInputorcisgezRef}
-        />
-        {/* OTP Input */}
-        <TextInput
-          onChangeText={newOTPInputValue => {
-            try {
-              setOtpValue4(newOTPInputValue);
-            } catch (err) {
-              console.error(err);
-            }
-          }}
-          style={StyleSheet.applyWidth(
-            {
-              backgroundColor: theme.colors['BG Gray'],
-              borderBottomWidth: 1,
-              borderColor: theme.colors.divider,
-              borderLeftWidth: 1,
-              borderRadius: 16,
-              borderRightWidth: 1,
-              borderTopWidth: 1,
-              fontFamily: 'System',
-              fontSize: 18,
-              fontWeight: '600',
-              height: 61,
-              paddingBottom: 8,
-              paddingLeft: 8,
-              paddingRight: 8,
-              paddingTop: 8,
-              textAlign: 'center',
-              width: '21%',
-            },
-            dimensions.width
-          )}
-          value={otpValue4}
-          placeholder={'*'}
-          editable={true}
-          keyboardType={'numeric'}
-          maxLength={1}
-          placeholderTextColor={theme.colors['Medium']}
-          ref={oTPInputYUdHARwvRef}
+          value={pinInputValue}
+          autoComplete={'one-time-code'}
+          blurOnFull={true}
+          cellCount={4}
+          changeTextDelay={500}
+          clearOnCellFocus={true}
+          focusedBorderColor={theme.colors.primary}
+          keyboardType={'number-pad'}
         />
       </View>
+
+      <Text
+        style={StyleSheet.applyWidth(
+          StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+            color: theme.colors['Error'],
+            fontFamily: 'Roboto_400Regular',
+            paddingLeft: 30,
+          }),
+          dimensions.width
+        )}
+        accessible={true}
+        allowFontScaling={true}
+      >
+        {otpErrorMsg}
+      </Text>
       {/* Resend otp */}
       <View
         style={StyleSheet.applyWidth(
@@ -484,10 +392,15 @@ const ConfirmOTPForgotpasswordScreen = props => {
             const handler = async () => {
               try {
                 const otpResult = createOTP();
+                const otpErrorMsg = otpValidation(pinInputValue);
+                setOtpErrorMsg(otpErrorMsg);
+                if (otpErrorMsg?.length) {
+                  return;
+                }
                 console.log(otpResult);
                 const confirmotp = (
                   await CISAPPApi.confirmOTPscreenPOST(Constants, {
-                    otp: otpResult,
+                    otp: pinInputValue,
                     transid: Constants['OTP_ACK_NUMBER'],
                   })
                 )?.json;

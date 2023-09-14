@@ -9,6 +9,7 @@ import {
   Button,
   Icon,
   Link,
+  PinInput,
   ScreenContainer,
   TextInput,
   Touchable,
@@ -22,6 +23,55 @@ const ConfirmOTPLoginScreen = props => {
   const Constants = GlobalVariables.useValues();
   const Variables = Constants;
   const setGlobalVariableValue = GlobalVariables.useSetValue();
+
+  const otpValidation = otp => {
+    var errorMessage = null;
+    if (!otp.trim()) {
+      errorMessage = 'Otp is required';
+    }
+    return errorMessage;
+  };
+
+  const onOtpKeyPressBack = (Variables, index, text) => {
+    return ({ nativeEvent: { key: value } }) => {
+      if (value === 'Backspace' && otpArray[index] === '') {
+        if (index === 1) {
+          OTPInput1.current.focus();
+        } else if (index === 2) {
+          OTPInput2.current.focus();
+        } else if (index === 3) {
+          console.log('3');
+          OTPInput3.current.focus();
+        }
+
+        if (isAndroid && index > 0) {
+          const otpArraycopy = otpArray.concat();
+          otpArraycopy[index - 1] = '';
+          setotpArray(otpArraycopy);
+        }
+      }
+    };
+  };
+
+  const createHelper = (text, index) => {
+    const inputRefs = [];
+    const otp = [];
+
+    return function help(text, index) {
+      otp[index] = text;
+
+      if (index < length - 1) {
+        inputRefs[index + 1].focus();
+      }
+
+      const handleBackspace = index => {
+        if (index > 0) {
+          otp[index - 1] = '';
+          inputRefs[index - 1].focus();
+        }
+      };
+    };
+  };
 
   const startTimer = () => {
     const intervalId = setInterval(() => {
@@ -103,6 +153,35 @@ const ConfirmOTPLoginScreen = props => {
     }
   };
 
+  const focusOnwardBackward = (otpValue1, otpValue2, otpValue3, otpValue4) => {
+    var otpValue1 = null;
+    var otpValue2 = null;
+    var otpValue3 = null;
+    var otpValue4 = null;
+    const onOtpChange = index => {
+      return value => {
+        if (isNaN(Number(value))) {
+          // do nothing when a non digit is pressed
+          return;
+        }
+        const otpArrayCopy = otpArray.concat();
+        otpArrayCopy[index] = value;
+        setOtpArray(otpArrayCopy);
+
+        // auto focus to next InputText if value is not blank
+        if (value !== '') {
+          if (index === 0) {
+            otpValue2.current.focus();
+          } else if (index === 1) {
+            otpValue3.current.focus();
+          } else if (index === 2) {
+            otpValue4.current.focus();
+          }
+        }
+      };
+    };
+  };
+
   const { theme } = props;
   const { navigation } = props;
 
@@ -118,16 +197,20 @@ const ConfirmOTPLoginScreen = props => {
     }
   }, [isFocused]);
   const [ERROR_MESSAGE, setERROR_MESSAGE] = React.useState('');
+  const [codeInputValue, setCodeInputValue] = React.useState(undefined);
+  const [otpErrorMsg, setOtpErrorMsg] = React.useState('');
   const [otpValue1, setOtpValue1] = React.useState('');
   const [otpValue2, setOtpValue2] = React.useState('');
   const [otpValue3, setOtpValue3] = React.useState('');
   const [otpValue4, setOtpValue4] = React.useState('');
+  const [pinInputValue, setPinInputValue] = React.useState('');
   const [seconds, setSeconds] = React.useState(21);
   const [textInputValue, setTextInputValue] = React.useState(0);
 
-  const oTPInputanyfIJEYRef = React.useRef();
-  const oTPInputNYln2zeNRef = React.useRef();
-  const oTPInputXiJmbFXJRef = React.useRef();
+  const oTPInput1W7I2gF5SRef = React.useRef();
+  const oTPInput2anyfIJEYRef = React.useRef();
+  const oTPInput3NYln2zeNRef = React.useRef();
+  const oTPInput4XiJmbFXJRef = React.useRef();
 
   return (
     <ScreenContainer hasSafeArea={true} scrollable={false}>
@@ -229,175 +312,69 @@ const ConfirmOTPLoginScreen = props => {
       {/* OTP */}
       <View
         style={StyleSheet.applyWidth(
-          {
-            alignItems: 'center',
-            flexDirection: 'row',
-            justifyContent: 'space-evenly',
-            paddingLeft: 20,
-            paddingRight: 20,
-          },
+          { paddingLeft: 20, paddingRight: 20 },
           dimensions.width
         )}
       >
-        {/* OTP Input */}
-        <TextInput
-          onChangeText={newOTPInputValue => {
+        <PinInput
+          renderItem={({ cellValue, isFocused }) => {
+            return null;
+          }}
+          onInputFull={finalValue => {
+            const codeInputValue = finalValue;
             try {
-              setOtpValue1(newOTPInputValue);
-              oTPInputanyfIJEYRef.current.focus();
+            } catch (err) {
+              console.error(err);
+            }
+          }}
+          onChangeText={newPinInputValue => {
+            const codeInputValue = newPinInputValue;
+            try {
+              setPinInputValue(newPinInputValue);
             } catch (err) {
               console.error(err);
             }
           }}
           style={StyleSheet.applyWidth(
-            {
-              backgroundColor: theme.colors['BG Gray'],
-              borderBottomWidth: 1,
-              borderColor: theme.colors.divider,
-              borderLeftWidth: 1,
-              borderRadius: 16,
-              borderRightWidth: 1,
-              borderTopWidth: 1,
-              fontFamily: 'System',
-              fontSize: 18,
-              fontWeight: '600',
-              height: 61,
-              paddingBottom: 8,
-              paddingLeft: 8,
-              paddingRight: 8,
-              paddingTop: 8,
-              textAlign: 'center',
-              width: '21%',
-            },
+            StyleSheet.compose(
+              GlobalStyles.PinInputStyles(theme)['Pin Input'],
+              {
+                backgroundColor: theme.colors['BG Gray'],
+                borderColor: theme.colors['Divider'],
+                borderRadius: 16,
+                fontFamily: 'System',
+                fontSize: 18,
+                fontWeight: '700',
+                maxHeight: 61,
+                padding: 8,
+                width: '100%',
+              }
+            ),
             dimensions.width
           )}
-          value={otpValue1}
-          placeholder={'*'}
-          editable={true}
-          keyboardType={'numeric'}
-          maxLength={1}
-          placeholderTextColor={theme.colors['Medium']}
-        />
-        {/* OTP Input */}
-        <TextInput
-          onChangeText={newOTPInputValue => {
-            try {
-              setOtpValue2(newOTPInputValue);
-              oTPInputNYln2zeNRef.current.focus();
-            } catch (err) {
-              console.error(err);
-            }
-          }}
-          style={StyleSheet.applyWidth(
-            {
-              backgroundColor: theme.colors['BG Gray'],
-              borderBottomWidth: 1,
-              borderColor: theme.colors.divider,
-              borderLeftWidth: 1,
-              borderRadius: 16,
-              borderRightWidth: 1,
-              borderTopWidth: 1,
-              fontFamily: 'System',
-              fontSize: 18,
-              fontWeight: '600',
-              height: 61,
-              paddingBottom: 8,
-              paddingLeft: 8,
-              paddingRight: 8,
-              paddingTop: 8,
-              textAlign: 'center',
-              width: '21%',
-            },
-            dimensions.width
-          )}
-          value={otpValue2}
-          placeholder={'*'}
-          editable={true}
-          keyboardType={'numeric'}
-          maxLength={1}
-          placeholderTextColor={theme.colors['Medium']}
-          ref={oTPInputanyfIJEYRef}
-        />
-        {/* OTP Input */}
-        <TextInput
-          onChangeText={newOTPInputValue => {
-            try {
-              setOtpValue3(newOTPInputValue);
-              oTPInputXiJmbFXJRef.current.focus();
-            } catch (err) {
-              console.error(err);
-            }
-          }}
-          style={StyleSheet.applyWidth(
-            {
-              backgroundColor: theme.colors['BG Gray'],
-              borderBottomWidth: 1,
-              borderColor: theme.colors.divider,
-              borderLeftWidth: 1,
-              borderRadius: 16,
-              borderRightWidth: 1,
-              borderTopWidth: 1,
-              fontFamily: 'System',
-              fontSize: 18,
-              fontWeight: '600',
-              height: 61,
-              paddingBottom: 8,
-              paddingLeft: 8,
-              paddingRight: 8,
-              paddingTop: 8,
-              textAlign: 'center',
-              width: '21%',
-            },
-            dimensions.width
-          )}
-          value={otpValue3}
-          placeholder={'*'}
-          editable={true}
-          keyboardType={'numeric'}
-          maxLength={1}
-          placeholderTextColor={theme.colors['Medium']}
-          ref={oTPInputNYln2zeNRef}
-        />
-        {/* OTP Input */}
-        <TextInput
-          onChangeText={newOTPInputValue => {
-            try {
-              setOtpValue4(newOTPInputValue);
-            } catch (err) {
-              console.error(err);
-            }
-          }}
-          style={StyleSheet.applyWidth(
-            {
-              backgroundColor: theme.colors['BG Gray'],
-              borderBottomWidth: 1,
-              borderColor: theme.colors.divider,
-              borderLeftWidth: 1,
-              borderRadius: 16,
-              borderRightWidth: 1,
-              borderTopWidth: 1,
-              fontFamily: 'System',
-              fontSize: 18,
-              fontWeight: '600',
-              height: 61,
-              paddingBottom: 8,
-              paddingLeft: 8,
-              paddingRight: 8,
-              paddingTop: 8,
-              textAlign: 'center',
-              width: '21%',
-            },
-            dimensions.width
-          )}
-          value={otpValue4}
-          placeholder={'*'}
-          editable={true}
-          keyboardType={'numeric'}
-          maxLength={1}
-          placeholderTextColor={theme.colors['Medium']}
-          ref={oTPInputXiJmbFXJRef}
+          value={pinInputValue}
+          autoComplete={'one-time-code'}
+          blurOnFull={true}
+          cellCount={4}
+          changeTextDelay={500}
+          clearOnCellFocus={true}
+          focusedBorderColor={theme.colors.primary}
+          keyboardType={'number-pad'}
         />
       </View>
+
+      <Text
+        style={StyleSheet.applyWidth(
+          StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+            color: theme.colors['Error'],
+            fontFamily: 'Roboto_400Regular',
+            paddingLeft: 30,
+          }),
+          dimensions.width
+        )}
+      >
+        {otpErrorMsg}
+      </Text>
       {/* Resend otp */}
       <View
         style={StyleSheet.applyWidth(
@@ -488,6 +465,11 @@ const ConfirmOTPLoginScreen = props => {
               try {
                 const otpResult = createOTP();
                 console.log(otpResult);
+                const otpErrorMsg = otpValidation(pinInputValue);
+                setOtpErrorMsg(otpErrorMsg);
+                if (otpErrorMsg?.length) {
+                  return;
+                }
                 const confirmotp = (
                   await CISAPPApi.loginConfirmOTPPOST(Constants, {
                     accno: (() => {
@@ -496,7 +478,7 @@ const ConfirmOTPLoginScreen = props => {
                       return e;
                     })(),
                     otp: (() => {
-                      const e = otpResult;
+                      const e = pinInputValue;
                       console.log(e);
                       return e;
                     })(),

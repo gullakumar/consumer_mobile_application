@@ -194,12 +194,21 @@ const LoginScreen = props => {
               style={StyleSheet.applyWidth(
                 StyleSheet.compose(
                   GlobalStyles.ImageStyles(theme)['banner 3'],
-                  { height: 110, width: 110 }
+                  {
+                    height: [
+                      { minWidth: Breakpoints.Laptop, value: 90 },
+                      { minWidth: Breakpoints.Mobile, value: 90 },
+                    ],
+                    width: [
+                      { minWidth: Breakpoints.Laptop, value: 245 },
+                      { minWidth: Breakpoints.Mobile, value: 245 },
+                    ],
+                  }
                 ),
                 dimensions.width
               )}
               resizeMode={'cover'}
-              source={Images.JBNL}
+              source={Images.FluentgridLogoGray}
             />
             <View
               style={StyleSheet.applyWidth(
@@ -216,7 +225,7 @@ const LoginScreen = props => {
                   dimensions.width
                 )}
               >
-                {'Jharkhand Bijli Vitran Nigam Limited'}
+                {'Utility Self Service '}
               </Text>
 
               <Text
@@ -377,6 +386,7 @@ const LoginScreen = props => {
                     value={password}
                     placeholder={'Password'}
                     editable={true}
+                    maxLength={12}
                     placeholderTextColor={theme.colors['Medium']}
                     secureTextEntry={true}
                   />
@@ -456,6 +466,7 @@ const LoginScreen = props => {
                     value={password}
                     placeholder={'Password'}
                     editable={true}
+                    maxLength={12}
                     placeholderTextColor={theme.colors['Custom Color_20']}
                     secureTextEntry={false}
                   />
@@ -716,12 +727,7 @@ const LoginScreen = props => {
           {/* Promotions 2 */}
           <View
             style={StyleSheet.applyWidth(
-              {
-                alignItems: 'stretch',
-                height: 108,
-                marginTop: 8,
-                width: '100%',
-              },
+              { alignItems: 'stretch', marginTop: 8, width: '100%' },
               dimensions.width
             )}
           >
@@ -758,7 +764,11 @@ const LoginScreen = props => {
                                 style={StyleSheet.applyWidth(
                                   StyleSheet.compose(
                                     GlobalStyles.ImageStyles(theme)['banner 3'],
-                                    { borderRadius: 8, height: 108 }
+                                    {
+                                      borderRadius: 8,
+                                      height: 108,
+                                      width: '100%',
+                                    }
                                   ),
                                   dimensions.width
                                 )}

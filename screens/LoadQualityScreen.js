@@ -71,10 +71,10 @@ line two` ) and will not work with special characters inside of quotes ( example
         if (!isFocused) {
           return;
         }
-        setServiceConNumber(Constants['name']);
+        setTextInputValue(Constants['name']);
         const consumerDetailsJson = (
           await CISAPPApi.consumerDetailsPOST(Constants, {
-            action: buildConsumerString(Constants['name']),
+            accno: Constants['name'],
           })
         )?.json;
         console.log(consumerDetailsJson);
@@ -145,6 +145,7 @@ line two` ) and will not work with special characters inside of quotes ( example
   const [radioButtonGroupValue, setRadioButtonGroupValue] = React.useState('');
   const [selectedTab, setSelectedTab] = React.useState('content');
   const [serviceConNumber, setServiceConNumber] = React.useState('');
+  const [textInputValue, setTextInputValue] = React.useState('');
   const [visibleHindi, setVisibleHindi] = React.useState(false);
   const [voltageScreen, setVoltageScreen] = React.useState({});
 
@@ -243,7 +244,6 @@ line two` ) and will not work with special characters inside of quotes ( example
                       borderRadius: 16,
                       borderRightWidth: 1,
                       borderTopWidth: 1,
-                      height: 50,
                       marginBottom: 20,
                       paddingLeft: 20,
                       paddingRight: 20,
@@ -264,7 +264,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                       try {
                         const consumerDetailsJson = (
                           await CISAPPApi.consumerDetailsPOST(Constants, {
-                            action: buildConsumerString(newPickerValue),
+                            accno: Constants['name'],
                           })
                         )?.json;
                         console.log(consumerDetailsJson);
@@ -343,7 +343,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                       borderColor: theme.colors['Background'],
                       borderWidth: 1,
                       fontFamily: 'Roboto_400Regular',
-                      marginTop: -5,
+                      width: '95%',
                     },
                     dimensions.width
                   )}
@@ -375,9 +375,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                       try {
                         console.log(newRadioButtonGroupValue);
                         const consumerDetailsJson = (
-                          await CISAPPApi.consumerDetailsPOST(Constants, {
-                            action: buildConsumerString(serviceConNumber),
-                          })
+                          await CISAPPApi.consumerDetailsPOST(Constants, {})
                         )?.json;
                         console.log(consumerDetailsJson);
                         const prepaidFlag = (

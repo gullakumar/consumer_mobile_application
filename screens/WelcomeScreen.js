@@ -624,12 +624,12 @@ const WelcomeScreen = props => {
               style={StyleSheet.applyWidth(
                 StyleSheet.compose(
                   GlobalStyles.ImageStyles(theme)['banner 3'],
-                  { height: 110, width: 110 }
+                  { height: 90, width: 245 }
                 ),
                 dimensions.width
               )}
               resizeMode={'cover'}
-              source={Images.JBNL}
+              source={Images.FluentgridLogoGray}
             />
             <View
               style={StyleSheet.applyWidth(
@@ -646,7 +646,7 @@ const WelcomeScreen = props => {
                   dimensions.width
                 )}
               >
-                {'Jharkhand Bijli Vitran Nigam Limited'}
+                {'Utility Self Service '}
               </Text>
 
               <Text
@@ -845,6 +845,8 @@ const WelcomeScreen = props => {
             style={StyleSheet.applyWidth(
               StyleSheet.compose(GlobalStyles.ViewStyles(theme)['Promotions'], {
                 marginBottom: 50,
+                paddingLeft: 16,
+                paddingRight: 16,
               }),
               dimensions.width
             )}
@@ -883,7 +885,11 @@ const WelcomeScreen = props => {
                                   style={StyleSheet.applyWidth(
                                     StyleSheet.compose(
                                       GlobalStyles.ImageStyles(theme)['banner'],
-                                      { borderRadius: 8, height: 108 }
+                                      {
+                                        borderRadius: 8,
+                                        height: 108,
+                                        width: '100%',
+                                      }
                                     ),
                                     dimensions.width
                                   )}

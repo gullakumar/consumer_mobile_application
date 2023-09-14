@@ -124,7 +124,7 @@ line two` ) and will not work with special characters inside of quotes ( example
         }
         const consumerDetailsJson = (
           await CISAPPApi.consumerDetailsPOST(Constants, {
-            action: buildConsumerString(Constants['name']),
+            accno: Constants['name'],
           })
         )?.json;
         console.log(consumerDetailsJson);
@@ -250,7 +250,6 @@ line two` ) and will not work with special characters inside of quotes ( example
               borderRadius: 16,
               borderRightWidth: 1,
               borderTopWidth: 1,
-              height: 50,
               paddingLeft: 20,
               paddingRight: 20,
               width: '100%',
@@ -269,9 +268,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                 const pickerValue = newPickerValue;
                 try {
                   const consumerDetailsJson = (
-                    await CISAPPApi.consumerDetailsPOST(Constants, {
-                      action: buildConsumerString(newPickerValue),
-                    })
+                    await CISAPPApi.consumerDetailsPOST(Constants, {})
                   )?.json;
                   console.log(consumerDetailsJson);
                   buildConsumerString(newPickerValue);
@@ -290,7 +287,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                 borderColor: theme.colors['Background'],
                 borderWidth: 1,
                 fontFamily: 'Roboto_400Regular',
-                marginTop: -5,
+                width: '95%',
               },
               dimensions.width
             )}
@@ -310,7 +307,11 @@ line two` ) and will not work with special characters inside of quotes ( example
         <View
           style={StyleSheet.applyWidth(
             StyleSheet.compose(GlobalStyles.ViewStyles(theme)['user name'], {
+              height: 50,
               marginTop: 20,
+              paddingLeft: 20,
+              paddingRight: 20,
+              width: '100%',
             }),
             dimensions.width
           )}
@@ -369,7 +370,11 @@ line two` ) and will not work with special characters inside of quotes ( example
         <View
           style={StyleSheet.applyWidth(
             StyleSheet.compose(GlobalStyles.ViewStyles(theme)['user name'], {
+              height: 50,
               marginTop: 20,
+              paddingLeft: 20,
+              paddingRight: 20,
+              width: '100%',
             }),
             dimensions.width
           )}

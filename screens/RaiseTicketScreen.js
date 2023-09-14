@@ -81,7 +81,11 @@ line two` ) and will not work with special characters inside of quotes ( example
         console.log(cat);
         setGlobalVariableValue({
           key: 'picker_option1',
-          value: category(cat && cat[0].data.RequestTypeMJson),
+          value: (() => {
+            const e = category(cat && cat[0].data.RequestTypeMJson);
+            console.log(e);
+            return e;
+          })(),
         });
         const comcat = (await CISAPPApi.complaintCategoryPOST(Constants))?.json;
         console.log(comcat);
@@ -353,7 +357,13 @@ line two` ) and will not work with special characters inside of quotes ( example
                 style={StyleSheet.applyWidth(
                   StyleSheet.compose(
                     GlobalStyles.ViewStyles(theme)['user name'],
-                    { marginBottom: 10, marginTop: 3 }
+                    {
+                      height: 50,
+                      marginBottom: 10,
+                      marginTop: 3,
+                      paddingLeft: 20,
+                      paddingRight: 20,
+                    }
                   ),
                   dimensions.width
                 )}
@@ -409,7 +419,6 @@ line two` ) and will not work with special characters inside of quotes ( example
                   onValueChange={newPickerValue => {
                     const handler = async () => {
                       try {
-                        setPickerValue(newPickerValue);
                         const subCategoryJson = (
                           await CISAPPApi.serviceRequestSubCategoryPOST(
                             Constants,
@@ -419,7 +428,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                         console.log(subCategoryJson);
                         buildSubCategory(newPickerValue);
                         subCategoryOptions(subCategoryJson);
-                        const subid = setGlobalVariableValue({
+                        setGlobalVariableValue({
                           key: 'sub_category',
                           value: subCategoryOptions(
                             subCategoryJson &&
@@ -433,7 +442,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                     handler();
                   }}
                   style={StyleSheet.applyWidth(
-                    { height: 50 },
+                    { fontSize: 14, width: '100%' },
                     dimensions.width
                   )}
                   options={Constants['picker_option1']}
@@ -441,7 +450,8 @@ line two` ) and will not work with special characters inside of quotes ( example
                   iconColor={theme.colors['Medium']}
                   iconSize={24}
                   leftIconMode={'inset'}
-                  placeholder={'Select Category'}
+                  mode={'native'}
+                  placeholder={'Request Nature'}
                   placeholderTextColor={theme.colors['Medium']}
                   rightIconName={'Entypo/chevron-down'}
                   type={'solid'}
@@ -472,7 +482,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                     }
                   }}
                   style={StyleSheet.applyWidth(
-                    { height: 50 },
+                    { fontSize: 14, width: '100%' },
                     dimensions.width
                   )}
                   options={Constants['sub_category']}
@@ -480,7 +490,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                   iconColor={theme.colors['Medium']}
                   iconSize={24}
                   leftIconMode={'inset'}
-                  placeholder={'Select Sub Category'}
+                  placeholder={'Request Type'}
                   placeholderTextColor={theme.colors['Medium']}
                   rightIconName={'Entypo/chevron-down'}
                   type={'solid'}
@@ -601,7 +611,13 @@ line two` ) and will not work with special characters inside of quotes ( example
                 style={StyleSheet.applyWidth(
                   StyleSheet.compose(
                     GlobalStyles.ViewStyles(theme)['user name'],
-                    { marginBottom: 10, marginTop: 3 }
+                    {
+                      height: 50,
+                      marginBottom: 10,
+                      marginTop: 3,
+                      paddingLeft: 20,
+                      paddingRight: 20,
+                    }
                   ),
                   dimensions.width
                 )}
@@ -640,7 +656,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                       dimensions.width
                     )}
                     value={Constants['name']}
-                    placeholder={'Enter service connection number'}
+                    placeholder={'Service connection number'}
                     editable={true}
                     placeholderTextColor={theme.colors['Medium']}
                   />
@@ -658,7 +674,6 @@ line two` ) and will not work with special characters inside of quotes ( example
                     const handler = async () => {
                       const pickerValue = newPickerValue;
                       try {
-                        setPickerValue3(newPickerValue);
                         const comsubcat = (
                           await CISAPPApi.complaintSubCategoryPOST(Constants, {
                             action: buildSubCategory(newPickerValue),
@@ -670,13 +685,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                         setGlobalVariableValue({
                           key: 'sub_category2',
                           value: complaintSubCategoryOptions(
-                            (() => {
-                              const e =
-                                comsubcat &&
-                                comsubcat[0].data.RequestMWhereJson;
-                              console.log(e);
-                              return e;
-                            })()
+                            comsubcat && comsubcat[0].data.RequestMWhereJson
                           ),
                         });
                       } catch (err) {
@@ -686,7 +695,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                     handler();
                   }}
                   style={StyleSheet.applyWidth(
-                    { height: 50 },
+                    { width: '100%' },
                     dimensions.width
                   )}
                   options={Constants['picker_option2']}
@@ -694,7 +703,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                   iconColor={theme.colors['Medium']}
                   iconSize={24}
                   leftIconMode={'inset'}
-                  placeholder={'Select Category'}
+                  placeholder={'Complaint Nature'}
                   placeholderTextColor={theme.colors['Medium']}
                   rightIconName={'Entypo/chevron-down'}
                   type={'solid'}
@@ -727,7 +736,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                     }
                   }}
                   style={StyleSheet.applyWidth(
-                    { height: 50 },
+                    { width: '100%' },
                     dimensions.width
                   )}
                   options={Constants['sub_category2']}
@@ -735,7 +744,7 @@ line two` ) and will not work with special characters inside of quotes ( example
                   iconColor={theme.colors['Medium']}
                   iconSize={24}
                   leftIconMode={'inset'}
-                  placeholder={'Select Sub Category'}
+                  placeholder={'Complaint Type'}
                   placeholderTextColor={theme.colors['Medium']}
                   rightIconName={'Entypo/chevron-down'}
                   type={'solid'}

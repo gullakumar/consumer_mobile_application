@@ -102,10 +102,10 @@ const UsageScreen = props => {
         if (!isFocused) {
           return;
         }
-        setServiceConNumber(Constants['name']);
+        setTextInputValue(Constants['name']);
         const consumerDetailsJson = (
           await CISAPPApi.consumerDetailsPOST(Constants, {
-            action: buildConsumerString(Constants['name']),
+            accno: Constants['name'],
           })
         )?.json;
         console.log(consumerDetailsJson);
@@ -176,6 +176,7 @@ const UsageScreen = props => {
   const [selectedTab, setSelectedTab] = React.useState('Dashboard');
   const [selectedTab2, setSelectedTab2] = React.useState('prepaidchart');
   const [serviceConNumber, setServiceConNumber] = React.useState('');
+  const [textInputValue, setTextInputValue] = React.useState('');
   const [visibleHindi, setVisibleHindi] = React.useState(false);
 
   return (
@@ -386,98 +387,109 @@ const UsageScreen = props => {
                   </View>
                 </Touchable>
                 {/* Load Enhancement */}
-                <Touchable
-                  onPress={() => {
-                    const handler = async () => {
-                      try {
-                        navigation.navigate('LoadQualityScreen');
-                        await WebBrowser.openBrowserAsync(
-                          'http://20.192.2.50:9388/cportal/#/bltLec/KUM188'
-                        );
-                      } catch (err) {
-                        console.error(err);
-                      }
-                    };
-                    handler();
-                  }}
-                >
-                  <View
-                    style={StyleSheet.applyWidth(
-                      {
-                        alignItems: 'center',
-                        flexDirection: 'row',
-                        paddingBottom: 12,
-                        paddingLeft: 24,
-                        paddingRight: 24,
-                        paddingTop: 12,
-                      },
-                      dimensions.width
-                    )}
-                  >
-                    <Icon
-                      name={'MaterialCommunityIcons/alert-outline'}
-                      size={24}
-                    />
-                    <Text
-                      style={StyleSheet.applyWidth(
-                        {
-                          color: theme.colors['Strong'],
-                          fontFamily: 'Roboto_400Regular',
-                          fontSize: 16,
-                          marginLeft: 8,
-                        },
-                        dimensions.width
-                      )}
+                <>
+                  {!(prepaidFlag === 'N') ? null : (
+                    <Touchable
+                      onPress={() => {
+                        const handler = async () => {
+                          try {
+                            navigation.navigate('LoadQualityScreen');
+                            await WebBrowser.openBrowserAsync(
+                              'http://20.192.2.50:9388/cportal/#/bltLec/KUM188'
+                            );
+                          } catch (err) {
+                            console.error(err);
+                          }
+                        };
+                        handler();
+                      }}
                     >
-                      {'Load Enhancement'}
-                    </Text>
-                  </View>
-                </Touchable>
+                      <View
+                        style={StyleSheet.applyWidth(
+                          {
+                            alignItems: 'center',
+                            flexDirection: 'row',
+                            paddingBottom: 12,
+                            paddingLeft: 24,
+                            paddingRight: 24,
+                            paddingTop: 12,
+                          },
+                          dimensions.width
+                        )}
+                      >
+                        <Icon
+                          name={'MaterialCommunityIcons/alert-outline'}
+                          size={24}
+                        />
+                        <Text
+                          style={StyleSheet.applyWidth(
+                            {
+                              color: theme.colors['Strong'],
+                              fontFamily: 'Roboto_400Regular',
+                              fontSize: 16,
+                              marginLeft: 8,
+                            },
+                            dimensions.width
+                          )}
+                        >
+                          {'Load Enhancement'}
+                        </Text>
+                      </View>
+                    </Touchable>
+                  )}
+                </>
                 {/* Load Reduction */}
-                <Touchable
-                  onPress={() => {
-                    const handler = async () => {
-                      try {
-                        navigation.navigate('LoadQualityScreen');
-                        await WebBrowser.openBrowserAsync(
-                          'http://20.192.2.50:9388/cportal/#/bltLrc/KUM188'
-                        );
-                      } catch (err) {
-                        console.error(err);
-                      }
-                    };
-                    handler();
-                  }}
-                >
-                  <View
-                    style={StyleSheet.applyWidth(
-                      {
-                        alignItems: 'center',
-                        flexDirection: 'row',
-                        paddingBottom: 12,
-                        paddingLeft: 24,
-                        paddingRight: 24,
-                        paddingTop: 12,
-                      },
-                      dimensions.width
-                    )}
-                  >
-                    <Icon name={'FontAwesome/exclamation-triangle'} size={24} />
-                    <Text
-                      style={StyleSheet.applyWidth(
-                        {
-                          color: theme.colors['Strong'],
-                          fontFamily: 'Roboto_400Regular',
-                          fontSize: 16,
-                          marginLeft: 8,
-                        },
-                        dimensions.width
-                      )}
+                <>
+                  {!(prepaidFlag === 'N') ? null : (
+                    <Touchable
+                      onPress={() => {
+                        const handler = async () => {
+                          try {
+                            navigation.navigate('LoadQualityScreen');
+                            await WebBrowser.openBrowserAsync(
+                              'http://20.192.2.50:9388/cportal/#/bltLrc/KUM188'
+                            );
+                          } catch (err) {
+                            console.error(err);
+                          }
+                        };
+                        handler();
+                      }}
                     >
-                      {'Load Reduction'}
-                    </Text>
-                  </View>
-                </Touchable>
+                      <View
+                        style={StyleSheet.applyWidth(
+                          {
+                            alignItems: 'center',
+                            flexDirection: 'row',
+                            paddingBottom: 12,
+                            paddingLeft: 24,
+                            paddingRight: 24,
+                            paddingTop: 12,
+                          },
+                          dimensions.width
+                        )}
+                      >
+                        <Icon
+                          name={'FontAwesome/exclamation-triangle'}
+                          size={24}
+                        />
+                        <Text
+                          style={StyleSheet.applyWidth(
+                            {
+                              color: theme.colors['Strong'],
+                              fontFamily: 'Roboto_400Regular',
+                              fontSize: 16,
+                              marginLeft: 8,
+                            },
+                            dimensions.width
+                          )}
+                        >
+                          {'Load Reduction'}
+                        </Text>
+                      </View>
+                    </Touchable>
+                  )}
+                </>
                 {/* Downloads */}
                 <Touchable
                   onPress={() => {
@@ -926,7 +938,6 @@ const UsageScreen = props => {
                       borderRadius: 16,
                       borderRightWidth: 1,
                       borderTopWidth: 1,
-                      height: 50,
                       marginBottom: 30,
                       paddingLeft: 20,
                       paddingRight: 20,
@@ -943,12 +954,11 @@ const UsageScreen = props => {
                 <Picker
                   onValueChange={newPickerValue => {
                     const handler = async () => {
-                      const pickerValue = newPickerValue;
                       try {
-                        setServiceConNumber(newPickerValue);
+                        setTextInputValue(newPickerValue);
                         const consumerDetailsJson = (
                           await CISAPPApi.consumerDetailsPOST(Constants, {
-                            action: buildConsumerString(newPickerValue),
+                            accno: Constants['name'],
                           })
                         )?.json;
                         console.log(consumerDetailsJson);
@@ -1004,13 +1014,13 @@ const UsageScreen = props => {
                       borderColor: theme.colors['Background'],
                       borderWidth: 1,
                       fontFamily: 'Roboto_400Regular',
-                      marginTop: -5,
+                      width: '95%',
                     },
                     dimensions.width
                   )}
+                  value={textInputValue}
                   options={Constants['manageaccount_picker']}
                   autoDismissKeyboard={true}
-                  defaultValue={Constants['name']}
                   iconColor={theme.colors['Medium']}
                   iconSize={24}
                   leftIconMode={'inset'}
@@ -1459,7 +1469,7 @@ const UsageScreen = props => {
                                   dimensions.width
                                 )}
                               >
-                                {'Units(Kwh)'}
+                                {'Units(Kvah)'}
                               </Text>
                             </View>
                           </View>
@@ -1978,7 +1988,7 @@ const UsageScreen = props => {
                                   dimensions.width
                                 )}
                               >
-                                {'Units(Kwh)'}
+                                {'Units(Kvah)'}
                               </Text>
                             </View>
                           </View>
@@ -2321,46 +2331,51 @@ const UsageScreen = props => {
           </View>
         </Touchable>
         {/* Support */}
-        <Touchable
-          onPress={() => {
-            try {
-              navigation.navigate('CheckTicketStatusScreen');
-            } catch (err) {
-              console.error(err);
-            }
-          }}
-          activeOpacity={0.8}
-          disabledOpacity={0.8}
-        >
-          <View
-            style={StyleSheet.applyWidth(
-              {
-                alignItems: 'center',
-                height: 48,
-                justifyContent: 'center',
-                width: 55,
-              },
-              dimensions.width
-            )}
-          >
-            <Icon
-              color={theme.colors['Community_Light_Black']}
-              name={'MaterialIcons/support-agent'}
-              size={24}
-            />
-            <Text
-              style={StyleSheet.applyWidth(
-                StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
-                  color: theme.colors['Community_Light_Black'],
-                  fontFamily: 'Roboto_400Regular',
-                }),
-                dimensions.width
-              )}
+        <>
+          {!(prepaidFlag === 'N') ? null : (
+            <Touchable
+              onPress={() => {
+                try {
+                  navigation.navigate('CheckTicketStatusScreen');
+                } catch (err) {
+                  console.error(err);
+                }
+              }}
+              disabled={false}
+              activeOpacity={0.8}
+              disabledOpacity={0.8}
             >
-              {'Support'}
-            </Text>
-          </View>
-        </Touchable>
+              <View
+                style={StyleSheet.applyWidth(
+                  {
+                    alignItems: 'center',
+                    height: 48,
+                    justifyContent: 'center',
+                    width: 55,
+                  },
+                  dimensions.width
+                )}
+              >
+                <Icon
+                  color={theme.colors['Community_Light_Black']}
+                  name={'MaterialIcons/support-agent'}
+                  size={24}
+                />
+                <Text
+                  style={StyleSheet.applyWidth(
+                    StyleSheet.compose(GlobalStyles.TextStyles(theme)['Text'], {
+                      color: theme.colors['Community_Light_Black'],
+                      fontFamily: 'Roboto_400Regular',
+                    }),
+                    dimensions.width
+                  )}
+                >
+                  {'Support'}
+                </Text>
+              </View>
+            </Touchable>
+          )}
+        </>
       </View>
     </ScreenContainer>
   );
